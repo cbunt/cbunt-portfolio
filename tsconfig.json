@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "rootDir": "./src",
+    "outDir": "build",
+    "jsx": "react-jsx",
+    "target": "es6",
+    "lib": [
+      "ES6",
+      "ES2021.String",
+      "dom"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true
+  },
+  "include": [
+    "./src/**/*.tsx",
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./node_modules/@webgpu/types/dist/*",
+    "src/components/pages/samples/cubemap-blur-2.mdx",
+  ],
+}
