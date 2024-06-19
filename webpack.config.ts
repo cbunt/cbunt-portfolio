@@ -1,6 +1,5 @@
 import { Compiler, Configuration, sources, DefinePlugin, WebpackError } from 'webpack';
 import type {} from 'webpack-dev-server'
-import type { Options as mdxOptions } from '@mdx-js/loader';
 
 import path from 'path';
 import { URL } from 'url';
@@ -69,19 +68,15 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     },
                 },
                 {
-                    test: /\.css$/i,
-                    use: ['style-loader', 'css-loader']
-                },
-                {
                     test: /\.wgsl$/,
                     type: 'asset/source'
                 },
                 {
-                    test: /\.(gltf)$/,
+                    test: /\.(gltf|glb)$/,
                     loader: "gltf-loader",
                 },
                 {
-                    test: /\.(ktx2|bin|glb|jpe?g|png)$/,
+                    test: /\.(ktx2|bin|jpe?g|png)$/,
                     type: 'asset/resource'
                 }
             ]

@@ -57,7 +57,7 @@ export default class Renderer {
         const context = this.canvas.getContext('webgpu');
         if (context == null) throw new Error('renderer -- given canvas already initalized to non-webgpu context');
 
-        this.context = context;
+        this.context = context as unknown as GPUCanvasContext;
 
         this.context.configure({
             device: this.device,

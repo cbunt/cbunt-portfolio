@@ -21,6 +21,5 @@
     "./src/**/*.ts",
     "./src/**/*.d.ts",
     "./node_modules/@webgpu/types/dist/*",
-    "src/components/pages/samples/cubemap-blur-2.mdx",
   ],
 }
