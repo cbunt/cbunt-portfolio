@@ -85,6 +85,12 @@ const GlobalStyle = createGlobalStyle`
 
     main {
         max-width: min(calc(80vh * 1.66), 100%);
+
+        > h1,
+        > h2 {
+            padding: 0;
+            margin: 0;
+        }
     }
 
     a:link {
@@ -129,6 +135,7 @@ const GlobalStyle = createGlobalStyle`
     p {
         max-width: calc(100% - 1rem);
         line-height: 1.75em;
+        margin-block-start: 0;
     }
 
     article {
@@ -143,10 +150,13 @@ const MainWrapper = styled.div`
     margin: 2.5rem 1rem 1rem 0rem;
 `;
 
-const IconLink = styled.div`
-    transform: rotate(180deg);
-    margin-top: -0.5rem;
+const IconLink = styled(DistortionLink)`
+    margin-top: 0;
     font-family: 'NerdFontsSymbols Nerd Font';
+    rotate: 180deg;
+
+    // needed for consistent display in safari, 19/06/24
+    writing-mode: initial; 
 `;
 
 export type SitePageProps = {
@@ -165,6 +175,8 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                         width: '2rem',
                         marginBottom: '2.5rem',
                         marginTop: '1.5rem',
+                        transform: 'rotate(180deg)',
+                        aspectRatio: 1,
                     }}
                     baseMode="none"
                     baseFrequency={0.02}
@@ -174,7 +186,15 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                         scale: 15,
                     }}
                 >
-                    <svg width="100%" height="100%" viewBox="0 0 100 75" transform="rotate(180)" fill="#0000" xmlns="http://www.w3.org/2000/svg" version="1.1" xlinkHref="http://www.w3.org/1999/xlink">
+                    <svg 
+                        width="100%"
+                        height="100%"
+                        viewBox="0 0 100 75"
+                        fill="#0000"
+                        xmlns="http://www.w3.org/2000/svg"
+                        version="1.1"
+                        xlinkHref="http://www.w3.org/1999/xlink"
+                    >
                         <defs>
                             <linearGradient id="cyan" x1="0" y1="1" x2="0.75" y2="0.5">
                                 <stop offset="0%" stopColor="var(--accent-2)" />
@@ -197,8 +217,8 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                 </DistortionElement>
                 <DistortionLink href="/">About</DistortionLink>
                 <DistortionLink href="/samples">Samples</DistortionLink>
-                <DistortionLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener"><IconLink>{'\uf092'}</IconLink></DistortionLink>
-                <DistortionLink href="mailto:cass@cbunt.ing"><IconLink>{'\udb80\uddee'}</IconLink></DistortionLink>
+                <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>
+                <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
             </nav>
             <MainWrapper>
                 <main>{children}</main>

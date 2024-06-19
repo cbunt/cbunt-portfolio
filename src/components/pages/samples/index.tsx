@@ -30,9 +30,9 @@ const Container = styled.div`
     }
     
     h1 {
-        margin: 0;
-        margin: -0.5rem 0;
+        margin: 0 0 -0.5rem;
         font-family: 'Playwrite NL';
+        text-align: center;
     }
 
     a {
