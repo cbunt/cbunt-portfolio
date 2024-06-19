@@ -1,4 +1,5 @@
-import { Compiler, Configuration, sources, DefinePlugin, WebpackError } from 'webpack';
+import webpack from 'webpack';
+import type { Compiler, Configuration } from 'webpack';
 import type {} from 'webpack-dev-server'
 
 import path from 'path';
@@ -8,6 +9,8 @@ import { globSync } from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import ReactRefreshTypeScript from 'react-refresh-typescript';
+
+const { sources, DefinePlugin, WebpackError } = webpack;
 
 declare module "fs" {
     function globSync(pattern: string): string[];

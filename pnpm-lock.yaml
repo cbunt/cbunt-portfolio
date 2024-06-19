@@ -66,6 +66,9 @@ importers:
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
+      '@types/gh-pages':
+        specifier: ^6.1.0
+        version: 6.1.0
       '@types/node':
         specifier: ^20.14.5
         version: 20.14.5
@@ -589,6 +592,9 @@ packages:
 
   '@types/geojson@7946.0.14':
     resolution: {integrity: sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==}
+
+  '@types/gh-pages@6.1.0':
+    resolution: {integrity: sha512-Ma9bmKkE+WUtywENLC1rSLXTW66cJHJMWX2RQrJTMKhYM8o+73bRJ1ebfo3RWXUcG+HW3khky2nhVaN7nCsa3Q==}
 
   '@types/html-minifier-terser@6.1.0':
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
@@ -3432,6 +3438,8 @@ snapshots:
       '@types/serve-static': 1.15.7
 
   '@types/geojson@7946.0.14': {}
+
+  '@types/gh-pages@6.1.0': {}
 
   '@types/html-minifier-terser@6.1.0': {}
 
