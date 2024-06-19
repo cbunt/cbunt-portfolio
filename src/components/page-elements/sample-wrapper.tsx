@@ -15,13 +15,12 @@ const CodeContainer = styled.div`
     border-radius: 6px;
 
     > div {
-        font-size: 1rem;
         flex-grow: 1;
         width: 0;
         overscroll-behavior: contain;
     }
 
-    .CodeMirror * {
+    .cm-content {
         font-size: 1rem;
     }
 `;

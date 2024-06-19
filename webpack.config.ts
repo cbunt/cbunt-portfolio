@@ -90,7 +90,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         },
         plugins: [
             ...htmlPaths.map(([title, filename]) => new HtmlWebpackPlugin({
-                title: path.basename(title),
+                title: `cbunt portfolio${path.basename(title) === 'index' ? '' : ' -- ' + path.basename(title)}`,
                 description: 'A Basic WGPU Renderer',
                 chunks: [title],
                 filename,
