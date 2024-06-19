@@ -20,7 +20,8 @@ const CodeContainer = styled.div`
         overscroll-behavior: contain;
     }
 
-    .cm-content {
+    .cm-content,
+    .cm-line {
         font-size: 1rem;
     }
 `;
