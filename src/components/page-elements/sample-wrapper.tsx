@@ -20,6 +20,10 @@ const CodeContainer = styled.div`
         width: 0;
         overscroll-behavior: contain;
     }
+
+    .CodeMirror * {
+        font-size: 1rem;
+    }
 `;
 
 export type SampleWrapperProps = {
