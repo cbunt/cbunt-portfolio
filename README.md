@@ -1,7 +1,6 @@
 # cbunt portfoilio site
 
-This is a toy rendering engine written in WebGPU as a portfoilio piece. 
-I strongly recommend not using it for anything, though I'm not sure how you even would.
+My developer portfolio site, focusing on graphics programming and webdev. Written in Typescript, React, WebGPU and WGSL.
 
 ### Resources  
 <https://alain.xyz/blog/raw-webgpu>  
