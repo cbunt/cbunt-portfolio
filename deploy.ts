@@ -1,13 +1,12 @@
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import webpack, { Stats } from 'webpack';
-import ghpages from 'gh-pages'
+import { publish } from 'gh-pages'
 
 import webpackConfig from './webpack.config.ts';
 
 const execPromise = promisify(exec);
 const webpackPromise = promisify(webpack.webpack);
-const publishPromise = promisify(ghpages.publish);
 
 async function checkGitStatus(cmd: string, msg: string) {
     const { stderr, stdout } = await execPromise(`git ${cmd}`);
@@ -35,5 +34,4 @@ if (gitlogErr !== '') {
 }
 
 const datetime = new Date().toISOString().replace('T', ' ').replace(/\.[^Z]*Z/, '+00:00');
-// @ts-expect-error
-await publishPromise('build', { message: `${commitHash} sync, ${datetime}` });
+await publish('build', { message: `${commitHash} sync, ${datetime}`, cname: 'cbunt.ing' });
