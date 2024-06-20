@@ -20,7 +20,6 @@ const Wrapper = styled(DistortionElement).attrs({
     scale: 5,
 })`
     --border-width: 10px;
-    --border-offset: -0.5;
     --border-color: var(--background-color);
 
     position: relative;

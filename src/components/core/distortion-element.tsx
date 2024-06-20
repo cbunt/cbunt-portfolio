@@ -27,8 +27,8 @@ export const DistortedBorder = styled.div<{ $filterid: string }>`
 
     width: calc(100% + var(--border-width, 0px));
     height: calc(100% + var(--border-width, 0px));
-    top: calc(var(--border-offset, 0) * var(--border-width, 0px));
-    left: calc(var(--border-offset, 0) * var(--border-width, 0px));
+    top: calc(-0.5 * var(--border-width, 0px));
+    left: calc(-0.5 * var(--border-width, 0px));
     
     border: inherit;
     border-width: var(--border-width, inherit);
