@@ -12,7 +12,7 @@ export default createTheme({
     lineHighlight: '#0000',
     gutterBackground: 'var(--background-color)',
     gutterForeground: 'var(--accent-3)',
-    fontSize: '1rem',
+    fontFamily: 'Space Mono',
   },
   styles: [
     { tag: t.propertyName, 'font-style': 'italic' },
@@ -25,8 +25,8 @@ export default createTheme({
     },
     {
         tag: [ t.keyword, t.operator],
-        'font-weight': 'bold',
         color: 'var(--accent-2)',
+        'font-weight': 'bold',
     },
     {
         tag: [t.brace, t.bracket, t.paren, t.angleBracket],
