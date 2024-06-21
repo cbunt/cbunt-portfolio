@@ -1,5 +1,6 @@
 import { ReactNode, StrictMode } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+
 import DistortionElement from '../core/distortion-element';
 import DistortionLink from '../core/link';
 
@@ -28,7 +29,6 @@ const GlobalStyle = createGlobalStyle`
 
         &:hover {
             background: #555;
-            /* width: 10px; */
             border: 0;
         }
     }
@@ -63,24 +63,31 @@ const GlobalStyle = createGlobalStyle`
             --accent-1: #18F7F7;
             --accent-2: #FF61FF;
             --accent-3: #FFFF16;
-            }
+        }
+
+        code {
+            font-family: 'Space Mono', monospace;
+            color: var(--hi-vis-gray);
+            background-color: var(--secondary-color);
+            padding: 0 0.3rem;
+            border-radius: 5px;
+        }
+        
+        // fallback while firefox is bugged
+        --hi-vis-gray: var(--hi-vis-color);
+        
+        @supports (color: oklch(from white l c h)) {
+            --hi-vis-gray: oklch(from var(--hi-vis-color) l 0 h);
+        }
             
-            // fallback while firefox is bugged
-            --hi-vis-gray: var(--hi-vis-color);
-            
-            @supports (color: oklch(from white l c h)) {
-                --hi-vis-gray: oklch(from var(--hi-vis-color) l 0 h);
-            }
-                
-            background-color: var(--background-color);
-            color: var(--hi-vis-color);
-            margin: 0;
+        background-color: var(--background-color);
+        color: var(--hi-vis-color);
+        margin: 0;
     }
 
     #root {
         display: flex;
         font-family: "Asap", sans-serif;
-        margin: 0 0 5vh;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -89,14 +96,17 @@ const GlobalStyle = createGlobalStyle`
         color-scheme: light dark;
     }
 
-    main {
-        max-width: min(calc(80vh * 1.66), 100%);
+    h1,
+    h2 {
+        margin: 0 0 1rem;
+        justify-self: center;
+    }
 
-        > h1,
-        > h2 {
-            padding: 0;
-            margin: 0;
-        }
+    footer {
+        font-size: small;
+        text-align: center;
+        margin: 2rem 0 0;
+        font-weight: 200;
     }
 
     a:link {
@@ -142,10 +152,11 @@ const GlobalStyle = createGlobalStyle`
         max-width: calc(100% - 1rem);
         line-height: 1.75em;
         margin-block-start: 0;
+        margin-inline: 1rem;
     }
 
     article {
-        margin: 2rem 1rem;
+        margin: 1.75rem 0;
     }
 `;
 
@@ -153,7 +164,16 @@ const MainWrapper = styled.div`
     display: flex;
     justify-content: center;
     flex: 10;
-    margin: 2.5rem 1rem 1rem 0rem;
+    margin: 2.5rem 1rem 1.5rem 0rem;
+    min-height: calc(100vh - 4rem);
+`;
+
+const ContentFooterDivide = styled.div`
+    max-width: min(calc(80vh * 1.66), 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
 `;
 
 const IconLink = styled(DistortionLink)`
@@ -226,7 +246,10 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                 <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
             </nav>
             <MainWrapper>
-                <main>{children}</main>
+                <ContentFooterDivide>
+                    <main>{children}</main>
+                    <footer>MIT © 2024</footer>
+                </ContentFooterDivide>
             </MainWrapper>
         </StrictMode>
     );

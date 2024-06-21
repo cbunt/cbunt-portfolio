@@ -13,17 +13,14 @@ const Header = styled.div`
     justify-content: space-between;
     border-bottom: solid 3px var(--accent-3);
 
-    > * {
-        padding: 0 0 1rem;
-        margin: 0 1rem;
-    }
-
     span {
         color: var(--accent-2);
         align-self: center;
         font-weight: bold;
         font-style: italic;
         user-select: none;
+        padding: 0 0 1rem;
+        margin: 0 1rem;
     }
 
     h1 {
