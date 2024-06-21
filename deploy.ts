@@ -39,4 +39,4 @@ if (compilation?.hasErrors()) {
 
 console.log('deploy-pages -- publishing to pages');
 const datetime = new Date().toISOString().replace('T', ' ').replace(/\.[^Z]*Z/, '+00:00');
-await publish('build', { message: `${commitHash} sync, ${datetime}`, cname: 'cbunt.ing' });
+await publish('build', { message: `${commitHash} sync, ${datetime}`, cname: 'cbunt.ing', nojekyll: true });
