@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
         }
     }
 
+    ::-webkit-scrollbar-corner,
     ::-webkit-scrollbar-track {
         background: transparent;
     }
@@ -33,25 +34,26 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        
         --scale-bezier: cubic-bezier(0.81, 0, 0.37, 3.69);
         --scale-transition: transform 0.2s cubic-bezier(0.81, 0, 0.37, 3.69);
         
         --ok-l1: 0.9;
         --ok-l2: 1.3;
-        --ok-c-factor: 1.6;
+        --ok-l3: 50%;
+        --ok-c-factor: 0.6;
         
-        --background-color: #FEFED7;
-        --hi-vis-color: #241b00;
-        --secondary-color: #cee0ff;
+        --background-color: #feffdd;
+        --hi-vis-color: #0c007d;
+        --secondary-color: #d6d6d6;
         
-        --accent-1: #E02A24;
-        --accent-2: #109702;
+        --accent-1: #db020d;
+        --accent-2: #079601;
         --accent-3: #4E55FF;
         
         @media (prefers-color-scheme: dark) {
             --ok-l1: 1.5;
             --ok-l2: 0.6;
+            --ok-l3: 75%;
             --ok-c-factor: 1.5;
             
             --secondary-color: #415153;
@@ -66,12 +68,12 @@ const GlobalStyle = createGlobalStyle`
             // fallback while firefox is bugged
             --hi-vis-gray: var(--hi-vis-color);
             
-            @supports (color: oklch(from white h s l)) {
-            --hi-vis-gray: oklch(from var(--hi-vis-color) l 0 h);
-                }
+            @supports (color: oklch(from white l c h)) {
+                --hi-vis-gray: oklch(from var(--hi-vis-color) l 0 h);
+            }
                 
             background-color: var(--background-color);
-            color: var(--hi-vis-gray);
+            color: var(--hi-vis-color);
             margin: 0;
     }
 
@@ -81,6 +83,10 @@ const GlobalStyle = createGlobalStyle`
         margin: 0 0 5vh;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    :root {
+        color-scheme: light dark;
     }
 
     main {
@@ -154,8 +160,6 @@ const IconLink = styled(DistortionLink)`
     margin-top: 0;
     font-family: 'NerdFontsSymbols Nerd Font';
     rotate: 180deg;
-
-    // needed for consistent display in safari, 19/06/24
     writing-mode: initial; 
 `;
 
@@ -218,6 +222,7 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                 <DistortionLink href="/">About</DistortionLink>
                 <DistortionLink href="/samples">Samples</DistortionLink>
                 <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>
+                <IconLink href="https://www.linkedin.com/in/cbunt" target="_blank" rel="noreferrer noopener">{'\udb80\udf3b'}</IconLink>
                 <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
             </nav>
             <MainWrapper>

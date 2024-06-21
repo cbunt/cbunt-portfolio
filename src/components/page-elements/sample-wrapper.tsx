@@ -8,21 +8,27 @@ import SitePage from './page-wrapper';
 import SupportCheck from '../viewport/support-check';
 import SampleSelect from './sample-select';
 import styled from 'styled-components';
+import theme from './codemirror-theme';
+import DistortionElement from '../core/distortion-element';
 
-const CodeContainer = styled.div`
+const CodeContainer = styled(DistortionElement).attrs({
+    border: true,
+    baseMode: 'none',
+})`
+    position: relative;
+    --border-color: var(--secondary-color);
+    --border-width: 5px;
+    border-style: solid;
+    border-color: #0000;
+
     display: flex;
-    overflow: hidden;
     border-radius: 6px;
 
-    > div {
+    > div:first-of-type {
         flex-grow: 1;
         width: 0;
         overscroll-behavior: contain;
-    }
-
-    .cm-content,
-    .cm-line {
-        font-size: 1rem;
+        margin: 0.5rem;
     }
 `;
 
@@ -39,8 +45,6 @@ export default function SampleWrapper({
     sourceText,
     children,
 }: SampleWrapperProps) {
-    const theme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
     return (
         <SitePage>
             <SampleSelect selected={modelName} />
@@ -50,7 +54,7 @@ export default function SampleWrapper({
                 ? (
                     <CodeContainer>
                         <CodeMirror
-                            theme={theme ? 'dark' : 'light'}
+                            theme={theme}
                             editable={false}
                             maxHeight="80vh"
                             value={sourceText}

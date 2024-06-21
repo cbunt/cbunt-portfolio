@@ -9,7 +9,7 @@ import { ValueKeyCallback } from '../../samples/property-listener';
 const StyledSlider = styled.input.attrs({ type: 'range' })`
     --brightness-hover: 70%;
     --track-color: var(--accent-2);
-    --slider-color: oklch(from var(--track-color) calc(l * var(--ok-l2)) calc(c * var(--ok-c-factor)) h);
+    --slider-color: oklch(from var(--track-color) calc(l * var(--ok-l2)) calc(c * 0.6) h);
 
     border-radius: 4px;
     border: solid max(2.5px, 0.1rem) var(--track-color);
