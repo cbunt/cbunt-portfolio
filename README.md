@@ -1,4 +1,4 @@
-# cbunt portfoilio site
+# portfolio site
 
 My developer portfolio site, focusing on graphics programming and webdev. Written in Typescript, React, WebGPU and WGSL.
 
