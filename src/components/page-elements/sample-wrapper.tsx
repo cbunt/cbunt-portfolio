@@ -49,7 +49,7 @@ export default function SampleWrapper({
         <SitePage>
             <SampleSelect selected={modelName} />
             {getModelConstructor != null ? <SupportCheck getModelConstructor={getModelConstructor} /> : undefined}
-            <article>{children}</article>
+            {children}
             {sourceText != null
                 ? (
                     <CodeContainer>
