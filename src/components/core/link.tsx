@@ -11,7 +11,7 @@ const DistortionLink = styled(DistortionElement).attrs({
 })`
     transform-origin: center;
     text-decoration: none;
-    margin: 1.5rem 1rem;
+    margin: 1rem 1rem;
     transition: 
         text-shadow 0.5s cubic-bezier(.51,-0.33,.74,.78), 
         var(--scale-transition);
