@@ -1,47 +1,69 @@
-import Markdown, { MarkdownToJSX, RuleType } from 'markdown-to-jsx'
-import { Fragment } from 'react/jsx-runtime';
-import React, { ComponentPropsWithoutRef, JSX, isValidElement } from 'react';
+import { ComponentType, useCallback, Fragment } from 'react';
+import Markdown, { MarkdownToJSX, RuleType } from 'markdown-to-jsx';
 
-function isTaggedFence(node: MarkdownToJSX.ParserResult): node is MarkdownToJSX.CodeBlockNode & { lang: keyof JSX.IntrinsicElements } {
-    if (node.type !== RuleType.codeBlock || node.lang == null) return false;
-    if (isValidElement(node.lang)) return true;
+function getTagElement(tag: string, tags?: Record<string, ComponentType>) {
+    if (tags?.[tag] != null) return tags[tag];
+
     try {
-        return document.createElement(node.lang).toString() != "[object HTMLUnknownElement]";
-    } catch {
-        return false;
-    }
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        if (document.createElement(tag).toString() !== '[object HTMLUnknownElement]') {
+            return tag as keyof JSX.IntrinsicElements;
+        }
+    } catch { /**/ }
+    return undefined;
 }
 
-const renderRule: (tags?: { [tag: string]: React.ComponentType } ) => MarkdownToJSX.Options['renderRule'] = 
-(tags?) => (next, node, children, state) => {
-    if (node.type === RuleType.codeBlock && node.lang != null) {
-        let Elm: React.ComponentType | keyof JSX.IntrinsicElements;
-        if (tags?.[node.lang] != null) {
-            Elm = tags[node.lang];
-        } else if (isTaggedFence(node)) {
-            Elm = node.lang;
-        } else {
-            return next();
-        }
-
-        const { attrs } = node;
-        return (
-            <Elm {...attrs} key={state.key}>
-                <FencedMarkedown>{String.raw`${node.text}`}</FencedMarkedown>
-            </Elm>
-        );
-    }
-    return next();
+type FencedMarkdownProps = {
+    children: string,
+    options?: MarkdownToJSX.Options,
+    tags?: Record<string, ComponentType>,
+    [key: Exclude<string, 'options' | 'children' | 'tags'>]: unknown,
 };
 
-export default function FencedMarkedown({
+export default function FencedMarkdown({
     children,
     options,
     tags,
     ...rest
-}: ComponentPropsWithoutRef<typeof Markdown> & { tags?: { [tag: string]: React.ComponentType } }) {
+}: FencedMarkdownProps) {
+    // eslint-disable-next-line react/display-name
+    const renderRule = useCallback((tOptions: MarkdownToJSX.Options) => (
+        ...[next, node, /* children */, state]: Parameters<Required<MarkdownToJSX.Options>['renderRule']>
+    ) => {
+        if (node.type !== RuleType.codeBlock || node.lang == null) return next();
+
+        const Elm = getTagElement(node.lang, tags);
+        if (Elm == null) return next();
+
+        const nextOptions = { ...tOptions };
+        let { attrs } = node;
+
+        if (attrs != null && 'overrides' in attrs && typeof attrs.overrides === 'string') {
+            const overrideObj = JSON.parse(attrs.overrides) as object;
+
+            const newOverrides = Object.entries(overrideObj).flatMap(([tag, replacement]) => {
+                const component = typeof replacement === 'string' ? getTagElement(replacement, tags) : undefined;
+                return component == null
+                    ? []
+                    : [[tag, { component }] as [string, { component: ComponentType | keyof JSX.IntrinsicElements }]];
+            });
+
+            nextOptions.overrides = { ...nextOptions.overrides, ...Object.fromEntries(newOverrides) };
+            attrs = (({ overrides, ...rest }) => rest)(attrs);
+        }
+
+        const wrapper = (props: object) => <Elm {...attrs} {...props} />;
+
+        return (
+            <Markdown key={state.key} options={{ ...nextOptions, renderRule: renderRule(nextOptions), wrapper }}>
+                {String.raw`${node.text}`}
+            </Markdown>
+        );
+    }, [options, tags]);
+
+    const partialOptions = { ...rest, ...options };
     return (
-        <Markdown options={{ ...rest, ...options, wrapper: options?.wrapper ?? Fragment, renderRule: renderRule(tags) }}>
+        <Markdown options={{ ...partialOptions, renderRule: renderRule(partialOptions), wrapper: options?.wrapper ?? Fragment }}>
             {children}
         </Markdown>
     );
