@@ -17,7 +17,7 @@ async function checkGitStatus(cmd: string, msg: string) {
 console.log('deploy-pages -- checking git status');
 await Promise.all([
     checkGitStatus('fetch --dry-run', 'Unfetched remote changes. Aborting deployment.'),
-    checkGitStatus('diff', 'Uncommited local changes. Aborting deployment.'),
+    checkGitStatus('diff', 'Uncommitted local changes. Aborting deployment.'),
     checkGitStatus('log origin/main..HEAD', 'Unpushed local changes. Aborting deployment.'),
 ]);
 
