@@ -96,10 +96,13 @@ const GlobalStyle = createGlobalStyle`
         color-scheme: light dark;
     }
 
+    h1 {
+        font-stretch: 125%;
+    }
+
     h1,
     h2 {
         margin: 0 0 1rem;
-        justify-self: center;
     }
 
     footer {
@@ -110,7 +113,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     a:link {
-        color: var(--accent-1);
+        color: light-dark(var(--accent-3), var(--accent-1));
     }
 
     a:visited {
@@ -120,12 +123,14 @@ const GlobalStyle = createGlobalStyle`
     nav {
         display: flex;
         flex-direction: row-reverse;
+        justify-content: space-between;
         position: sticky;
         top: 0;
         height: fit-content;
         align-items: center;
 
         text-transform: uppercase;
+        height: 100%;
 
         font-size: 1.5rem;
         font-weight: 550;
@@ -134,7 +139,13 @@ const GlobalStyle = createGlobalStyle`
 
         writing-mode: vertical-lr;
         transform: rotate(180deg);
-        
+
+        div {
+            display: flex;
+            flex-direction: row-reverse;
+            margin: 2rem 0;
+        }
+
         a:nth-of-type(3n+1) {  
             color: var(--accent-1);
         }
@@ -210,7 +221,7 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                         scale: 15,
                     }}
                 >
-                    <svg 
+                    <svg
                         width="100%"
                         height="100%"
                         viewBox="0 0 100 75"
@@ -239,11 +250,16 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                         <polygon style={{ mixBlendMode: 'hard-light' }} fill="url(#cyan)" points="0 75, 50 0, 100 75" />
                     </svg>
                 </DistortionElement>
-                <DistortionLink href="/">About</DistortionLink>
-                <DistortionLink href="/samples">Samples</DistortionLink>
-                <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>
-                <IconLink href="https://www.linkedin.com/in/cbunt" target="_blank" rel="noreferrer noopener">{'\udb80\udf3b'}</IconLink>
-                <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
+                <div>
+                    <DistortionLink href="/">About</DistortionLink>
+                    <DistortionLink href="/samples">Samples</DistortionLink>
+                    <DistortionLink href="/resume">Résumé</DistortionLink>
+                </div>
+                <div>
+                    <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>
+                    <IconLink href="https://www.linkedin.com/in/cbunt" target="_blank" rel="noreferrer noopener">{'\udb80\udf3b'}</IconLink>
+                    <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
+                </div>
             </nav>
             <MainWrapper>
                 <ContentFooterDivide>
