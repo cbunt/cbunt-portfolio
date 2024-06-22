@@ -15,7 +15,7 @@
     "build:dev": "NODE_OPTIONS=\"--import tsx\" webpack --mode development",
     "start": "NODE_OPTIONS=\"--import tsx\" webpack serve --hot --mode development",
     "clean": "rm -fr ./build/*",
-    "deploy-pages": "npm clean && tsx deploy.ts"
+    "deploy-pages": "npm run clean && tsx deploy.ts"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",
