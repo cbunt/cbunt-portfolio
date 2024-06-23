@@ -1,42 +1,65 @@
 import SitePage from '../page-elements/page-wrapper';
 import { renderApp } from '../../utils/frontend';
+import FencedMarkdown from '../core/fenced-markdown';
+import CustomTooltip, { StyledTooltip } from '../core/tooltip';
+import styled from 'styled-components';
+
+const ExtraStyledTooltip = styled(StyledTooltip)`
+    font-size: 1.5rem;
+    width: max-content;
+    max-width: unset;
+    color: var(--hi-vis-gray);
+    font-stretch: 125%;
+    font-weight: bold;
+    padding: 1rem;
+`;
+
+const Hover = styled(CustomTooltip).attrs({
+    forwardedTooltipAs: ExtraStyledTooltip,
+})`
+    color: var(--accent-1);
+    cursor: help;
+`;
+
+const content = /* md */`
+# Welcome to <Hover tooltipContent="cass bunting's">my</Hover> Portfolio Website
+
+\`\`\`article
+## About the Site
+
+This website is my effort to collect what I've worked on so far in one place.
+I'm still adding new projects and linking old projects that currently live in
+other places, so the site will change. Maybe I'll even add a picture of myself! 
+Check back soon for even more samples of my work.
+
+
+## About <Hover tooltipContent="cass bunting">Me</Hover>
+
+I'm <Hover tooltipContent="me">Cass Bunting</Hover>, a graphics-programmer,
+technical artist, and (now, with this site) web developer in Vancouver, BC. I'm
+excited about real time rendering, developing useful, streamlined technical 
+tools for other artists and developers, and creating unique interactive experiences.
+
+My experience includes designing water surfaces through voronoi tesselation for 
+a game about Metis history, extensive work with Unity, and everything else you 
+see on this very website. I love to work with stylized graphics, procedural 
+generation, and especially combinations of the two. During my recently-completed 
+studies at the University of British Columbia, I honed my skills with and developed
+my passion for both low- and high-  level programming—from functional languages to 
+assembly. I also have significant experience working outside of tech. I worked just 
+about every position in restaurants for about six years, and in education for four.
+
+Aside from working with graphics, my overwhelmingly numerous hobbies include
+playing music, hiking, cooking, reading about history and social theory,
+creative writing, and—of course—playing video games.
+
+\`\`\`
+`;
 
 renderApp(
     <SitePage>
-        <h2>Cass Bunting</h2>
-        <article>
-            <p>
-                Rerum odit eos veniam est ut delectus minima.
-                Quia expedita pariatur vel qui excepturi quae.
-                Est unde molestiae nihil nihil ut molestias cupiditate.
-                Consequuntur nam et id temporibus dolorem cumque.
-            </p>
-            <p>
-                Dolores voluptas quia rerum.
-                Iste in nulla officiis odio iusto eligendi.
-                Repellat ab delectus doloremque placeat laudantium aut voluptatibus.
-                Laboriosam id error dolorum qui numquam eaque provident.
-            </p>
-            <p>
-                Earum ex mollitia vel exercitationem eum.
-                Est est sit eius impedit ullam impedit.
-                Ipsa illum suscipit exercitationem ut.
-                Eum laboriosam labore ut aut accusantium.
-                Pariatur eum provident ab.
-                In nihil aspernatur illo ex et et cum.
-            </p>
-            <p>
-                Alias omnis enim sed autem vitae odio occaecati.
-                Est est et perferendis magnam.
-                Fugiat assumenda pariatur eaque.
-            </p>
-            <p>
-                Error blanditiis dolorem eum eum quia sequi.
-                Ullam corporis cum molestias amet et.
-                Perferendis mollitia quia quia voluptas incidunt qui necessitatibus.
-                Alias ipsum ut autem voluptatem nam.
-                Autem neque et voluptatibus officiis perspiciatis et optio qui.
-            </p>
-        </article>
+        <FencedMarkdown options={{ overrides: { Hover } }}>
+            {content}
+        </FencedMarkdown>
     </SitePage>,
 );
