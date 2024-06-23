@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { renderApp } from '../../utils/frontend';
 import FencedMarkdown from '../core/fenced-markdown';
 import SitePage from '../page-elements/page-wrapper';
-import { Fragment } from 'react/jsx-runtime';
+import { ReactNode } from 'react';
 
 const IconList = styled.dl`
     display: flex;
@@ -54,7 +54,7 @@ const IconList = styled.dl`
 `;
 
 const content = /* md */`
-# Cass Bunting's Resume
+# Cass Bunting's Résumé
 
 \`\`\`\`\`article
 \`\`\`\`div style="display: grid; gridTemplateColumns: 1fr 1fr"
@@ -117,13 +117,14 @@ Familiar
 Non-Tech Skills
 - Color Design
 - Writing—Technical, Professional, and Creative
+- Public Speaking
 \`\`\`
 \`\`\`\`\`
 `;
 
 renderApp(
     <SitePage>
-        <FencedMarkdown tags={{ IconList, Fragment }}>
+        <FencedMarkdown tags={{ IconList, Fragment: ({ children }: { children?: ReactNode }) => <>{children}</> }}>
             {content}
         </FencedMarkdown>
     </SitePage>,
