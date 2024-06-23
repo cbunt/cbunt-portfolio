@@ -33,6 +33,7 @@ const ValueBackground = styled(DistortionElement).attrs({ scale: 10 })`
 export type CustomTooltipProps<E extends ElementType | undefined> = PolymorphicProps<E, 'div', {
     tooltipProps?: Omit<ComponentPropsWithoutRef<typeof Tooltip>, 'id'>,
     tooltipContent?: ReactNode,
+    forwardedTooltipAs?: typeof Tooltip,
     children?: ReactNode,
 }>;
 
@@ -41,6 +42,7 @@ export default function CustomTooltip<T extends ElementType | undefined>({
     tooltipProps,
     tooltipContent,
     forwardedAs,
+    forwardedTooltipAs,
     ...rest
 }: CustomTooltipProps<T>) {
     const id = useId();
@@ -49,6 +51,7 @@ export default function CustomTooltip<T extends ElementType | undefined>({
 
     const tooltip = useMemo(() => {
         if (tooltipContent == null) return undefined;
+        const TooltipAs = forwardedTooltipAs ?? StyledTooltip;
 
         const afterHide = () => {
             seedCallback.current?.();
@@ -56,10 +59,10 @@ export default function CustomTooltip<T extends ElementType | undefined>({
         };
 
         return (
-            <StyledTooltip {...tooltipProps} id={id} afterHide={afterHide}>
+            <TooltipAs {...tooltipProps} id={id} afterHide={afterHide}>
                 {tooltipContent}
                 <ValueBackground refreshSeedCallback={(fn) => { seedCallback.current = fn; }} />
-            </StyledTooltip>
+            </TooltipAs>
         );
     }, [tooltipContent, tooltipProps]);
 
