@@ -1,8 +1,9 @@
-import { ComponentPropsWithoutRef, ReactNode, useRef } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, ElementType, ReactNode, useId, useMemo, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 
 import DistortionElement from './distortion-element';
+import { PolymorphicProps } from '../../utils/frontend';
 
 export const StyledTooltip = styled(Tooltip).attrs({
     disableStyleInjection: true,
@@ -13,8 +14,9 @@ export const StyledTooltip = styled(Tooltip).attrs({
     color: var(--hi-vis-gray);
     padding: 12px;
     font-size: inherit;
-    z-index: 3;
+    z-index: 5;
     max-width: 10rem;
+    width: max-content;
 `;
 
 const ValueBackground = styled(DistortionElement).attrs({ scale: 10 })`
@@ -28,16 +30,45 @@ const ValueBackground = styled(DistortionElement).attrs({ scale: 10 })`
     z-index: -1;
 `;
 
-export default function CustomTooltip({
+export type CustomTooltipProps<E extends ElementType | undefined> = PolymorphicProps<E, 'div', {
+    tooltipProps?: Omit<ComponentPropsWithoutRef<typeof Tooltip>, 'id'>,
+    tooltipContent?: ReactNode,
+    children?: ReactNode,
+}>;
+
+export default function CustomTooltip<T extends ElementType | undefined>({
     children,
+    tooltipProps,
+    tooltipContent,
+    forwardedAs,
     ...rest
-}: ComponentPropsWithoutRef<typeof Tooltip>) {
+}: CustomTooltipProps<T>) {
+    const id = useId();
     const seedCallback = useRef<(() => void) | null>(null);
+    const As = (forwardedAs ?? 'div') as ComponentType | keyof JSX.IntrinsicElements;
+
+    const tooltip = useMemo(() => {
+        if (tooltipContent == null) return undefined;
+
+        const afterHide = () => {
+            seedCallback.current?.();
+            tooltipProps?.afterHide?.();
+        };
+
+        return (
+            <StyledTooltip {...tooltipProps} id={id} afterHide={afterHide}>
+                {tooltipContent}
+                <ValueBackground refreshSeedCallback={(fn) => { seedCallback.current = fn; }} />
+            </StyledTooltip>
+        );
+    }, [tooltipContent, tooltipProps]);
 
     return (
-        <StyledTooltip {...rest} afterHide={() => seedCallback.current?.()}>
-            <ValueBackground refreshSeedCallback={(fn) => { seedCallback.current = fn; }} />
-            {children as ReactNode}
-        </StyledTooltip>
+        <>
+            <As {...rest} data-tooltip-id={id}>
+                {children}
+            </As>
+            {tooltip}
+        </>
     );
 }

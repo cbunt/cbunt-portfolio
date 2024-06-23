@@ -22,11 +22,13 @@ const GUIContainer = styled(Collapse).attrs({ elementType: 'form' })`
 
     & > label {
         user-select: none;
-        margin-left: max(6px, 0.3rem);
-        margin-right: max(6px, 0.3rem);
+        margin-top: 0;
+        padding-top: max(8px, 0.3rem);
+        padding-left: max(6px, 0.3rem);
+        padding-right: max(6px, 0.3rem);
     }
 
-    &:has([role=tooltip]) > label:hover {
+    & > label:hover:has(+ [role=tooltip]) {
         transform: rotate(-3deg);
     }
 `;
@@ -75,10 +77,6 @@ const MainPanel = styled.div<{ $toggleId: string }>`
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
-
-    &:has(${DragHandle}:hover) {
-        transform: scale(1.05);
-    }
 `;
 
 const PanelBackground = styled(DistortionElement).attrs({

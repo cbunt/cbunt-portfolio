@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useId, useEffect, useMemo } from 'react';
+import { ChangeEvent, useState, useId, useEffect } from 'react';
 import styled from 'styled-components';
 
 import type { ValueKeyCallback } from '../../samples/property-listener';
@@ -106,21 +106,11 @@ export function Checkbox({
     description,
 }: CheckboxProps) {
     const id = useId();
-    const tooltipId = useId();
     const [value, setValue] = useState(startValue);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.checked);
         callback(e.target.checked);
     };
-
-    const tooltip = useMemo(() => {
-        if (description == null) return undefined;
-        return (
-            <CustomTooltip id={tooltipId}>
-                {description}
-            </CustomTooltip>
-        );
-    }, [description]);
 
     const update = (val: unknown) => {
         if (typeof val === 'boolean' && val !== value) setValue(val);
@@ -135,8 +125,9 @@ export function Checkbox({
 
     return (
         <>
-            {tooltip}
-            <label htmlFor={id} data-tooltip-id={tooltipId}>{label}</label>
+            <CustomTooltip forwardedAs="label" htmlFor={id} tooltipContent={description}>
+                {label}
+            </CustomTooltip>
             <DistortionWrapper>
                 <StyledCheckbox
                     aria-label={label}

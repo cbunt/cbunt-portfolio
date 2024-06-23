@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useId, useEffect, useRef, useCallback, useMemo } from 'react';
+import { ChangeEvent, useState, useId, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
 import DistortionElement from './distortion-element';
@@ -154,18 +154,8 @@ export function Slider({
     callbacks,
 }: SliderProps) {
     const id = useId();
-    const tooltipId = useId();
     const [sliderState, setSliderState] = useState({ min, max, step, value });
     const seedCallback = useRef<(() => void) | null>(null);
-
-    const tooltip = useMemo(() => {
-        if (description == null) return undefined;
-        return (
-            <CustomTooltip id={tooltipId}>
-                {description}
-            </CustomTooltip>
-        );
-    }, [description]);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         let newVal = e.target.value !== '' ? parseFloat(e.target.value) : sliderState.min;
@@ -195,8 +185,9 @@ export function Slider({
 
     return (
         <>
-            <label htmlFor={id} data-tooltip-id={tooltipId}>{label}</label>
-            {tooltip}
+            <CustomTooltip forwardedAs="label" htmlFor={id} tooltipContent={description}>
+                {label}
+            </CustomTooltip>
             <DistortionWrapper refreshSeedCallback={setSeedCallback}>
                 <StyledSlider
                     aria-label={`${label}-slider`}
