@@ -163,7 +163,6 @@ export function FileUpload<T>({
     selection,
     callbacks,
 }: FileUploadProps<T>) {
-    const selectId = useId();
     const [selected, setSelected] = useState(selection?.value);
     const inputRef = useRef<null | HTMLInputElement>(null);
     const selectionRef = useRef<null | HTMLDivElement>(null);
@@ -209,7 +208,7 @@ export function FileUpload<T>({
 
     return (
         <>
-            <label style={{ gridRow: 'span 2' }} htmlFor={selectId}>{label}</label>
+            <label style={{ gridRow: 'span 2' }}>{label}</label>
             <StyledButton onClick={() => { inputRef.current?.click(); }}>
                 {fullButtonText}
                 <input
