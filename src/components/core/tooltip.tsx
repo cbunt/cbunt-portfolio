@@ -47,7 +47,7 @@ export default function CustomTooltip<T extends ElementType | undefined>({
 }: CustomTooltipProps<T>) {
     const id = useId();
     const seedCallback = useRef<(() => void) | null>(null);
-    const As = (forwardedAs ?? 'div') as ComponentType | keyof JSX.IntrinsicElements;
+    const As = (forwardedAs ?? 'a') as ComponentType | keyof JSX.IntrinsicElements;
 
     const tooltip = useMemo(() => {
         if (tooltipContent == null) return undefined;
