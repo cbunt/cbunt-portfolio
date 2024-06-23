@@ -12,6 +12,10 @@ document.head.appendChild(fontLink);
 
 const sampleNames = SAMPLES__.map((sample) => sample.replaceAll('-', ' '));
 
+const externalSamples = {
+    'This Website, Source': 'https://github.com/cbunt/cbunt-portfolio',
+};
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -53,6 +57,9 @@ renderApp(
             <div><span>Written for modern browsers in WebGPU and Typescript.</span></div>
         {...sampleNames.map((sample, i) =>
             <DistortionLink key={sample} href={`/samples/${SAMPLES__[i]}`}>{sample}</DistortionLink>,
+        )}
+        {...Object.entries(externalSamples).map(([name, url]) =>
+            <DistortionLink key={name} href={url} target="_blank" rel="noreferrer noopener">{name}</DistortionLink>,
         )}
         </Container>
     </SitePage>,
