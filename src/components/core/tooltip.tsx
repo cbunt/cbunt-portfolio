@@ -64,7 +64,7 @@ export default function CustomTooltip<T extends ElementType | undefined>({
                 <ValueBackground refreshSeedCallback={(fn) => { seedCallback.current = fn; }} />
             </TooltipAs>
         );
-    }, [tooltipContent, tooltipProps]);
+    }, [tooltipContent, tooltipProps, forwardedTooltipAs]);
 
     return (
         <>
