@@ -1,4 +1,4 @@
-import Markdown from 'markdown-to-jsx'
+import Markdown from 'markdown-to-jsx';
 
 import SampleWrapper from '../../page-elements/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
@@ -12,7 +12,7 @@ Computes an approximate, perceptually-even Gaussian pyramid of a cubemap
 texture. Given an image and a desired maximum distance in pixels, for each
 blurred mip level the process:
 
-- Calculates the minimum angular distance bewteen any pixel and a perimeter of 
+- Calculates the minimum angular distance between any pixel and a perimeter of 
   the given pixel distance
 - Uses that minimum angle over 3 as the Guassian sigma for blurring
 - For each pixel, samples all pixels of the previous mip within the given distance
