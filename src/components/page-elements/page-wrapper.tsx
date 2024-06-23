@@ -126,11 +126,11 @@ const GlobalStyle = createGlobalStyle`
         justify-content: space-between;
         position: sticky;
         top: 0;
-        height: fit-content;
         align-items: center;
 
         text-transform: uppercase;
-        height: 100%;
+        height: calc(100% - 5rem);
+        padding: 2.5rem 0;
 
         font-size: 1.5rem;
         font-weight: 550;
@@ -143,7 +143,10 @@ const GlobalStyle = createGlobalStyle`
         div {
             display: flex;
             flex-direction: row-reverse;
-            margin: 2rem 0;
+        }
+
+        a {
+            font-stretch: 125%;
         }
 
         a:nth-of-type(3n+1) {  
@@ -208,8 +211,6 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                     style={{
                         pointerEvents: 'all',
                         width: '2rem',
-                        marginBottom: '2.5rem',
-                        marginTop: '1.5rem',
                         transform: 'rotate(180deg)',
                         aspectRatio: 1,
                     }}
