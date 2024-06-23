@@ -33,6 +33,7 @@ export default function FencedMarkdown({
         if (node.type !== RuleType.codeBlock || node.lang == null) return next();
 
         const Elm = getTagElement(node.lang, tags);
+
         if (Elm == null) return next();
 
         const nextOptions = { ...tOptions };
@@ -61,7 +62,7 @@ export default function FencedMarkdown({
         );
     }, [options, tags]);
 
-    const partialOptions = { ...rest, ...options };
+    const partialOptions = { ...rest, ...options, forceWrapper: true };
     return (
         <Markdown options={{ ...partialOptions, renderRule: renderRule(partialOptions), wrapper: options?.wrapper ?? Fragment }}>
             {children}
