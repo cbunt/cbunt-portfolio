@@ -5,127 +5,188 @@ import FencedMarkdown from '../core/fenced-markdown';
 import SitePage from '../page-elements/page-wrapper';
 import { ReactNode } from 'react';
 
-const IconList = styled.dl`
-    display: flex;
-    flex-wrap: wrap;
+const MarkdownStyle = styled(FencedMarkdown)`
+    columns: 2 25rem;
 
-    column-gap: 1rem;
-    row-gap: 1rem;
-    margin: 0.5rem 0;
-    padding: 1rem 1rem;
-
-    background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
-    border-radius: 5px;
-
-    &:is(:nth-of-type(1)) dt {
-        color: var(--accent-2);
+    * {
+        break-before: avoid;
+        break-after: avoid;
+        break-inside: avoid;
     }
 
-    &:is(:nth-of-type(2)) dt {
-        color: var(--accent-3);
+    h2 {
+        break-before: auto;
     }
 
-    &:is(:nth-of-type(3)) dt {
-        color: var(--accent-1);
-    }
+    a {
+            text-decoration: none;
+        }
 
-    dd, dt {
-        margin: 0 1rem;
-        display: block;
-        align-content: center;
+    h3 {
+        margin-bottom: 0;
+        font-size: medium;
         font-weight: bold;
     }
 
-    dt {
-        font-style: italic;
+    h2 {
+        /* font-size: large; */
     }
 
-    i {
-        font-weight: normal;
-        margin-right: 0.5rem;
-        font-size: 1.5rem;
-        font-style: normal;
-        font-family: 'NerdFontsSymbols Nerd Font';
+    p {
+        text-justify: auto;
+        margin-left: 0;
     }
 
-    .margin-less {
-        margin-right: 0rem;
+    ul {
+        margin-left: 1rem;
+        padding: 0;
+        list-style-type: none;
+        list-style-position: outside;
+        line-height: 1.5rem;
+        margin-top: 0.25rem;
+
+
+        li:not(:first-child) {
+            margin-top: 0.25rem;
+        }
+    }
+
+    dl {
+        display: flex;
+        flex-wrap: wrap;
+
+        column-gap: 1rem;
+        row-gap: 1rem;
+        margin: 0.5rem 0;
+        padding: 1rem 0;
+
+        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
+        border-radius: 5px;
+
+        dd, dt {
+            margin: 0 1rem;
+            display: block;
+            align-content: center;
+            font-weight: bold;
+        }
+
+        dt {
+            font-style: bold;
+
+
+        }
+
+        i {
+            font-weight: normal;
+            margin-right: 0.5rem;
+            font-style: normal;
+            font-family: 'NerdFontsSymbols Nerd Font';
+        }
+
+        .margin-less {
+            margin-right: 0rem;
+        }
     }
 `;
 
 const content = /* md */`
-# Cass Bunting's Résumé
+## Goal
+Recently graduated computer science student seeking to exercise and
+build upon my knowledge of real-time rendering and web development.
 
-\`\`\`\`\`article
-\`\`\`\`div style="display: grid; gridTemplateColumns: 1fr 1fr"
-\`\`\`div
+## Skills
+### Proficient
+\`\`\`dl overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
+- HLSL
+- <i>\udb81\udeaf</i>Unity
+- <i class-name="margin-less">\udb80\udf1b</i> C Sharp
+- WebGPU
+- <i>\udb81\udee6</i>Typescript
+- <i>\ued46</i>React
+- <i>\ue749</i>CSS
+- <i>\ued0d</i>Node
+- <i>\udb81\udf2b</i>Webpack
+- <i>\uf21f</i>Docker
+- <i>\uebc6</i>Linux
+\`\`\`
+
+### Familiar
+\`\`\`dl overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
+- <i>\udb82\uddb1</i>Unreal
+- <i class-name="margin-less">\ue61e</i> C
+- <i class-name="margin-less">\ue61d</i> C++
+- <i>\ue73c</i>Python
+- Vulkan
+\`\`\`
+
+### Non-Tech Skills
+\`\`\`dl overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
+- Color Design
+- Public Speaking
+- Guitar
+- Songwriting
+- Typesetting
+- Writing—Technical, Professional, and Creative
+\`\`\`
+
+## Projects
+### [Portfolio Site, cbunt.ing](https://github.com/cbunt/cbunt-portfolio)  
+Personal portfolio developed with React, Webpack, and Typescript, with interactive WebGPU samples.
+
+### [Cubemap Gaussian Blur](https://github.com/cbunt/cbunt-portfolio/blob/main/src/samples/cubemap-blur/cubemap-guassian-pyramid.ts)  
+Algorithm and WebGPU implementation for perceptually even Gaussian blurring of 3D textures.
+
+### [Stylized Voronoi Water Shader]()  
+Novel real-time 3D water shader stylized using Voronoi noise.
+
+### [Haskell Neural Network]()  
+Neural network implementation undertaken to learn machine learning and functional programming.
+
 ## Education
-*University of British Columbia*   
+### University of British Columbia  
 Bachelors of Arts, Majoring in Computer Science  
 Graduated May 2024
 
-*Digital Media Practicum*  
-Offered through the University of British Columbia and the Center for Digital Media  
-January through April 2023   
+### Notable Courses  
+- [**Digital Media Practicum**](https://www.students.cs.ubc.ca/~cs-344/current-term/)  
+Served as programmer and technical artist to
+develop a Unity game MVP for external client
+Hammer & Tong. Contributed to research and
+planning, and created gameplay infrastructure,
+graphical shaders, and tools for artists and designers.  
+- [**Compiler Construction**](https://www.students.cs.ubc.ca/~cs-411/2022w2/)  
+- [**Parallel Computation**](https://vancouver.calendar.ubc.ca/course-descriptions/courses/cpscv-418-parallel-computation)  
+- [**Human Computer Interaction**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
+- [**Creative Writing for Video Games**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
 
-*Notable Courses*  
-[Compiler Construction](https://www.students.cs.ubc.ca/~cs-411/2022w2/)  
-[Parallel Computation](https://vancouver.calendar.ubc.ca/course-descriptions/courses/cpscv-418-parallel-computation)  
-[Human Computer Interaction](https://www.students.cs.ubc.ca/~cs-344/current-term/)
-\`\`\`
 
-\`\`\`div
 ## Work
-*Edmonds Unitarian Universalist Congregation*  
-Children and Youth Program Coordinator  
-2016 - 2020  
+### Edmonds Unitarian Universalist Congregation**  
+Youth Program Coordinator  
+Supported youth programming, managed teachers and volunteers,
+ordered and organized supplies, lead activities, wrote weekly
+newsletters, and developed  goals, approach, and policy.  
+2016 - 2020
 
-*Various Restaurants*  
-Server, Cook, Dishwasher, Light admin work   
-2014 - 2020  
-\`\`\`
-\`\`\`\`
+### Education Roles
+Instructor and Program Coordinator  
+Collaboratively developed and facilitated teen leadership training.
 
-## Skills
+- *YMCA Camp Orkila*, 2018
+- *Goldmine Youth Leadership School*, 2014, 2016, 2017
 
-\`\`\`IconList overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
-Proficient
-- WebGPU
-- HLSL
-- <i>\udb81\udeaf</i>Unity
-- <i class-name="margin-less">\udb80\udf1b</i>
-- <i>\ued46</i>React
-- <i>\udb81\udee6</i>Typescript
-- <i>\ue749</i>CSS
-- <i>\udb81\udf2b</i>Webpack
-- <i>\ued0d</i>Node
-- <i>\uf21f</i>Docker
-\`\`\`
-
-\`\`\`IconList overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
-Familiar
-- <i>\udb82\uddb1</i>Unreal
-- <i class-name="margin-less">\ue61e</i>
-- <i class-name="margin-less">\ue61d</i>
-- CUDA
-- <i>\ue777</i>Haskell
-- Racket
-- <i>\ue73c</i>Python
-\`\`\`
-
-\`\`\`IconList overrides={{ "ul": "Fragment", "li": "dd", "p": "dt" }} 
-Non-Tech Skills
-- Color Design
-- Writing—Technical, Professional, and Creative
-- Public Speaking
-\`\`\`
-\`\`\`\`\`
+### Various Restaurants and Bars
+- *Bánh Town*, Server, Seattle, 2018 - 2019
+- *Percy's & Co*, Server, Seattle, 2017 - 2018
+- *Giddy Up Burgers*, Server & Cook, Seattle, 2016 - 2017
+- *Miho Izakaya*, Dishwasher, Portland, 2015 - 2016
 `;
 
 renderApp(
     <SitePage>
-        <FencedMarkdown tags={{ IconList, Fragment: ({ children }: { children?: ReactNode }) => <>{children}</> }}>
+        <h1>Cass Bunting&apos;s Résumé</h1>
+        <MarkdownStyle tags={{ Fragment: ({ children }: { children?: ReactNode }) => <>{children}</> }} options={{ wrapper: 'article' }}>
             {content}
-        </FencedMarkdown>
+        </MarkdownStyle>
     </SitePage>,
 );
