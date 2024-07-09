@@ -10,7 +10,6 @@ const MarkdownStyle = styled(FencedMarkdown)`
 
     * {
         break-before: avoid;
-        break-after: avoid;
         break-inside: avoid;
     }
 
@@ -59,9 +58,6 @@ const MarkdownStyle = styled(FencedMarkdown)`
         row-gap: 1rem;
         margin: 0.5rem 0;
         padding: 1rem 0;
-
-        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
-        border-radius: 5px;
 
         dd, dt {
             margin: 0 1rem;
