@@ -17,6 +17,7 @@ type FencedMarkdownProps = {
     children: string,
     options?: MarkdownToJSX.Options,
     tags?: Record<string, ComponentType>,
+    className?: string,
     [key: Exclude<string, 'options' | 'children' | 'tags'>]: unknown,
 };
 
@@ -24,6 +25,7 @@ export default function FencedMarkdown({
     children,
     options,
     tags,
+    className,
     ...rest
 }: FencedMarkdownProps) {
     // eslint-disable-next-line react/display-name
@@ -64,7 +66,7 @@ export default function FencedMarkdown({
 
     const partialOptions = { ...rest, ...options, forceWrapper: true };
     return (
-        <Markdown options={{ ...partialOptions, renderRule: renderRule(partialOptions), wrapper: options?.wrapper ?? Fragment }}>
+        <Markdown className={className} options={{ ...partialOptions, renderRule: renderRule(partialOptions), wrapper: options?.wrapper ?? Fragment }}>
             {children}
         </Markdown>
     );
