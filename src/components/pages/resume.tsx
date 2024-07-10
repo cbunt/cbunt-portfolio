@@ -132,10 +132,10 @@ Personal portfolio developed with React, Webpack, and Typescript, with interacti
 ### [Cubemap Gaussian Blur](https://github.com/cbunt/cbunt-portfolio/blob/main/src/samples/cubemap-blur/cubemap-guassian-pyramid.ts)  
 Algorithm and WebGPU implementation for perceptually even Gaussian blurring of 3D textures.
 
-### [Stylized Voronoi Water Shader]()  
+### Stylized Voronoi Water Shader
 Novel real-time 3D water shader stylized using Voronoi noise.
 
-### [Haskell Neural Network]()  
+### Haskell Neural Network
 Neural network implementation undertaken to learn machine learning and functional programming.
 
 ## Education
@@ -153,7 +153,7 @@ graphical shaders, and tools for artists and designers.
 - [**Compiler Construction**](https://www.students.cs.ubc.ca/~cs-411/2022w2/)  
 - [**Parallel Computation**](https://vancouver.calendar.ubc.ca/course-descriptions/courses/cpscv-418-parallel-computation)  
 - [**Human Computer Interaction**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
-- [**Creative Writing for Video Games**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
+- **Creative Writing for Video Games**
 
 
 ## Work
