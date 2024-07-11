@@ -23,7 +23,7 @@ const cubemapSampling: string = /* wgsl */`
             5, 2, 3, 0, 1, INVALID_FACE, // -Z  +Y   -Y   +X   -X 
         );
 
-        // a flattend matrix in the same form as dfaces
+        // a flattened matrix in the same form as dfaces
         // giving the index of the damts array containing 
         // the transformation from the starting face to 
         // the destination face
@@ -36,7 +36,7 @@ const cubemapSampling: string = /* wgsl */`
             0, 7,  12, 3,  4,  0,
         );
 
-        // 2x4 martices transforming a coordinate vector <u, v, w, 1>
+        // 2x4 matrices transforming a coordinate vector <u, v, w, 1>
         // from one face to another
         const dmats = array(
             array(// 0
@@ -179,7 +179,7 @@ const createMipBlurCode = (
     @group(0) @binding(1) 
     var outputTexture: texture_storage_2d_array<${format}, write>;
 
-    // simga[0] resevered for work offset
+    // simga[0] reserved for work offset
     @group(0) @binding(2) var<storage> sigmas : array<f32>;
     
     @compute @workgroup_size(${groups}, 1, 1)
@@ -231,16 +231,18 @@ const createMipBlurCode = (
     }
 `;
 
-// the minimum angular distance between any pixel on a cubemap
-// of the given face width and any pixel lying on a perimeter
-// the given number of steps away
+/**
+ *  the minimum angular distance between any pixel on a cubemap
+ *  of the given face width and any pixel lying on a perimeter
+ *  the given number of steps away
+ */
 function minStepDistance(steps: number, width: number) {
     // the angular distance
     // from the uvf: face = 0, u = 0, and v = width - Math.floor(steps / 2) - 1
     // to the uvf: face = 3, u = 2 * width - baseV - steps - 2, and v = 0 or 1
 
-    // It's likely possible to programitically determine whether the destition
-    // pixel should be v = 0 or v = 1, but checking both works fine
+    // It's likely possible to programmatically determine whether the
+    // destination pixel should be v = 0 or v = 1, but checking both works fine
 
     const nextMipWidth = width >> 1;
     const baseV = nextMipWidth - Math.floor(steps / 4) - 1;
@@ -267,13 +269,63 @@ function minStepDistance(steps: number, width: number) {
 export type GaussianPyramidDescriptor = {
     device: GPUDevice,
     texture: GPUTexture,
+
+    /**
+     *  If the pyramid should overwrite the existing mips
+     *  of the given texture
+     *
+     *  @defaultValue `false`
+     */
     inPlace?: boolean,
+
+    /**
+     *  The maximum width of the smallest mip level.
+     *
+     *  @defaultValue `8`
+     */
     minWidth?: number,
+
+    /**
+     *  The kernel extent distance, in pixels.
+     *
+     *  @defaultValue `4`
+     */
     steps?: number,
-    maxOpsPerPass?: number,
+
+    /**
+     *  A function to delay the processing of additional pixels,
+     *  e.g. `requestAnimationFrame`. Spaces work to allow additional
+     *  rendering and interactivity during heavy blurring workloads.
+     *
+     *  If undefined, all pixels are processed at once.
+     */
     delayWork?: (fn: () => Promise<void> | void) => void,
+
+    /**
+     *  The maximum number of pixels to process within a batch.
+     *  Unused if `delayWork` is undefined.
+     *
+     *  @defaultValue 6 * ((17 * 256) ** 2)
+     *
+     *  Allowing cubemap 256 pixels in width with `steps = 8` to run
+     *  in a single pass. This is a conservatively low default for
+     *  compatibility with lower-end hardware.
+     */
+    maxOpsPerPass?: number,
+
+    /**
+     *  A prefix string for error message thrown from the function
+     *
+     *  @defaultValue `cubemapGuassianPyramid --`
+     */
+    printPrefix?: string,
+
+    /**
+     *  The label to pass the output GPUTexture.
+     *
+     *  Unused if `inPlace == true`
+     */
     outputTextureLabel?: string,
-    labelTag?: string,
 };
 
 export default async function cubemapGuassianPyramid({
@@ -283,9 +335,9 @@ export default async function cubemapGuassianPyramid({
     inPlace = false,
     minWidth = 8,
     steps = 4,
-    maxOpsPerPass = 6 * ((32 * 256) ** 2),
-    delayWork = (fn) => { void fn(); },
-    labelTag = `${cubemapGuassianPyramid.name} --`,
+    maxOpsPerPass = 6 * ((17 * 256) ** 2),
+    printPrefix: labelTag = `${cubemapGuassianPyramid.name} --`,
+    delayWork,
 }: GaussianPyramidDescriptor) {
     const { width, format } = texture;
     const mipLevelCount = inPlace
@@ -465,7 +517,7 @@ export default async function cubemapGuassianPyramid({
             batchDispatches += passDispatches;
             mipPasses += 1;
 
-            if (batchDispatches >= maxDispatches) {
+            if (delayWork != null && batchDispatches >= maxDispatches) {
                 batchDispatches = 0;
                 await device.queue.onSubmittedWorkDone();
                 delayWork(runPass);
