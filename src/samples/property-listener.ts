@@ -1,6 +1,6 @@
 import { UnknownObject, mapValues } from '../utils/general';
 
-// Unique symbols to avoid naming colisions with underlying types
+// Unique symbols to avoid naming collisions with underlying types
 const $type = Symbol('PropertyListener -- Type');
 const $callback = Symbol('PropertyListener -- Callback');
 const $listeners = Symbol('PropertyListener -- Listeners');

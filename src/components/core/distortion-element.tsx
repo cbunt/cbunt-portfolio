@@ -9,15 +9,15 @@ export type DistortionFilterProps = {
     border?: boolean,
 };
 
-export type DistrotionMode = 'none' | 'static' | 'animated' | 'loop';
+export type DistortionMode = 'none' | 'static' | 'animated' | 'loop';
 
 export type DistortionModeProps =
-    DistrotionMode
+    DistortionMode
     | (DistortionFilterProps & { mode: 'loop' })
-    | (DistortionFilterProps & { mode: DistrotionMode });
+    | (DistortionFilterProps & { mode: DistortionMode });
 
-export const DistortedBorder = styled.div<{ $filterid: string }>`
-    filter: url(#${({ $filterid }) => $filterid});
+export const DistortedBorder = styled.div<{ $filterId: string }>`
+    filter: url(#${({ $filterId }) => $filterId});
 
     box-sizing: border-box;
     pointer-events: none;
@@ -42,8 +42,8 @@ export type DistortionElementProps<E extends ElementType> = PolymorphicProps<E, 
     baseSeed?: number,
     minRefresh?: number,
     animationInterval?: number,
-    overrideMode?: DistrotionMode,
-    baseMode?: DistrotionMode,
+    overrideMode?: DistortionMode,
+    baseMode?: DistortionMode,
     whileHover?: DistortionModeProps,
     whileActive?: DistortionModeProps,
     whileFocus?: DistortionModeProps,
@@ -53,8 +53,8 @@ export type DistortionElementProps<E extends ElementType> = PolymorphicProps<E, 
 
 export function getDistortionSeed() { return Math.random() * (2 ** 16 - 1) | 0; }
 
-const DistortionWrapper = styled.div<{ $showfilter: boolean, $svgid: string }>`
-    ${({ $showfilter: showfilter, $svgid: svgid }) => (showfilter ? `filter: url(#${svgid});` : '')}
+const DistortionWrapper = styled.div<{ $showFilter: boolean, $svgId: string }>`
+    ${({ $showFilter, $svgId }) => ($showFilter ? `filter: url(#${$svgId});` : '')}
 `;
 
 export default function DistortionElement<E extends ElementType>({
@@ -179,12 +179,12 @@ export default function DistortionElement<E extends ElementType>({
             onMouseLeave={stateCallback(false, 'hover', whileHover, onMouseLeave)}
             onMouseDown={stateCallback(true, 'active', whileActive, onMouseDown)}
             onMouseUp={stateCallback(false, 'active', whileActive, onMouseUp)}
-            $showfilter={filter}
-            $svgid={filterId}
+            $showFilter={filter}
+            $svgId={filterId}
             {...rest}
         >
             {children}
-            {filterProps.border ? <DistortedBorder $filterid={filterId} /> : undefined}
+            {filterProps.border ? <DistortedBorder $filterId={filterId} /> : undefined}
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="0" height="0" style={{ position: 'absolute' }}>
                 <defs>
                     <filter id={filterId}>

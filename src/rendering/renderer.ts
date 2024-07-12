@@ -72,7 +72,7 @@ export default class Renderer {
         this.#createResizeObserver(device.limits.maxTextureDimension2D);
     }
 
-    static async CreateInitalized(canvas: HTMLCanvasElement): Promise<Renderer> {
+    static async CreateInitialized(canvas: HTMLCanvasElement): Promise<Renderer> {
         const adapter = await navigator.gpu.requestAdapter();
         if (adapter == null) {
             throw new Error('Could not initalize GPU.');

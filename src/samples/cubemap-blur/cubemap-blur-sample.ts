@@ -51,7 +51,7 @@ export default class CubemapBlurModel implements FullRenderModel {
             min: 0,
             max: 1,
             step: 0.1,
-            description: 'The mip level to display in the viewer. 0 is the orignal image, max is completely blurred with 1 pixel faces.',
+            description: 'The mip level to display in the viewer. 0 is the original image, max is completely blurred with 1 pixel faces.',
         },
         filterDistance: {
             [ListenerSyms.$type]: 'slider' as const,
@@ -183,7 +183,7 @@ export default class CubemapBlurModel implements FullRenderModel {
                 textureToKTX(this.device, this.skybox, true),
                 showSaveFilePicker({
                     types: [{ accept: { 'image/ktx2': ['.ktx2'] } }],
-                    suggestedName: 'blured-skybox.ktx2',
+                    suggestedName: 'blurred-skybox.ktx2',
                 }).then((handle) => handle.createWritable({ keepExistingData: false })),
             ]);
 

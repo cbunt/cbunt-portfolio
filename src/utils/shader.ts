@@ -23,7 +23,7 @@ class PreprocessorStatement {
     get [Symbol.toStringTag]() { return this.toString(); }
 }
 
-export function preprocessers(flags: number) {
+export function preprocessors(flags: number) {
     return {
         ifdef(sym: number, branch: Branch) {
             return new PreprocessorStatement((flags & sym) === sym, branch);
@@ -35,6 +35,5 @@ export function preprocessers(flags: number) {
 }
 
 export function wrapWithIncrement<T>(fn: (counter: number) => T, start = 0): () => T {
-    // eslint-disable-next-line no-plusplus, no-param-reassign
     return () => fn(start++);
 }

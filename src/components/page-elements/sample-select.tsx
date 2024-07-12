@@ -55,7 +55,7 @@ const LinkContainer = styled(Collapse)`
     }
 `;
 
-const Seperator = styled.div`
+const Separator = styled.div`
     &:not(:last-of-type)::after {
         display: block;
         content: '|';
@@ -97,7 +97,7 @@ export default function SampleSelect({
                         : (
                             <>
                                 <a href={`/samples/${SAMPLES__[i]}`}>{sample}</a>
-                                <Seperator />
+                                <Separator />
                             </>
                             ))}
                 </div>

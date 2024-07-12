@@ -103,14 +103,14 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
         document.addEventListener('pointerlockchange', handleLockChange, false);
 
         if (rendererRef.current == null) {
-            // dyanmically imported to avoid loading in on unsupported browsers
+            // dynamically imported to avoid loading in on unsupported browsers
             void Promise.all([
                 import('../../rendering/renderer'),
                 getModelConstructor(),
-            ]).then(async ([{ default: { CreateInitalized } }, modelCtor]) => {
-                if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitalized');
+            ]).then(async ([{ default: { CreateInitialized } }, modelCtor]) => {
+                if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
 
-                rendererRef.current = await CreateInitalized(canvasRef.current);
+                rendererRef.current = await CreateInitialized(canvasRef.current);
                 controllerRef.current = new CameraController(rendererRef.current.camera);
 
                 const model = rendererRef.current.setModel(modelCtor) as FullRenderModel;

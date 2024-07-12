@@ -24,7 +24,7 @@ const cubemapSampling: string = /* wgsl */`
         );
 
         // a flattened matrix in the same form as dfaces
-        // giving the index of the damts array containing 
+        // giving the index of the dmat array containing 
         // the transformation from the starting face to 
         // the destination face
         const dindices = array(
@@ -179,7 +179,7 @@ const createMipBlurCode = (
     @group(0) @binding(1) 
     var outputTexture: texture_storage_2d_array<${format}, write>;
 
-    // simga[0] reserved for work offset
+    // sigma[0] reserved for work offset
     @group(0) @binding(2) var<storage> sigmas : array<f32>;
     
     @compute @workgroup_size(${groups}, 1, 1)
