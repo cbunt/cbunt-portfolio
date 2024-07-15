@@ -1,5 +1,5 @@
 import { ReactNode, StrictMode } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, css } from 'styled-components';
 
 import DistortionElement from '../core/distortion-element';
 import DistortionLink from '../core/link';
@@ -182,12 +182,14 @@ const MainWrapper = styled.div`
     min-height: calc(100vh - 4rem);
 `;
 
-const ContentFooterDivide = styled.div`
-    max-width: min(calc(80vh * 1.66), 100%);
+const ContentFooterDivide = styled.div<{ $extendWidth?: boolean }>`
+    ${({ $extendWidth }) => $extendWidth
+        ? css`width: min(calc(80vh * 1.66), 100%);`
+        : css`max-width: min(calc(80vh * 1.66), 100%);`}
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100%;
 `;
 
 const IconLink = styled(DistortionLink)`
@@ -199,9 +201,10 @@ const IconLink = styled(DistortionLink)`
 
 export type SitePageProps = {
     children: ReactNode,
+    extendMainWidth?: boolean,
 };
 
-export default function SitePage({ children }: SitePageProps): JSX.Element {
+export default function SitePage({ children, extendMainWidth }: SitePageProps): JSX.Element {
     return (
         <StrictMode>
             <GlobalStyle />
@@ -263,7 +266,7 @@ export default function SitePage({ children }: SitePageProps): JSX.Element {
                 </div>
             </nav>
             <MainWrapper>
-                <ContentFooterDivide>
+                <ContentFooterDivide $extendWidth={extendMainWidth}>
                     <main>{children}</main>
                     <footer>MIT © 2024</footer>
                 </ContentFooterDivide>

@@ -7,14 +7,18 @@ const UnsupportedWarning = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 1.66 / 1;
     width: 100%;
+    height: 100%;
     font-weight: 500;
     line-height: 1.5;
     background-color: var(--secondary-color);
+
+    > p { 
+        margin: 1rem;
+    }
 `;
 
-const Wrapper = styled(DistortionElement).attrs({
+export const CheckWrapper = styled(DistortionElement).attrs({
     border: true,
     baseMode: 'none',
     scale: 5,
@@ -22,8 +26,10 @@ const Wrapper = styled(DistortionElement).attrs({
     --border-width: 10px;
     --border-color: var(--background-color);
 
+    aspect-ratio: 1.66 / 1;
     position: relative;
     border: 0px solid #0000;
+    width: 100%;
 `;
 
 export type SupportCheckProps = {
@@ -32,7 +38,7 @@ export type SupportCheckProps = {
 
 export default function SupportCheck({ getModelConstructor }: SupportCheckProps) {
     return (
-        <Wrapper>
+        <CheckWrapper>
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {navigator.gpu?.requestAdapter == null
                 ? (
@@ -51,6 +57,6 @@ export default function SupportCheck({ getModelConstructor }: SupportCheckProps)
                     </UnsupportedWarning>
                     )
                 : <Viewport getModelConstructor={getModelConstructor} />}
-        </Wrapper>
+        </CheckWrapper>
     );
 }

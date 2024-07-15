@@ -36,7 +36,7 @@ export type SampleWrapperProps = {
     getModelConstructor?: LoadModelConstructor,
     modelName: string,
     sourceText?: string,
-    children: ReactNode,
+    children?: ReactNode,
 };
 
 export default function SampleWrapper({
@@ -46,7 +46,7 @@ export default function SampleWrapper({
     children,
 }: SampleWrapperProps) {
     return (
-        <SitePage>
+        <SitePage extendMainWidth>
             <SampleSelect selected={modelName} />
             {getModelConstructor != null ? <SupportCheck getModelConstructor={getModelConstructor} /> : undefined}
             {children}

@@ -3,10 +3,11 @@ import ForwardUniforms from './forward-uniforms';
 import TonemapPass from './tonemap-pass';
 import SkyboxPass from './skybox-pass';
 import { RenderModel, ModelConstructor } from './render-model';
+import { debounce } from '../utils/general';
 
 export default class Renderer {
     static readonly requiredFeatures: GPUFeatureName[] = ['float32-filterable'];
-    static readonly outputFormat: GPUTextureFormat = 'rgba8unorm';
+    static readonly outputFormat: GPUTextureFormat = navigator.gpu.getPreferredCanvasFormat();
     static readonly postProcessFormat: GPUTextureFormat = 'rgba32float';
 
     colorAttachment: GPURenderPassColorAttachment = {
@@ -55,7 +56,7 @@ export default class Renderer {
         );
 
         const context = this.canvas.getContext('webgpu');
-        if (context == null) throw new Error('renderer -- given canvas already initalized to non-webgpu context');
+        if (context == null) throw new Error('renderer -- given canvas already initialized to non-webgpu context');
 
         this.context = context as unknown as GPUCanvasContext;
 
@@ -68,14 +69,13 @@ export default class Renderer {
         });
 
         this.updateBackings(size);
-
-        this.#createResizeObserver(device.limits.maxTextureDimension2D);
+        this.#createResizeObserver();
     }
 
     static async CreateInitialized(canvas: HTMLCanvasElement): Promise<Renderer> {
         const adapter = await navigator.gpu.requestAdapter();
         if (adapter == null) {
-            throw new Error('Could not initalize GPU.');
+            throw new Error('Could not initialize GPU.');
         }
 
         const {
@@ -115,30 +115,27 @@ export default class Renderer {
         if (this.model != null) this.skyboxPass.depthTexture = this.model.depthTextureView;
     }
 
-    #createResizeObserver(maxDimension: number) {
-        const resizeCanvas = (rawWidth: number, rawHeight: number) => {
-            const width = Math.max(1, Math.min(rawWidth, maxDimension));
-            const height = Math.max(1, Math.min(rawHeight, maxDimension));
+    #createResizeObserver() {
+        const resizeCanvas = debounce((rawWidth: number, rawHeight: number) => {
+            const width = Math.max(1, Math.min(rawWidth | 0, this.device.limits.maxTextureDimension2D));
+            const height = Math.max(1, Math.min(rawHeight | 0, this.device.limits.maxTextureDimension2D));
             const dimensions = { width, height };
             this.canvas.width = width;
             this.canvas.height = height;
             this.updateBackings(dimensions);
-        };
+        }, 20);
 
         try {
             const observer = new ResizeObserver((entries) => {
-                const entry = entries[entries.length - 1];
-                const size = entry.devicePixelContentBoxSize[0];
-                resizeCanvas(size.inlineSize, size.blockSize);
+                const [{ inlineSize, blockSize }] = entries[entries.length - 1].devicePixelContentBoxSize;
+                resizeCanvas(inlineSize, blockSize);
             });
             observer.observe(this.canvas, { box: 'device-pixel-content-box' });
         } catch {
             // Safari doesn't support device-pixel-content-box, so it would fail into this.
             const observer = new ResizeObserver((entries) => {
-                const entry = entries[entries.length - 1];
-                const width = entry.contentBoxSize[0].inlineSize * devicePixelRatio;
-                const height = entry.contentBoxSize[0].blockSize * devicePixelRatio;
-                resizeCanvas(width, height);
+                const [{ inlineSize, blockSize }] = entries[entries.length - 1].contentBoxSize;
+                resizeCanvas(inlineSize * devicePixelRatio, blockSize * devicePixelRatio);
             });
             observer.observe(this.canvas, { box: 'content-box' });
         }

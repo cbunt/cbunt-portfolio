@@ -10,12 +10,14 @@ import FullscreenButton from './fullscreen-button';
 
 const ViewportStyle = styled.div`
     position: relative;
-    aspect-ratio: 1.66 / 1;
+    width: 100%;
+    height: 100%;
 
     canvas {
         width: 100%;
         height: 100%;
         cursor: grab;
+        display: block;
     }
 `;
 

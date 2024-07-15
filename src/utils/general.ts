@@ -47,3 +47,12 @@ export function range(n: number) {
 export function mapRange<T>(n: number, fn: (i: number) => T) {
     return range(n).map(fn);
 }
+
+export function debounce<Args extends Array<unknown>>(callback: (...args: Args) => unknown, delay: number) {
+    let tid: ReturnType<typeof setTimeout> | undefined;
+    return function (...args: Args) {
+        const ctx = self;
+        if (tid != null) clearTimeout(tid);
+        tid = setTimeout(() => { callback.apply(ctx, args); }, delay);
+    };
+};
