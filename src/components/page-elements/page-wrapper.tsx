@@ -112,12 +112,12 @@ const GlobalStyle = createGlobalStyle`
         font-weight: 200;
     }
 
-    a:link {
+    a {
         color: light-dark(var(--accent-3), var(--accent-1));
-    }
-
-    a:visited {
-        color: var(--accent-2);
+       
+        &:visited {
+            color: var(--accent-2);
+        }
     }
 
     nav {
@@ -149,16 +149,25 @@ const GlobalStyle = createGlobalStyle`
             font-stretch: 125%;
         }
 
-        a:nth-of-type(3n+1) {  
-            color: var(--accent-1);
+        a:nth-of-type(3n+1) {
+            &:link,
+            &:visited {
+                color: var(--accent-1);
+            }  
         }
 
         a:nth-of-type(3n+2) {  
-            color: var(--accent-2);
+            &:link,
+            &:visited {
+                color: var(--accent-2);
+            }  
         }
         
         a:nth-of-type(3n+3) {  
-            color: var(--accent-3);
+            &:link,
+            &:visited {
+                color: var(--accent-3);
+            }  
         }
     }
 
