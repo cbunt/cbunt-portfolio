@@ -1,5 +1,7 @@
 import blit from '../shaders/blit-vert.shader';
 
+const label = 'tonemap pass';
+
 export default class TonemapPass {
     static readonly code = /* wgsl */`
         @group(0) @binding(0) var colorTexture: texture_2d<f32>;
@@ -41,7 +43,7 @@ export default class TonemapPass {
     `;
 
     static readonly bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor = {
-        label: 'tonemap bindgroup layout',
+        label,
         entries: [{
             binding: 0,
             texture: { sampleType: 'float', viewDimension: '2d' },
@@ -57,7 +59,7 @@ export default class TonemapPass {
     };
 
     passDescriptor: GPURenderPassDescriptor = {
-        label: 'tonepass -- pass encoder',
+        label,
         colorAttachments: [this.colorAttachment],
     };
 
@@ -74,12 +76,12 @@ export default class TonemapPass {
     ) {
         this.renderTarget = { format };
         this.bindgroupLayout = device.createBindGroupLayout(TonemapPass.bindGroupLayoutDescriptor);
-        const module = device.createShaderModule({ label: 'tonemap shader', code: TonemapPass.code });
+        const module = device.createShaderModule({ label, code: TonemapPass.code });
 
         this.pipelineDescriptor = {
-            label: 'tonemap pipeline',
+            label,
             layout: device.createPipelineLayout({
-                label: 'tone map pipeline layout',
+                label,
                 bindGroupLayouts: [this.bindgroupLayout],
             }),
             vertex: {
@@ -98,7 +100,7 @@ export default class TonemapPass {
 
     updateInput(input: GPUTextureView) {
         this.bindgroup = this.device.createBindGroup({
-            label: 'tonemap bindgroup',
+            label,
             layout: this.bindgroupLayout,
             entries: [{
                 binding: 0,

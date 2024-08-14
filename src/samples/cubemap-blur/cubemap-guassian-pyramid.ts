@@ -161,7 +161,7 @@ export type GaussianPyramidDescriptor = {
      *
      *  @defaultValue `cubemapGuassianPyramid --`
      */
-    printPrefix?: string,
+    label?: string,
 
     /**
      *  The label to pass the output GPUTexture.
@@ -179,7 +179,7 @@ export default async function cubemapGuassianPyramid({
     minWidth = 8,
     steps = 4,
     maxOpsPerPass = 6 * ((17 * 256) ** 2),
-    printPrefix: labelTag = `${cubemapGuassianPyramid.name} --`,
+    label = cubemapGuassianPyramid.name,
     delayWork,
 }: GaussianPyramidDescriptor) {
     const { width, format } = texture;
@@ -195,12 +195,12 @@ export default async function cubemapGuassianPyramid({
     );
     const maxWorkgroups = device.limits.maxComputeWorkgroupsPerDimension;
     const shader = device.createShaderModule({
-        label: `${labelTag} shader`,
+        label,
         code: createMipBlurCode(groups, format),
     });
 
     const bindgroupLayout = device.createBindGroupLayout({
-        label: `${labelTag} bindgroup layout`,
+        label,
         entries: [
             {
                 binding: 0,
@@ -225,9 +225,9 @@ export default async function cubemapGuassianPyramid({
     });
 
     const pipeline = device.createComputePipeline({
-        label: `${labelTag} pipeline`,
+        label,
         layout: device.createPipelineLayout({
-            label: `${labelTag} -- pipeline layout`,
+            label,
             bindGroupLayouts: [bindgroupLayout],
         }),
         compute: {
@@ -254,7 +254,7 @@ export default async function cubemapGuassianPyramid({
         });
 
         const copyEncoder = device.createCommandEncoder({
-            label: `${labelTag} copy encoder`,
+            label: `${label} copy encoder`,
         });
 
         copyEncoder.copyTextureToTexture(
@@ -268,7 +268,7 @@ export default async function cubemapGuassianPyramid({
     }
 
     const mipViews = mapRange(mipLevelCount, (i) => gaussianPyramid.createView({
-        label: `${labelTag} mip view ${i}`,
+        label: `${label} mip view ${i}`,
         dimension: '2d-array',
         baseMipLevel: i,
         mipLevelCount: 1,
@@ -342,11 +342,11 @@ export default async function cubemapGuassianPyramid({
             );
 
             const passEncoder = device.createCommandEncoder({
-                label: `${labelTag} mip ${mipLevel}, pass ${mipPasses} encoder`,
+                label: `${label} mip ${mipLevel}, pass ${mipPasses} encoder`,
             });
 
             const pass = passEncoder.beginComputePass({
-                label: `${labelTag} mip ${mipLevel}, pass ${mipPasses}`,
+                label: `${label} mip ${mipLevel}, pass ${mipPasses}`,
             });
 
             pass.setPipeline(pipeline);

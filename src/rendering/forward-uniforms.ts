@@ -1,5 +1,7 @@
 import Camera from './camera';
 
+const label = 'forward uniforms';
+
 export default class ForwardUniforms {
     static readonly code = (group: number) => /* wgsl */`
         struct ForwardUniforms {
@@ -17,18 +19,18 @@ export default class ForwardUniforms {
     static readonly bufferSize = Camera.bufferLength;
 
     static readonly layoutDescriptor: GPUBindGroupLayoutDescriptor = {
-        label: 'Forward uniforms layout',
+        label,
         entries: [
             {
                 binding: 0,
                 buffer: { minBindingSize: ForwardUniforms.bufferSize },
-                visibility: GPUShaderStage.VERTEX,
+                visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
             },
         ],
     };
 
     static readonly bufferDescriptor: GPUBufferDescriptor = {
-        label: 'Forward uniforms buffer',
+        label,
         size: ForwardUniforms.bufferSize,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     };
@@ -43,7 +45,7 @@ export default class ForwardUniforms {
         this.bindGroupLayout = device.createBindGroupLayout(ForwardUniforms.layoutDescriptor);
 
         this.bindGroupDescriptor = {
-            label: 'forward pass uniforms bind group',
+            label,
             layout: this.bindGroupLayout,
             entries: [
                 {

@@ -1,6 +1,9 @@
 import ForwardUniforms from './forward-uniforms';
+import { SkyboxTarget } from './render-model';
 
-export default class SkyboxPass {
+const label = 'skybox pass';
+
+export default class SkyboxPass implements SkyboxTarget {
     static readonly code = /* wgsl */`
         ${ForwardUniforms.code(0)}
 
@@ -92,7 +95,7 @@ export default class SkyboxPass {
         this.#targetFormat = format;
 
         this.pipeline = this.device.createRenderPipeline({
-            label: 'skybox pass -- pipeline',
+            label,
             layout: this.pipelineLayout,
             vertex: {
                 entryPoint: 'vs',
@@ -135,7 +138,7 @@ export default class SkyboxPass {
         skybox?: GPUTextureView,
     ) {
         this.bindgroupLayout = device.createBindGroupLayout({
-            label: 'skybox pass -- bindgroup layout',
+            label,
             entries: [
                 {
                     binding: 0,
@@ -177,11 +180,11 @@ export default class SkyboxPass {
 
         this.shader = device.createShaderModule({
             code: SkyboxPass.code,
-            label: 'skybox pass -- shader',
+            label,
         });
 
         this.pipelineLayout = device.createPipelineLayout({
-            label: 'skybox pass -- pipeline layout',
+            label,
             bindGroupLayouts: [
                 cameraUniforms.bindGroupLayout,
                 this.bindgroupLayout,
@@ -189,7 +192,7 @@ export default class SkyboxPass {
         });
 
         this.uniformBuffer = device.createBuffer({
-            label: 'skybox pass -- uniform buffer',
+            label,
             size: 32,
             usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM,
         });
@@ -211,7 +214,7 @@ export default class SkyboxPass {
         if (this.#skyTexture == null || this.#depthTexture == null) return;
 
         this.textureBindgroup = this.device.createBindGroup({
-            label: 'skybox pass -- bindgroup',
+            label,
             layout: this.bindgroupLayout,
             entries: [
                 {
