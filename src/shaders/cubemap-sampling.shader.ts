@@ -1,5 +1,5 @@
 export const toWorldDir: string = /* wgsl */`
-    fn toWorldDir(uvf: vec3u, size: u32) -> vec3f {
+    fn toWorldDir(coord: vec3u, size: u32) -> vec3f {
         let uv = (2.0 / f32(size)) * (vec2f(coord.xy) + 0.5) - 1.0;
 
         var pos: vec3f;
