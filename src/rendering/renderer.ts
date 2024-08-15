@@ -4,6 +4,7 @@ import TonemapPass from './tonemap-pass';
 import SkyboxPass from './skybox-pass';
 import { binaryInsert, debounce } from '../utils/general';
 import GBuffer from './gbuffer';
+import DeferredPass from './deferred-pass';
 
 export type ForwardPassParams = {
     encoder: GPUCommandEncoder,
@@ -36,6 +37,7 @@ export default class Renderer {
     gbuffer: GBuffer;
 
     forwardPasses: ForwardPass[] = [];
+    deferredPass: DeferredPass;
     skyboxPass: SkyboxPass;
     tonemapPass: TonemapPass;
 
@@ -49,6 +51,7 @@ export default class Renderer {
         this.camera = new Camera(size);
         this.globals = new GlobalUniforms(this.device);
         this.gbuffer = new GBuffer(device, size);
+        this.deferredPass = new DeferredPass(device, this.globals, this.gbuffer, Renderer.postProcessFormat);
 
         this.skyboxPass = new SkyboxPass(
             this.device,
@@ -158,6 +161,7 @@ export default class Renderer {
         }
 
         const pass = encoder.beginRenderPass(this.passDescriptor);
+        this.deferredPass.render(pass);
         this.skyboxPass.render(pass);
         pass.end();
 
