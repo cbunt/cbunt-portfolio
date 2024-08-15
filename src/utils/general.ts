@@ -1,16 +1,5 @@
 export type UnknownObject = Record<PropertyKey, unknown>;
 
-type Equals<X, Y> =
-(<T> () => T extends X ? 1 : 2) extends
-(<T> () => T extends Y ? 1 : 2)
-    ? true
-    : false;
-
-type Not<T> = T extends true ? false : true;
-
-export type IsReadonly<O extends object, P extends keyof O> =
-    Not<Equals<{ [_ in P]: O[P] }, { -readonly [_ in P]: O[P] }>>;
-
 export function mapValues<Input, ObjectType extends Partial<Record<keyof ObjectType, Input>>, Output>(
     obj: ObjectType,
     fn: (val: Input) => Output,
