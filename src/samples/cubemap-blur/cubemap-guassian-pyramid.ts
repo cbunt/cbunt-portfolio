@@ -17,19 +17,24 @@ const createMipBlurCode = (
 
     override STEPS: i32 = 4;
 
+    struct Params {
+        offset: u32,
+        sigmas: array<f32>,
+    }
+
     @group(0) @binding(0) var previousMip: texture_2d_array<f32>;
 
     @group(0) @binding(1) 
     var outputTexture: texture_storage_2d_array<${format}, write>;
 
     // sigma[0] reserved for work offset
-    @group(0) @binding(2) var<storage> sigmas : array<f32>;
+    @group(0) @binding(2) var<storage> params: Params;
     
     @compute @workgroup_size(${groups}, 1, 1)
     fn main(@builtin(global_invocation_id) gid: vec3u) {
         let mipSize = textureDimensions(outputTexture).x;
 
-        let idx = gid.x + u32(sigmas[0]);
+        let idx = gid.x + params.offset;
         let faceSize = mipSize * mipSize;
         let faceIdx = idx % faceSize;
         let coord = vec3u(
@@ -46,9 +51,9 @@ const createMipBlurCode = (
         let baseCoord = vec3i(vec3u(coord.x * 2, coord.y * 2, coord.z));
         let pos = toWorldDir(vec3u(coord), mipSize);
 
-        let size = arrayLength(&sigmas);
+        let size = arrayLength(&params.sigmas);
         let level = size - u32(ceil(log2(f32(previousSize))));
-        let sigma = sigmas[level];
+        let sigma = params.sigmas[level];
         let guassian_factor = -0.5 / (sigma * sigma);
 
         var weight = 0.0;
@@ -193,7 +198,6 @@ export default async function cubemapGuassianPyramid({
         device.limits.maxComputeWorkgroupSizeX,
         device.limits.maxComputeInvocationsPerWorkgroup,
     );
-    const maxWorkgroups = device.limits.maxComputeWorkgroupsPerDimension;
     const shader = device.createShaderModule({
         label,
         code: createMipBlurCode(groups, format),
@@ -274,16 +278,21 @@ export default async function cubemapGuassianPyramid({
         mipLevelCount: 1,
     }));
 
+    const maxWorkgroups = device.limits.maxComputeWorkgroupsPerDimension;
+    const maxLayers = Math.ceil(Math.log2(width));
     const maxDispatches = Math.max(
         (maxOpsPerPass / (((1 + (steps * 2)) ** 2) * groups)) | 0,
         1,
     );
-    const maxLayers = Math.ceil(Math.log2(width));
 
-    const propertyArray = new Float32Array([0, ...mapRange(maxLayers, (i) => {
+    const propertyArray = new ArrayBuffer((maxLayers + 1) * 4);
+    const offset = new Uint32Array(propertyArray, 0, 1);
+    const simgas = new Float32Array(propertyArray, 4, maxLayers);
+
+    simgas.set(mapRange(maxLayers, (i) => {
         const w = width >> i;
         return Math.acos(1 - minStepDistance(Math.min(w, steps), w)) / 3;
-    })]);
+    }));
 
     const propertyBuffer = createAndCopyBuffer(
         propertyArray,
@@ -332,8 +341,8 @@ export default async function cubemapGuassianPyramid({
                 });
             }
 
-            propertyArray[0] = currentMipDispatches * groups;
-            device.queue.writeBuffer(propertyBuffer, 0, propertyArray, 0, 1);
+            offset[0] = currentMipDispatches * groups;
+            device.queue.writeBuffer(propertyBuffer, 0, offset);
 
             const passDispatches = Math.min(
                 requiredMipDispatches - currentMipDispatches,
@@ -341,20 +350,16 @@ export default async function cubemapGuassianPyramid({
                 maxWorkgroups,
             );
 
-            const passEncoder = device.createCommandEncoder({
-                label: `${label} mip ${mipLevel}, pass ${mipPasses} encoder`,
-            });
-
-            const pass = passEncoder.beginComputePass({
-                label: `${label} mip ${mipLevel}, pass ${mipPasses}`,
-            });
+            const passLabel = `${label} mip ${mipLevel}, pass ${mipPasses}`;
+            const encoder = device.createCommandEncoder({ label: passLabel });
+            const pass = encoder.beginComputePass({ label: passLabel });
 
             pass.setPipeline(pipeline);
             pass.setBindGroup(0, bindgroup);
             pass.dispatchWorkgroups(passDispatches, 1, 1);
             pass.end();
 
-            device.queue.submit([passEncoder.finish()]);
+            device.queue.submit([encoder.finish()]);
 
             currentMipDispatches += passDispatches;
             batchDispatches += passDispatches;
