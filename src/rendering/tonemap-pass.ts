@@ -109,7 +109,7 @@ export default class TonemapPass {
         });
     }
 
-    pass(encoder: GPUCommandEncoder, output: GPUTexture) {
+    render(encoder: GPUCommandEncoder, output: GPUTexture) {
         if (this.bindgroup == null) return;
 
         if (this.renderTarget.format !== output.format) {

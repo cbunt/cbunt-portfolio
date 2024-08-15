@@ -1,10 +1,10 @@
 import Camera from './camera';
 
-const label = 'forward uniforms';
+const label = 'global uniforms';
 
-export default class ForwardUniforms {
+export default class GlobalUniforms {
     static readonly code = (group: number) => /* wgsl */`
-        struct ForwardUniforms {
+        struct GlobalUniforms {
             worldToView: mat4x4f,
             viewToClip: mat4x4f,
             worldToClip: mat4x4f,
@@ -13,7 +13,7 @@ export default class ForwardUniforms {
             inverseWorldToClip: mat4x4f,
         }
 
-        @group(${group}) @binding(0) var<uniform> globals: ForwardUniforms;
+        @group(${group}) @binding(0) var<uniform> globals: GlobalUniforms;
     `;
 
     static readonly bufferSize = Camera.bufferLength;
@@ -23,7 +23,7 @@ export default class ForwardUniforms {
         entries: [
             {
                 binding: 0,
-                buffer: { minBindingSize: ForwardUniforms.bufferSize },
+                buffer: { minBindingSize: GlobalUniforms.bufferSize },
                 visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
             },
         ],
@@ -31,7 +31,7 @@ export default class ForwardUniforms {
 
     static readonly bufferDescriptor: GPUBufferDescriptor = {
         label,
-        size: ForwardUniforms.bufferSize,
+        size: GlobalUniforms.bufferSize,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     };
 
@@ -41,8 +41,8 @@ export default class ForwardUniforms {
     bindgroup!: GPUBindGroup;
 
     constructor(device: GPUDevice) {
-        this.deviceBuffer = device.createBuffer(ForwardUniforms.bufferDescriptor);
-        this.bindGroupLayout = device.createBindGroupLayout(ForwardUniforms.layoutDescriptor);
+        this.deviceBuffer = device.createBuffer(GlobalUniforms.bufferDescriptor);
+        this.bindGroupLayout = device.createBindGroupLayout(GlobalUniforms.layoutDescriptor);
 
         this.bindGroupDescriptor = {
             label,
@@ -53,7 +53,7 @@ export default class ForwardUniforms {
                     resource: {
                         buffer: this.deviceBuffer,
                         offset: 0,
-                        size: ForwardUniforms.bufferSize,
+                        size: GlobalUniforms.bufferSize,
                     },
                 },
             ],

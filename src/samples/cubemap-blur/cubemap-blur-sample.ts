@@ -4,31 +4,17 @@ import shoreline from 'public/environment-maps/shoreline.ktx2';
 import papermill from 'public/environment-maps/papermill.ktx2';
 import market from 'public/environment-maps/leland-market.ktx2';
 
-import { FullRenderModel } from '../sample-spec';
 import propertyListener, { ListenerSyms } from '../property-listener';
-import type { ViewInfo, SkyboxTarget } from '../../rendering/render-model';
 import { copyKTX, textureToKTX } from '../../utils/data-copy';
 import cubemapGuassianPyramid from './cubemap-guassian-pyramid';
 import { mapValues } from '../../utils/general';
+import Renderer, { ForwardPassParams } from '../../rendering/renderer';
 
 enum BlurState { IDLE, BLUR, WAIT }
 
-export default class CubemapBlurModel implements FullRenderModel {
+export default class CubemapBlurModel {
     static title = '';
     static description = '';
-
-    colorAttachment: GPURenderPassColorAttachment = {
-        clearValue: { r: 0, g: 0, b: 0, a: 1 },
-        loadOp: 'clear',
-        storeOp: 'store',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        view: undefined!,
-    };
-
-    passDescriptor: GPURenderPassDescriptor = { colorAttachments: [this.colorAttachment] };
-
-    depthTexture: GPUTexture;
-    depthTextureView: GPUTextureView;
 
     skybox?: GPUTexture;
     state: BlurState = BlurState.IDLE;
@@ -37,15 +23,15 @@ export default class CubemapBlurModel implements FullRenderModel {
         nearestSample: {
             [ListenerSyms.$type]: 'checkbox' as const,
             [ListenerSyms.$callback]: (val: unknown) => {
-                if (typeof val === 'boolean') this.skyboxTarget.useNearestSample = val;
+                if (typeof val === 'boolean') this.renderer.skyboxPass.useNearestSample = val;
             },
-            value: this.skyboxTarget.useNearestSample,
+            value: false,
             description: 'Disables linear sampling in the viewer.',
         },
         mipLevel: {
             [ListenerSyms.$type]: 'slider' as const,
             [ListenerSyms.$callback]: (value: unknown) => {
-                if (typeof value === 'number') this.skyboxTarget.mipLevel = value;
+                if (typeof value === 'number') this.renderer.skyboxPass.mipLevel = value;
             },
             value: 0,
             min: 0,
@@ -84,47 +70,14 @@ export default class CubemapBlurModel implements FullRenderModel {
     });
 
     readonly settings = this.#settings.publicSettings;
+    readonly priority = 0;
 
-    constructor(
-        private readonly device: GPUDevice,
-        private readonly skyboxTarget: SkyboxTarget,
-        target: ViewInfo,
-    ) {
-        this.depthTexture = device.createTexture({
-            dimension: '2d',
-            format: 'depth32float',
-            size: { width: 1, height: 1 },
-            usage: GPUTextureUsage.RENDER_ATTACHMENT
-            | GPUTextureUsage.TEXTURE_BINDING,
-        });
-
-        this.depthTextureView = this.depthTexture.createView();
-        this.colorAttachment.view = target.view;
-
-        const encoder = device.createCommandEncoder({ label: 'cubemap blur dummy depth encoder' });
-        const pass = encoder.beginRenderPass({
-            colorAttachments: [],
-            depthStencilAttachment: {
-                depthClearValue: 1,
-                depthLoadOp: 'clear',
-                depthStoreOp: 'store',
-                view: this.depthTextureView,
-            },
-        });
-        pass.end();
-        this.device.queue.submit([encoder.finish()]);
-    }
-
-    render(encoder: GPUCommandEncoder) {
-        return encoder.beginRenderPass(this.passDescriptor);
-    }
-
-    setTarget(view: ViewInfo) {
-        this.colorAttachment.view = view.view;
+    constructor(public renderer: Renderer) {
+        renderer.addForwardPass(this);
     }
 
     processSkybox(file: string | URL | File | ArrayBuffer) {
-        return copyKTX(file, this.device, {
+        return copyKTX(file, this.renderer.device, {
             mipLevelCount: 'max',
             textureUsage: GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.COPY_SRC,
             validate: true,
@@ -138,7 +91,7 @@ export default class CubemapBlurModel implements FullRenderModel {
 
         this.#settings.privateSettings.mipLevel.max = this.skybox.mipLevelCount - 1;
         this.#settings.privateSettings.mipLevel.value = 1;
-        this.skyboxTarget.mipLevel = 1;
+        this.renderer.skyboxPass.mipLevel = 1;
 
         void this.reblur();
     }
@@ -161,10 +114,10 @@ export default class CubemapBlurModel implements FullRenderModel {
         this.state = BlurState.BLUR;
 
         await cubemapGuassianPyramid({
-            device: this.device,
+            device: this.renderer.device,
             texture: this.skybox,
-            inPlace: true,
             steps: this.settings.filterDistance.value,
+            inPlace: true,
             delayWork: requestAnimationFrame,
         });
 
@@ -173,14 +126,14 @@ export default class CubemapBlurModel implements FullRenderModel {
 
     refresh() {
         if (this.skybox == null) return;
-        this.skyboxTarget.skyTexture = this.skybox.createView({ dimension: 'cube' });
+        this.renderer.skyboxPass.skyTexture = this.skybox.createView({ dimension: 'cube' });
     }
 
     async saveFile() {
         if (this.skybox == null) return;
         try {
             const proms = Promise.all([
-                textureToKTX(this.device, this.skybox, true),
+                textureToKTX(this.renderer.device, this.skybox, true),
                 showSaveFilePicker({
                     types: [{ accept: { 'image/ktx2': ['.ktx2'] } }],
                     suggestedName: 'blurred-skybox.ktx2',
@@ -192,5 +145,18 @@ export default class CubemapBlurModel implements FullRenderModel {
         } catch (e) {
             console.warn(e);
         }
+    }
+
+    render({ encoder, gbuffer }: ForwardPassParams) {
+        encoder.beginRenderPass({
+            colorAttachments: [],
+            depthStencilAttachment: {
+                depthClearValue: 1,
+                depthLoadOp: 'clear',
+                depthStoreOp: 'store',
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                view: gbuffer.depth.view!,
+            },
+        }).end();
     }
 }

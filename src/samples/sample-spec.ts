@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import type { GuiSetting } from './property-listener';
-import type { ModelConstructor, RenderModel } from '../rendering/render-model';
 import type { CheckboxProps, FileUploadProps, SliderProps } from '../components/core';
+import Renderer from '../rendering/renderer';
 
 type SettingWrapper<BaseType> = Omit<BaseType, 'label' | 'callbacks' | 'onChange'>;
 
@@ -21,7 +21,9 @@ export type FullSettings = {
     publicSettings: Record<string, ModelSetting>,
 };
 
-export type FullRenderModel = RenderModel & { settings: Record<string, ModelSetting> };
+export type ModelConstructor = new(renderer: Renderer) => unknown;
+
+export type FullRenderModel = { settings: Record<string, ModelSetting> };
 
 export type FullModelConstructor =
     new(...args: ConstructorParameters<ModelConstructor>) => FullRenderModel;

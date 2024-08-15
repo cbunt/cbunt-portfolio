@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import type Renderer from '../../rendering/renderer';
-import type { FullRenderModel, LoadModelConstructor, ModelSetting } from '../../samples/sample-spec';
+import type { LoadModelConstructor, ModelSetting } from '../../samples/sample-spec';
 
 import { CameraController, Directions } from '../../rendering/camera-controller';
 import ModelSettingsWidget from './model-settings-gui';
@@ -114,8 +114,8 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
 
                 rendererRef.current = await CreateInitialized(canvasRef.current);
                 controllerRef.current = new CameraController(rendererRef.current.camera);
+                const model = new modelCtor(rendererRef.current);
 
-                const model = rendererRef.current.setModel(modelCtor) as FullRenderModel;
                 setSettings(model.settings);
                 requestAnimationFrame(rendererRef.current.render);
             });

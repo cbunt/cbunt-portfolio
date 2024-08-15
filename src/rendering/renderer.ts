@@ -1,9 +1,20 @@
 import Camera from './camera';
-import ForwardUniforms from './forward-uniforms';
+import GlobalUniforms from './global-uniforms';
 import TonemapPass from './tonemap-pass';
 import SkyboxPass from './skybox-pass';
-import { RenderModel, ModelConstructor } from './render-model';
-import { debounce } from '../utils/general';
+import { binaryInsert, debounce } from '../utils/general';
+import GBuffer from './gbuffer';
+
+export type ForwardPassParams = {
+    encoder: GPUCommandEncoder,
+    globals: GlobalUniforms,
+    gbuffer: GBuffer,
+};
+
+export type ForwardPass = {
+    render: (params: ForwardPassParams) => void,
+    priority: number,
+};
 
 export default class Renderer {
     static readonly requiredFeatures: GPUFeatureName[] = ['float32-filterable'];
@@ -14,46 +25,37 @@ export default class Renderer {
         clearValue: { r: 0, g: 0, b: 0, a: 1 },
         loadOp: 'clear',
         storeOp: 'store',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        view: undefined!,
+        view: undefined!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     };
 
     passDescriptor: GPURenderPassDescriptor = { colorAttachments: [this.colorAttachment] };
 
     context: GPUCanvasContext;
-    model?: RenderModel;
-
     camera: Camera;
+    globals: GlobalUniforms;
+    gbuffer: GBuffer;
 
-    forwardUniforms: ForwardUniforms;
+    forwardPasses: ForwardPass[] = [];
     skyboxPass: SkyboxPass;
     tonemapPass: TonemapPass;
 
     postprocessTarget!: GPUTexture;
 
-    setModel(ModelCtor: ModelConstructor) {
-        this.model = new ModelCtor(this.device, this.skyboxPass, {
-            view: this.colorAttachment.view,
-            format: Renderer.postProcessFormat,
-            size: { width: this.canvas.width, height: this.canvas.height },
-        });
-        return this.model;
-    }
-
     constructor(
-        public canvas: HTMLCanvasElement,
-        public device: GPUDevice,
+        public readonly canvas: HTMLCanvasElement,
+        public readonly device: GPUDevice,
     ) {
         const size = { width: this.canvas.width, height: this.canvas.height };
         this.camera = new Camera(size);
-        this.forwardUniforms = new ForwardUniforms(this.device);
-        this.tonemapPass = new TonemapPass(this.device, Renderer.outputFormat);
+        this.globals = new GlobalUniforms(this.device);
+        this.gbuffer = new GBuffer(device, size);
 
         this.skyboxPass = new SkyboxPass(
             this.device,
-            this.forwardUniforms,
+            this.globals,
             Renderer.postProcessFormat,
         );
+        this.tonemapPass = new TonemapPass(this.device, Renderer.outputFormat);
 
         const context = this.canvas.getContext('webgpu');
         if (context == null) throw new Error('renderer -- given canvas already initialized to non-webgpu context');
@@ -83,6 +85,7 @@ export default class Renderer {
             maxComputeWorkgroupsPerDimension,
             maxComputeInvocationsPerWorkgroup,
         } = adapter.limits;
+
         const device = await adapter.requestDevice({
             label: 'main logical device',
             requiredFeatures: Renderer.requiredFeatures,
@@ -107,12 +110,9 @@ export default class Renderer {
 
         this.colorAttachment.view = this.postprocessTarget.createView();
         this.tonemapPass.updateInput(this.colorAttachment.view);
-        this.model?.setTarget({
-            view: this.colorAttachment.view,
-            format: Renderer.postProcessFormat,
-            size,
-        });
-        if (this.model != null) this.skyboxPass.depthTexture = this.model.depthTextureView;
+        this.gbuffer.resize(size);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.skyboxPass.depthTexture = this.gbuffer.depth.view!;
     }
 
     #createResizeObserver() {
@@ -141,17 +141,27 @@ export default class Renderer {
         }
     }
 
+    addForwardPass(forwardPass: ForwardPass) {
+        binaryInsert(this.forwardPasses, forwardPass, (a, b) => a.priority - b.priority);
+    }
+
     render = () => {
         requestAnimationFrame(this.render);
 
-        this.forwardUniforms.updateDeviceBuffer(this.device.queue, this.camera);
+        this.globals.updateDeviceBuffer(this.device.queue, this.camera);
 
         const encoder = this.device.createCommandEncoder({ label: 'main render encoder' });
-        const pass = this.model?.render(encoder) ?? encoder.beginRenderPass(this.passDescriptor);
-        this.skyboxPass.pass(pass);
+        const forwardPassParams = { encoder, globals: this.globals, gbuffer: this.gbuffer };
+
+        for (const forwardPass of this.forwardPasses) {
+            forwardPass.render(forwardPassParams);
+        }
+
+        const pass = encoder.beginRenderPass(this.passDescriptor);
+        this.skyboxPass.render(pass);
         pass.end();
 
-        this.tonemapPass.pass(encoder, this.context.getCurrentTexture());
+        this.tonemapPass.render(encoder, this.context.getCurrentTexture());
 
         this.device.queue.submit([encoder.finish()]);
     };

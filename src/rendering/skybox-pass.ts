@@ -1,11 +1,11 @@
-import ForwardUniforms from './forward-uniforms';
+import GlobalUniforms from './global-uniforms';
 import { SkyboxTarget } from './render-model';
 
 const label = 'skybox pass';
 
 export default class SkyboxPass implements SkyboxTarget {
     static readonly code = /* wgsl */`
-        ${ForwardUniforms.code(0)}
+        ${GlobalUniforms.code(0)}
 
         struct SkyboxUniforms {
             mipBias: f32,
@@ -133,7 +133,7 @@ export default class SkyboxPass implements SkyboxTarget {
 
     constructor(
         public device: GPUDevice,
-        public cameraUniforms: ForwardUniforms,
+        public globals: GlobalUniforms,
         targetFormat: GPUTextureFormat,
         skybox?: GPUTextureView,
     ) {
@@ -186,7 +186,7 @@ export default class SkyboxPass implements SkyboxTarget {
         this.pipelineLayout = device.createPipelineLayout({
             label,
             bindGroupLayouts: [
-                cameraUniforms.bindGroupLayout,
+                globals.bindGroupLayout,
                 this.bindgroupLayout,
             ],
         });
@@ -201,10 +201,10 @@ export default class SkyboxPass implements SkyboxTarget {
         if (skybox != null) this.skyTexture = skybox;
     }
 
-    pass(pass: GPURenderPassEncoder) {
+    render(pass: GPURenderPassEncoder) {
         if (this.textureBindgroup == null || this.pipeline == null) return false;
         pass.setPipeline(this.pipeline);
-        pass.setBindGroup(0, this.cameraUniforms.bindgroup);
+        pass.setBindGroup(0, this.globals.bindgroup);
         pass.setBindGroup(1, this.textureBindgroup);
         pass.draw(3);
         return true;
