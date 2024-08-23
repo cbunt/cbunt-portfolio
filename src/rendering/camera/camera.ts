@@ -1,5 +1,5 @@
 import { Vec3, Mat4, mat4, Quat } from 'wgpu-matrix';
-import { TypeSizes } from './constants';
+import { TypeSizes } from '../constants';
 
 export type CameraParams = {
     nearPlane: number,
@@ -11,13 +11,6 @@ export type CameraParams = {
 };
 
 export default class Camera {
-    static readonly orientation = new Float32Array([
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, -1, 0,
-        0, 0, 0, 1,
-    ]);
-
     static readonly worldToViewOffset = 0;
     static readonly viewToClipOffset = this.worldToViewOffset + TypeSizes.sizeofMat4x4f;
     static readonly worldToClipOffset = this.viewToClipOffset + TypeSizes.sizeofMat4x4f;
@@ -74,9 +67,9 @@ export default class Camera {
     readonly rotation: Quat = new Float32Array([0, 0, 0, 1]);
 
     params: CameraParams = {
-        nearPlane: 0.3,
+        nearPlane: 0.01,
         farPlane: 500.0,
-        fov: 60,
+        fov: 40,
         width: 1920,
         height: 1080,
         projection: 'perspective',
@@ -94,7 +87,6 @@ export default class Camera {
     cacheView(): void {
         mat4.fromQuat(this.rotation, this.viewToWorld);
         mat4.setTranslation(this.viewToWorld, this.location, this.viewToWorld);
-        // mat4.mul(this.viewToWorld, Camera.orientation, this.viewToWorld);
         mat4.invert(this.viewToWorld, this.worldToView);
         mat4.mul(this.viewToClip, this.worldToView, this.worldToClip);
         mat4.mul(this.viewToWorld, this.clipToView, this.clipToWorld);

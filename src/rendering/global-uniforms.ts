@@ -1,4 +1,4 @@
-import Camera from './camera';
+import Camera from './camera/camera';
 
 const label = 'global uniforms';
 

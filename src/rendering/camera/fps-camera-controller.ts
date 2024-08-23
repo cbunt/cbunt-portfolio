@@ -11,7 +11,7 @@ export const enum Directions {
     down = 1 << 5,
 }
 
-export class CameraController {
+export class FpsCameraController {
     xSensitivity = -0.5;
     ySensitivity = -0.5;
     moveSpeed = 1 / 350;

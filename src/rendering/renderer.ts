@@ -1,10 +1,11 @@
-import Camera from './camera';
+import Camera from './camera/camera';
 import GlobalUniforms from './global-uniforms';
 import TonemapPass from './tonemap-pass';
 import SkyboxPass from './skybox-pass';
-import { binaryInsert, debounce } from '../utils/general';
 import GBuffer from './gbuffer';
 import DeferredPass from './deferred-pass';
+
+import { binaryInsert, debounce } from '../utils/general';
 
 export type ForwardPassParams = {
     encoder: GPUCommandEncoder,

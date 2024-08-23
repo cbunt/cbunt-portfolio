@@ -1,12 +1,13 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, WheelEvent, MouseEvent } from 'react';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import styled from 'styled-components';
 
 import type Renderer from '../../rendering/renderer';
 import type { LoadModelConstructor, ModelSetting } from '../../samples/sample-spec';
 
-import { CameraController, Directions } from '../../rendering/camera-controller';
 import ModelSettingsWidget from './model-settings-gui';
 import FullscreenButton from './fullscreen-button';
+import { OrbitCameraController } from '../../rendering/camera';
 
 const ViewportStyle = styled.div`
     position: relative;
@@ -21,14 +22,12 @@ const ViewportStyle = styled.div`
     }
 `;
 
-const KeyCodesToDirection: Record<string, Directions | undefined> = {
-    KeyW: Directions.forward,
-    KeyA: Directions.left,
-    KeyS: Directions.backward,
-    KeyD: Directions.right,
-    Space: Directions.up,
-    ShiftLeft: Directions.down,
-};
+const enum MoveState {
+    none = 0,
+    rotate = 1,
+    zoom = 2,
+    pan = 4,
+}
 
 export type ViewportProps = {
     getModelConstructor: LoadModelConstructor,
@@ -37,51 +36,50 @@ export type ViewportProps = {
 export default function Viewport({ getModelConstructor }: ViewportProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const rendererRef = useRef<Renderer | null>(null);
-    const controllerRef = useRef<CameraController | null>(null);
+    const controllerRef = useRef<OrbitCameraController | null>(null);
     const isFocusedRef = useRef(false);
     const canFocus = useRef(true);
     const mainRef = useRef<HTMLDivElement | null>(null);
+    const moveRef = useRef(MoveState.none);
     const [settings, setSettings] = useState<Record<string, ModelSetting> | null>(null);
 
-    const handleKeyChange = (e: React.KeyboardEvent) => {
-        const dir = KeyCodesToDirection[e.code];
-        if (e.repeat || dir == null) return;
-
-        if (e.type === 'keydown') {
-            controllerRef.current?.changeMovement(dir, 'add');
-        } else if (e.type === 'keyup') {
-            controllerRef.current?.changeMovement(dir, 'remove');
-        }
-    };
-    const handleMouseMove = (e: MouseEvent) => {
-        controllerRef.current?.rotate(e.movementX, e.movementY);
+    const handleMouseMove = (e: globalThis.MouseEvent) => {
+        if (controllerRef.current == null) return;
+        const controller = controllerRef.current;
+        const { movementX: x, movementY: y } = e;
+        if (moveRef.current & MoveState.rotate) controller.rotate(x, y);
+        if (moveRef.current & MoveState.zoom) controller.zoom(10 * y);
+        if (moveRef.current & MoveState.pan) controller.pan(-x, y);
     };
 
-    const handleMouseDown = () => {
+    const handleMouseDown = (e: MouseEvent) => {
+        moveRef.current = e.buttons & 0b111;
         if (!canFocus.current) return;
         canvasRef.current?.requestPointerLock();
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: MouseEvent) => {
+        moveRef.current = e.buttons & 0b111;
+        if (moveRef.current !== MoveState.none) return;
         isFocusedRef.current = false;
         document.exitPointerLock();
-    };
-
-    const handleAnimation = (t: number) => {
-        if (!isFocusedRef.current) return;
-        controllerRef.current?.step(t);
-        requestAnimationFrame(handleAnimation);
     };
 
     const unlock = () => {
         document.removeEventListener('mousemove', handleMouseMove, false);
         canvasRef.current?.blur();
-        controllerRef.current?.freeze();
+
+        if (canvasRef.current) enableBodyScroll(canvasRef.current);
         if (isFocusedRef.current) {
             isFocusedRef.current = false;
             canFocus.current = false;
             setTimeout(() => { canFocus.current = true; }, 1500);
         }
+    };
+
+    const onWheel = (e: WheelEvent<HTMLCanvasElement>) => {
+        if (!isFocusedRef.current) return;
+        controllerRef.current?.zoom(e.deltaY);
     };
 
     const handleLockChange = () => {
@@ -91,8 +89,8 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
         }
 
         isFocusedRef.current = true;
+        if (canvasRef.current) disableBodyScroll(canvasRef.current, { reserveScrollBarGap: true });
         document.addEventListener('mousemove', handleMouseMove, false);
-        requestAnimationFrame(handleAnimation);
     };
 
     const cleanup = () => {
@@ -113,7 +111,7 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
                 if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
 
                 rendererRef.current = await CreateInitialized(canvasRef.current);
-                controllerRef.current = new CameraController(rendererRef.current.camera);
+                controllerRef.current = new OrbitCameraController(rendererRef.current.camera);
                 const model = new modelCtor(rendererRef.current);
 
                 setSettings(model.settings);
@@ -133,10 +131,9 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
             <FullscreenButton element={mainRef} />
             <canvas
                 ref={canvasRef}
-                onKeyDown={handleKeyChange}
-                onKeyUp={handleKeyChange}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
+                onWheel={onWheel}
                 tabIndex={0}
             />
             {settingsWidget}
