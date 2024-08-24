@@ -29,6 +29,11 @@ declare module '*.png' {
     export default url;
 }
 
+declare module '*.hdr' {
+    const url: string;
+    export default url;
+}
+
 declare module '*.json' {
     const content: object;
     export default content;
@@ -69,3 +74,4 @@ declare type TypedArrayConstructor =
 declare type TypedArrayLike = Pick<TypedArray, 'buffer' | 'byteLength' | 'byteOffset'>;
 
 declare const SAMPLES__: string[];
+declare const HDRS__: string[];

@@ -50,7 +50,7 @@ export default class SkyboxPass {
             let depth = textureLoad(depthTexture, uv, 0);
             if (depth < 1.0) { discard; }
 
-            let t = normalize(in.pos.xyz / in.pos.w) * vec3(-1.0, 1.0, 1.0);
+            let t = normalize(in.pos.xyz / in.pos.w);
             let color = textureSampleLevel(environmentTexture, environmentSampler, t, in.mipBias).rgb;
             return vec4(color, 1.0);
         }

@@ -44,6 +44,12 @@ export default class Renderer {
 
     postprocessTarget!: GPUTexture;
 
+    set skybox(texture: GPUTexture) {
+        this.deferredPass.skybox = texture;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.skyboxPass.skyTexture = this.deferredPass.radianceView!;
+    }
+
     constructor(
         public readonly canvas: HTMLCanvasElement,
         public readonly device: GPUDevice,

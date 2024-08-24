@@ -1,18 +1,13 @@
 import { showSaveFilePicker } from 'native-file-system-adapter';
 
-import shoreline from 'public/environment-maps/shoreline.ktx2';
-import papermill from 'public/environment-maps/papermill.ktx2';
-import market from 'public/environment-maps/leland-market.ktx2';
-
 import getSkyboxOptions from '../settings/skybox-options';
 import { FullRenderModel } from '../settings/sample-spec';
 import propertyListener, { ListenerSyms } from '../settings/property-listener';
 
-import { copyKTX, textureToKTX } from '../../utils/data-copy';
-import { mapValues } from '../../utils/general';
+import { textureToKTX } from '../../utils/data-copy';
+import Renderer, { ForwardPassParams } from '../../rendering/renderer';
 
 import cubemapGuassianPyramid from './cubemap-guassian-pyramid';
-import Renderer, { ForwardPassParams } from '../../rendering/renderer';
 
 enum BlurState { IDLE, BLUR, WAIT }
 

@@ -21,6 +21,9 @@ const template = path.resolve(__dirname, 'public', 'index.html');
 const favicon = path.resolve(__dirname, 'public', 'favicon.ico');
 const robotsUrl = 'https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/robots.txt/robots.txt';
 
+const hdrs = globSync('public/glTF-Sample-Environments/*.hdr')
+        .map((path) => (path.match(/^.*\/(?<name>[^\.]*)\.hdr$/)?.groups!.name));
+
 const dPages = globSync('src/components/pages/**/*.{tsx,mdx}');
 
 const pagePaths = dPages.map((p) => {
@@ -75,11 +78,11 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     type: 'asset/source'
                 },
                 {
-                    test: /\.(gltf|glb)$/,
+                    test: /\.(gltf)$/,
                     loader: "gltf-loader",
                 },
                 {
-                    test: /\.(ktx2|bin|jpe?g|png)$/,
+                    test: /\.(ktx2|bin|jpe?g|png|glb|hdr)$/,
                     type: 'asset/resource'
                 }
             ]
@@ -99,6 +102,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
             })),
             new DefinePlugin({
                 SAMPLES__: JSON.stringify(samples),
+                HDRS__: JSON.stringify(hdrs),
             }),
             !isDev && {
                 apply(compiler: Compiler) {

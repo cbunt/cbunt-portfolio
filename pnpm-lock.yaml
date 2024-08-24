@@ -32,6 +32,9 @@ importers:
       '@uiw/react-codemirror':
         specifier: ^4.22.2
         version: 4.22.2(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.28.1)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.28.1)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      body-scroll-lock:
+        specifier: 4.0.0-beta.0
+        version: 4.0.0-beta.0
       ktx-parse:
         specifier: ^0.7.0
         version: 0.7.0
@@ -72,6 +75,9 @@ importers:
       '@stylistic/eslint-plugin':
         specifier: ^2.2.1
         version: 2.2.1(eslint@8.56.0)(typescript@5.4.5)
+      '@types/body-scroll-lock':
+        specifier: ^3.1.2
+        version: 3.1.2
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -114,9 +120,6 @@ importers:
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.92.0(webpack-cli@5.1.4))
-      pnpm:
-        specifier: ^9.4.0
-        version: 9.4.0
       react-refresh:
         specifier: ^0.14.2
         version: 0.14.2
@@ -575,6 +578,9 @@ packages:
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
 
+  '@types/body-scroll-lock@3.1.2':
+    resolution: {integrity: sha512-ELhtuphE/YbhEcpBf/rIV9Tl3/O0A0gpCVD+oYFSS8bWstHFJUgA4nNw1ZakVlRC38XaQEIsBogUZKWIPBvpfQ==}
+
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
@@ -979,6 +985,9 @@ packages:
   body-parser@1.20.2:
     resolution: {integrity: sha512-ml9pReCu3M61kGlqoTm2umSXTlRTuGTx0bfYj+uIUKKYycG5NtSbeetV3faSU6R7ajOPw0g/J1PvK4qNy7s5bA==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+
+  body-scroll-lock@4.0.0-beta.0:
+    resolution: {integrity: sha512-a7tP5+0Mw3YlUJcGAKUqIBkYYGlYxk2fnCasq/FUph1hadxlTRjF+gAcZksxANnaMnALjxEddmSi/H3OR8ugcQ==}
 
   bonjour-service@1.2.1:
     resolution: {integrity: sha512-oSzCS2zV14bh2kji6vNe7vrpJYCHGvcZnlffFQ1MEoX/WOeQ/teD8SYWKR942OI3INjq8OMNJlbPK5LLLUxFDw==}
@@ -2294,11 +2303,6 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  pnpm@9.4.0:
-    resolution: {integrity: sha512-9Um4pSydK4U2di+ZwHIiBe/Fr5E+d4NdvMw7CwssqefcgCK3gGLBcpHEjoh0nHDOiOtadPH6jEv14Yu0bIvYOg==}
-    engines: {node: '>=18.12'}
-    hasBin: true
-
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
     engines: {node: '>= 0.4'}
@@ -3420,6 +3424,8 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 20.14.5
 
+  '@types/body-scroll-lock@3.1.2': {}
+
   '@types/bonjour@3.5.13':
     dependencies:
       '@types/node': 20.14.5
@@ -3910,6 +3916,8 @@ snapshots:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
+
+  body-scroll-lock@4.0.0-beta.0: {}
 
   bonjour-service@1.2.1:
     dependencies:
@@ -5349,8 +5357,6 @@ snapshots:
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
-
-  pnpm@9.4.0: {}
 
   possible-typed-array-names@1.0.0: {}
 

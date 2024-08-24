@@ -6,10 +6,9 @@
     "rootDir": "./src",
     "outDir": "build",
     "jsx": "react-jsx",
-    "target": "es6",
+    "target": "ES2021",
     "lib": [
-      "ES6",
-      "ES2021.String",
+      "ES2021",
       "dom"
     ],
     "strict": true,

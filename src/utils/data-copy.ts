@@ -29,16 +29,6 @@ export function createAndCopyBuffer(
     return buffer;
 }
 
-export type TextureSizeInfoProps = {
-    width: number,
-    height: number,
-    format?: GPUTextureFormat,
-    pixelSize?: number,
-    mipLevel?: number,
-    depthOrArrayLayers?: number,
-    cube?: boolean,
-};
-
 export function createAndCopyCubemap(
     device: GPUDevice,
     data: ArrayBuffer,
@@ -71,29 +61,20 @@ export function createAndCopyCubemap(
     return texture;
 }
 
-export type KTXCopyOptions = {
+export type KTXImportOptions = {
     label?: string,
     mipLevelCount?: number | 'max' | 'default',
     textureUsage?: number,
     validate?: boolean,
 };
 
-export async function copyKTX(
-    resource: string | URL | ArrayBuffer | File,
+export function ktx2ToTexture(
+    buffer: ArrayBuffer,
     device: GPUDevice,
-    options?: KTXCopyOptions,
-): Promise<GPUTexture> {
-    let buf: ArrayBuffer;
-    if (resource instanceof ArrayBuffer) {
-        buf = resource;
-    } else if (resource instanceof File) {
-        buf = await resource.arrayBuffer();
-    } else {
-        const response = await fetch(resource);
-        buf = await response.arrayBuffer();
-    }
-
-    const ktx = ktxparse.read(new Uint8Array(buf));
+    options?: KTXImportOptions,
+) {
+    const arr = new Uint8Array(buffer);
+    const ktx = ktxparse.read(arr);
     const format = VkFormatToWebGPU[ktx.vkFormat];
 
     if (format == null) {
@@ -254,8 +235,10 @@ Required: ${requiredUsage}`);
     );
     device.queue.submit([encoder.finish()]);
 
-    await device.queue.onSubmittedWorkDone();
-    await storage.mapAsync(GPUMapMode.READ, 0, byteSize);
+    await Promise.all([
+        storage.mapAsync(GPUMapMode.READ, 0, byteSize),
+        device.queue.onSubmittedWorkDone(),
+    ]);
 
     const mapped = storage.getMappedRange(0, byteSize);
     imageData.set(new Uint8Array(mapped));
