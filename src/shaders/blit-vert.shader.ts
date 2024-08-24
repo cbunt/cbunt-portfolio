@@ -13,7 +13,7 @@ export default /* wgsl */`
         );
         var res: VertOut;
         res.pos = vec4f(pos[idx], 0.0, 1.0);
-        res.uv = pos[idx];
+        res.uv = pos[idx] * vec2f(0.5, -0.5) + 0.5;
         return res;
     }
 `;
