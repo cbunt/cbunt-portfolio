@@ -1,9 +1,8 @@
 import GlobalUniforms from './global-uniforms';
-import { SkyboxTarget } from './render-model';
 
 const label = 'skybox pass';
 
-export default class SkyboxPass implements SkyboxTarget {
+export default class SkyboxPass {
     static readonly code = /* wgsl */`
         ${GlobalUniforms.code(0)}
 
