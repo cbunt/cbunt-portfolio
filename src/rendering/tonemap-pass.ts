@@ -8,26 +8,30 @@ export default class TonemapPass {
 
         ${blit}
 
+        fn fitRRTAndODT(color: vec3f) -> vec3f {
+            let a = color * (color + 0.0245786) - 0.000090537;
+            let b = color * (0.983729 * color + 0.4329510) + 0.238081;
+            return a / b;
+        }
+
         fn aces_tone_map(hdr: vec3f) -> vec3f {
-            const m1 = mat3x3(
+            const inputMat = mat3x3(
                 0.59719, 0.07600, 0.02840,
                 0.35458, 0.90834, 0.13383,
                 0.04823, 0.01566, 0.83777,
             );
-            const m2 = mat3x3(
+            const outputMat = mat3x3(
                 1.60475, -0.10208, -0.00327,
                 -0.53108, 1.10813, -0.07276,
                 -0.07367, -0.00605, 1.07602,
             );
             const boost = 1.0 / 0.6;
-            let v = m1 * (hdr);
-            let a = v * (v + 0.0245786) - 0.000090537;
-            let b = v * (0.983729 * v + 0.4329510) + 0.238081;
-            return saturate(m2 * (a / b));
-        }
 
-        fn gamma_correct(color: vec3f) -> vec3f {
-            return linear_to_srgb(color / (color + vec3(1.0)));
+            var color = hdr * boost;
+            color = inputMat * color;
+            color = fitRRTAndODT(color);
+            color = outputMat * color;
+            return saturate(color);
         }
 
         fn linear_to_srgb(color: vec3f) -> vec3f {
@@ -37,8 +41,11 @@ export default class TonemapPass {
         @fragment
         fn fs(@builtin(position) pos: vec4f) -> @location(0) vec4f {
             let uv = vec2<i32>(floor(pos.xy));
-            let color = textureLoad(colorTexture, uv, 0);
-            return vec4f(linear_to_srgb(aces_tone_map(color.rgb)), 1.0);
+
+            var color = textureLoad(colorTexture, uv, 0).rgb;
+            color = aces_tone_map(color);
+            color = linear_to_srgb(color);
+            return vec4f(color, 1.0);
         }
     `;
 
