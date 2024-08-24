@@ -63,31 +63,34 @@ export default class GBuffer {
         ],
     };
 
-    normal: TextureData = {
+    normal = this.createTexture({
         format: 'rgba16float',
         name: 'normal',
         clearValue: { r: 0, g: 0, b: 1, a: 1 },
-    };
+    });
 
-    albedo: TextureData = {
+    albedo = this.createTexture({
         format: 'rgba8unorm',
         name: 'albedo',
         clearValue: { r: 0, g: 0, b: 0, a: 1 },
-    };
+    });
 
-    emission: TextureData = {
+    emission = this.createTexture({
         format: 'rgba16float',
         name: 'emission',
         clearValue: { r: 0, g: 0, b: 0, a: 1 },
-    };
+    });
 
-    metallicRoughness: TextureData = {
+    metallicRoughness = this.createTexture({
         format: 'rg8unorm',
         name: 'metallic roughness',
         clearValue: { r: 0, g: 0, b: 0, a: 0 },
-    };
+    });
 
-    depth: TextureData = { format: 'depth32float', name: 'depth' };
+    depth = this.createTexture({
+        format: 'depth32float',
+        name: 'depth',
+    });
 
     textures = [
         this.normal,
@@ -99,66 +102,66 @@ export default class GBuffer {
 
     targets = this.textures.slice(0, -1).map(({ format }) => ({ format }));
 
-    bindGroupLayout: GPUBindGroupLayout;
-    bindgroup!: GPUBindGroup;
-    passDescriptor!: GPURenderPassDescriptor;
+    bindGroupLayout = this.device.createBindGroupLayout(GBuffer.layoutDescription);
+    bindgroup = this.updateBindgroup();
+    passDescriptor = this.updatePassDescriptor();
 
-    constructor(public readonly device: GPUDevice, size: GPUExtent3D) {
-        this.device = device;
-        this.bindGroupLayout = this.device.createBindGroupLayout(GBuffer.layoutDescription);
+    get size() { return this._size; }
+    set size(value: GPUExtent3D) {
+        this._size = value;
 
-        let width: number, height: number | undefined;
-        if ('width' in size) {
-            ({ width, height } = size);
-        } else {
-            ([width, height] = size);
-        }
-        height ??= width;
-
-        this.resize({ width, height });
+        this.textures.forEach((tex) => { this.createTexture(tex); });
+        this.bindgroup = this.updateBindgroup();
+        this.passDescriptor = this.updatePassDescriptor();
     }
 
-    resize(size: GPUExtent3DStrict) {
-        this.textures.forEach((tex) => { this.createTexture(tex, size); });
+    constructor(
+        public readonly device: GPUDevice,
+        private _size: GPUExtent3D,
+    ) { }
 
+    updateBindgroup() {
         const entries = this.textures.map(({ view }, idx) => ({
             binding: idx,
-            resource: view!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            resource: view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         }));
 
-        this.bindgroup = this.device.createBindGroup({
+        return this.device.createBindGroup({
             label: 'gbuffer bind group',
             layout: this.bindGroupLayout,
             entries,
         });
+    }
 
+    updatePassDescriptor() {
         const colorAttachments = this.textures.slice(0, -1).map(({ view, clearValue }) => ({
-            view: view!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-            clearValue: clearValue!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            view: view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            clearValue: clearValue, // eslint-disable-line @typescript-eslint/no-non-null-assertion
             loadOp: 'clear',
             storeOp: 'store',
-        })) as GPURenderPassColorAttachment[];
+        }));
 
-        this.passDescriptor = {
+        return {
             label: 'forward pass encoder',
             colorAttachments,
             depthStencilAttachment: {
-                view: this.depth.view!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+                view: this.depth.view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
                 depthClearValue: 1.0,
                 depthLoadOp: 'clear',
                 depthStoreOp: 'store',
             },
-        };
+        } as GPURenderPassDescriptor;
     }
 
-    createTexture(tex: TextureData, size: GPUExtent3DStrict) {
+    createTexture(tex: TextureData) {
         const label = `gbuffer ${tex.name}`;
         tex.texture = this.device.createTexture({
             label,
-            size,
+            size: this._size,
             format: tex.format,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
         tex.view = tex.texture.createView({ label });
+        return tex as TextureData & Required<Pick<TextureData, 'texture' | 'view'>>;
     }
 }

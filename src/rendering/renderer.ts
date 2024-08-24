@@ -114,7 +114,7 @@ export default class Renderer {
 
         this.colorAttachment.view = this.postprocessTarget.createView();
         this.tonemapPass.updateInput(this.colorAttachment.view);
-        this.gbuffer.resize(size);
+        this.gbuffer.size = size;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.skyboxPass.depthTexture = this.gbuffer.depth.view!;
     }
