@@ -14,10 +14,10 @@ export function clamp(num: number, min: number, max: number) {
 }
 
 export function padCheck(str: string | undefined) {
-    return str == null ? '' : ` ${str}`;
+    return str == null || str === '' ? '' : ` ${str}`;
 }
 
-export function padTemplate(strings: TemplateStringsArray, ...values: string[]) {
+export function padTemplate(strings: TemplateStringsArray, ...values: (string | undefined)[]) {
     const result = [strings[0]];
     values.forEach((key, i) => result.push(padCheck(key), strings[i + 1]));
     return result.join('');
