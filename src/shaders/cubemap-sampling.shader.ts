@@ -14,6 +14,22 @@ export const toWorldDir: string = /* wgsl */`
 
         return normalize(pos);
     }
+
+    fn toWorldDirF32(coord: vec2f, face: u32) -> vec3f {
+        let uv = 2.0 * coord - 1.0;
+
+        var pos: vec3f;
+        switch (face) {
+            case 0  { pos = vec3(  1.0, -uv.y, -uv.x); }
+            case 1  { pos = vec3( -1.0, -uv.y,  uv.x); }
+            case 2  { pos = vec3( uv.x,   1.0,  uv.y); }
+            case 3  { pos = vec3( uv.x,  -1.0, -uv.y); }
+            case 4  { pos = vec3( uv.x, -uv.y,   1.0); }
+            default { pos = vec3(-uv.x, -uv.y,  -1.0); }
+        }
+
+        return normalize(pos);
+    }
 `;
 
 /**
