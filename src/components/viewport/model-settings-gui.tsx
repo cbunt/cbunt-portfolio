@@ -1,6 +1,6 @@
 import { FileUploadProps, FileUpload, Checkbox, CheckboxProps, Slider, SliderProps, StyledButton } from '../core';
-import { ModelSetting } from '../../samples/sample-spec';
-import { ListenerSyms } from '../../samples/property-listener';
+import { ModelSetting } from '../../samples/settings/sample-spec';
+import { ListenerSyms } from '../../samples/settings/property-listener';
 import SettingsPanel from './settings-panel';
 
 export type ModelSettingsWidgetProps = {

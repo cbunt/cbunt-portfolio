@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import type { ValueKeyCallback } from '../../samples/property-listener';
+import type { ValueKeyCallback } from '../../samples/settings/property-listener';
 
 import StyledButton from './button';
 import DistortionElement from './distortion-element';

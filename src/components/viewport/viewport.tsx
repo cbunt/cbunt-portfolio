@@ -3,7 +3,7 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import styled from 'styled-components';
 
 import type Renderer from '../../rendering/renderer';
-import type { LoadModelConstructor, ModelSetting } from '../../samples/sample-spec';
+import type { LoadModelConstructor, ModelSetting } from '../../samples/settings/sample-spec';
 
 import ModelSettingsWidget from './model-settings-gui';
 import FullscreenButton from './fullscreen-button';

@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useId, useEffect } from 'react';
 import styled from 'styled-components';
 
-import type { ValueKeyCallback } from '../../samples/property-listener';
+import type { ValueKeyCallback } from '../../samples/settings/property-listener';
 import DistortionElement from './distortion-element';
 import CustomTooltip from './tooltip';
 

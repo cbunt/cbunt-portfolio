@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import DistortionElement from './distortion-element';
 import CustomTooltip from './tooltip';
 import { clamp } from '../../utils/general';
-import { ValueKeyCallback } from '../../samples/property-listener';
+import { ValueKeyCallback } from '../../samples/settings/property-listener';
 
 const StyledSlider = styled.input.attrs({ type: 'range' })`
     --brightness-hover: 70%;
