@@ -75,3 +75,5 @@ declare type TypedArrayLike = Pick<TypedArray, 'buffer' | 'byteLength' | 'byteOf
 
 declare const SAMPLES__: string[];
 declare const HDRS__: string[];
+declare const GLTF_INDEX_FILE__: string;
+declare const GLTF_BASE_URL__: string;

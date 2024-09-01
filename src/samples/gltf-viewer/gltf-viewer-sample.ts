@@ -1,18 +1,51 @@
-import testModel from 'public/gltfs/EnvironmentTest/EnvironmentTest.gltf';
-
 import { FullRenderModel } from '../settings/sample-spec';
-import propertyListener from '../settings/property-listener';
-
-import { AttributeDetails, ComponentType } from './loader/type-conversions';
-import importGltf from './loader/gltf-loader';
+import propertyListener, { ListenerSyms } from '../settings/property-listener';
+import getSkyboxOptions from '../settings/skybox-options';
 
 import GeometryPipeline from '../../rendering/default-forward-pass/geometry-pipeline';
 import DescriptorMap from '../../rendering/default-forward-pass/descriptor-map';
 import Renderer, { ForwardPassParams } from '../../rendering/renderer';
 import { MaterialDescriptor } from '../../rendering/default-forward-pass/material-draw-data';
 import { PipelineFeatureFlags } from '../../rendering/default-forward-pass/pipeline-feature-flags';
+
 import cubemapGuassianPyramid from '../cubemap-blur/cubemap-guassian-pyramid';
-import getSkyboxOptions from '../settings/skybox-options';
+
+import { AttributeDetails, ComponentType } from './loader/type-conversions';
+import importGltf from './loader/gltf-loader';
+import { DataType } from '@loaders.gl/core';
+import { isObject } from '../../utils/general';
+
+const gltfIndex = await getGltfIndex();
+
+async function getGltfIndex() {
+    const indexUrl = GLTF_BASE_URL__ + GLTF_INDEX_FILE__;
+    const indexRes = await fetch(indexUrl);
+    const indexStr = await indexRes.text();
+    const indexJson = JSON.parse(indexStr) as unknown;
+
+    if (!Array.isArray(indexJson)) {
+        throw new Error('could not load gtlf model index');
+    }
+
+    const entries: [string, string][] = indexJson.flatMap((gltf: unknown) => {
+        if (
+            !isObject(gltf)
+            || !('label' in gltf)
+            || typeof gltf.label !== 'string'
+            || !('name' in gltf)
+            || typeof gltf.name !== 'string'
+            || !('variants' in gltf)
+            || !isObject(gltf.variants)
+            || typeof gltf.variants.glTF !== 'string'
+        ) return [];
+
+        const { variants: { glTF: file }, label, name } = gltf;
+        const path = `${GLTF_BASE_URL__}${name}/glTF/${file}`;
+        return [[label, path]];
+    });
+
+    return Object.fromEntries(entries);
+}
 
 export default class GltfModel implements FullRenderModel {
     static readonly title = 'glTF Model Viewer';
@@ -53,7 +86,7 @@ export default class GltfModel implements FullRenderModel {
         },
     ];
 
-    geometryPipelines: Record<number, GeometryPipeline> = {};
+    geometryPipelines: Partial<Record<number, GeometryPipeline>> = {};
     descriptorMap: DescriptorMap;
     device: GPUDevice;
 
@@ -63,6 +96,21 @@ export default class GltfModel implements FullRenderModel {
 
     readonly #settings = propertyListener({
         skybox: getSkyboxOptions(this),
+        model: {
+            [ListenerSyms.$type]: 'file' as const,
+            [ListenerSyms.$callback]: (val: unknown, key: PropertyKey) => {
+                if (key !== 'value' || val == null) return;
+                if (typeof val === 'string' || val instanceof File) {
+                    void this.setModel(val);
+                }
+            },
+            accept: '.hdr',
+            selection: {
+                value: 'Environment Test',
+                initialValues: gltfIndex,
+            },
+            process: (file: File) => file,
+        },
     });
 
     readonly settings = this.#settings.publicSettings;
@@ -71,12 +119,7 @@ export default class GltfModel implements FullRenderModel {
     constructor(public renderer: Renderer) {
         this.descriptorMap = new DescriptorMap(renderer.device, renderer.gbuffer, renderer.globals);
         this.device = renderer.device;
-
-        this.renderer.skyboxPass.mipLevel = 0;
-        this.renderer.skyboxPass.useNearestSample = false;
         this.renderer.addForwardPass(this);
-
-        void this.importglTF(testModel);
     }
 
     async setSkybox(skybox: GPUTexture) {
@@ -90,7 +133,7 @@ export default class GltfModel implements FullRenderModel {
         this.renderer.skybox = skybox;
     }
 
-    async importglTF(modelPath: string) {
+    async setModel(modelPath: string | DataType) {
         const size = { width: 1, height: 1 };
         const colorArray = new Float32Array([1, 1, 1, 1]);
 
@@ -129,13 +172,13 @@ export default class GltfModel implements FullRenderModel {
             metallicRoughnessSampler: sampler,
         };
 
-        await importGltf(
+        this.geometryPipelines = await importGltf(
             modelPath,
             this.renderer.device,
             this.descriptorMap,
             matData,
             GltfModel.goalLayout,
-            this.geometryPipelines,
+            {},
         );
     }
 
@@ -144,7 +187,7 @@ export default class GltfModel implements FullRenderModel {
         pass.setBindGroup(0, globals.bindgroup);
 
         for (const pipeline of Object.values(this.geometryPipelines)) {
-            pipeline.draw(pass, this.renderer.device.queue);
+            pipeline?.draw(pass, this.renderer.device.queue);
         }
         pass.end();
     }

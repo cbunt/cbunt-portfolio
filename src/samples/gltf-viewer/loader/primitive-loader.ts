@@ -126,11 +126,11 @@ export default async function loadPrimitive(
                 atrs.NORMAL!.array,
                 atrs.TEXCOORD_0.array,
             ));
-            console.log(`tangents generated in ${Date.now() - start}`);
 
             for (let i = 3; i < tangent.length; i += 4) {
                 tangent[i] *= -1;
             }
+            console.log(`tangents generated in ${Date.now() - start}`);
 
             atrs.TANGENT = new AttributeWrapper(tangent, 4);
 
@@ -144,6 +144,7 @@ export default async function loadPrimitive(
             atrs.TANGENT = new AttributeWrapper(tangent, 4);
         }
     }
+
     const { vertexArray, vertexFeatures } = interleaveVertices(atrs, vertexCount);
     let features = getCullMode(instances) | vertexFeatures;
     if (mode != null) features |= modeToTopology[mode as TopologyMode] || 0;

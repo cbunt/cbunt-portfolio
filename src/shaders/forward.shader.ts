@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
-import { PipelineFeatureFlags } from '../rendering/default-forward-pass/pipeline-feature-flags';
+import { PipelineFeatureFlags, featureFlagsToString } from '../rendering/default-forward-pass/pipeline-feature-flags';
 import { preprocessors, wrapWithIncrement } from '../utils/shader';
 import GlobalUniforms from '../rendering/global-uniforms';
 import { GBufferGroupIndices } from '../rendering/gbuffer';
@@ -29,7 +29,7 @@ export function getBindgroupInfo(flags: PipelineFeatureFlags): GPUBindGroupLayou
         pushItem({ texture: { viewDimension: '2d' } });
     }
 
-    return { label: `forward bindgroup -- ${flags}`, entries };
+    return { label: featureFlagsToString(flags), entries };
 }
 
 /**
@@ -188,8 +188,9 @@ export default function include(flags: PipelineFeatureFlags) {
             out.metallicRoughness.g = saturate(metallicRoughness.g * material.roughnessFactor);
 
             ${ifdef(PipelineFeatureFlags.VertexNormals, /* wgsl */`
-                let tangentNormal = normalize(textureSample(normalTexture, normalSampler, inData.uv).xyz * 2.0 - 1.0);
-                let bitangent = cross(inData.normal, inData.tangent.xyz);
+                let normalSample = textureSample(normalTexture, normalSampler, inData.uv).xyz;
+                let tangentNormal = normalize(normalSample * 2.0 - 1.0);
+                let bitangent =inData.tangent.w * cross(inData.normal, inData.tangent.xyz);
                 let tbn = mat3x3f(normalize(inData.tangent.xyz), bitangent, normalize(inData.normal));
                 var normal = normalize(tbn * tangentNormal);
 

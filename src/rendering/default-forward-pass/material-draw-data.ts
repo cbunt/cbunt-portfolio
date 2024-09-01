@@ -1,6 +1,6 @@
 import { Vec3n, Vec4n } from 'wgpu-matrix';
 import DescriptorMap from './descriptor-map';
-import { PipelineFeatureFlags } from './pipeline-feature-flags';
+import { featureFlagsToString, PipelineFeatureFlags } from './pipeline-feature-flags';
 import { PrimitiveDrawData } from './primitive-draw-data';
 import { createAndCopyBuffer } from '../../utils/data-copy';
 
@@ -94,6 +94,7 @@ export class MaterialDrawData {
         this.layout = descriptorMap.getMaterialBindGroup(this.features);
         this.matData = data;
         this.bindGroup = device.createBindGroup({
+            label: featureFlagsToString(this.features),
             layout: this.layout,
             entries,
         });
@@ -107,17 +108,21 @@ export class MaterialDrawData {
         if (this.primitives.length === 0) return;
 
         passEncoder.setBindGroup(1, this.bindGroup);
-        for (let i = 0; i < this.primitives.length; i += 1) {
-            this.primitives[i].draw(passEncoder, queue);
+        for (const primitive of this.primitives) {
+            primitive.draw(passEncoder, queue);
         }
     }
 
     addPrimitives(...drawData: PrimitiveDrawData[]) {
-        drawData.forEach((data) => {
-            if ((data.features & this.features) !== data.features) {
-                throw new Error(`invalid primitive added to material: ${data.name})}`);
-            }
+        const filtered = drawData.filter((data) => {
+            if ((data.features & this.features) === data.features) return true;
+            console.warn(`invalid primitive added to material: 
+primitive: ${data.name}
+primitive features: ${featureFlagsToString(data.features).toString()}
+material: ${this.matData.name}
+material features: ${featureFlagsToString(this.features).toString()}`);
+            return false;
         });
-        this.primitives.push(...drawData);
+        this.primitives.push(...filtered);
     }
 }

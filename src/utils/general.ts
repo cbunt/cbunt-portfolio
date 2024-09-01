@@ -58,3 +58,7 @@ export function binaryInsert<T>(
         else binaryInsert(arr, element, comparator, pivot, right);
     }
 }
+
+export function isObject(val: unknown): val is NonNullable<UnknownObject> {
+    return typeof val === 'object' && val != null;
+}

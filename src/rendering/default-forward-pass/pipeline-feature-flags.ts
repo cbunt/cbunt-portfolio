@@ -1,4 +1,4 @@
-export const enum PipelineFeatureFlags {
+export enum PipelineFeatureFlags {
     Defaults = 0,
 
     /**
@@ -68,8 +68,17 @@ export const MaterialMask = (
 
 export const PipelineLayoutMask = (
     InstanceBufferLayoutMask
-    | MaterialBufferLayoutMask
+    | MaterialMask
 );
+
+export function featureFlagsToNames(val: number) {
+    return Object.entries(PipelineFeatureFlags)
+        .flatMap(([key, flag]) => typeof flag === 'number' && (flag & val) ? key : []);
+}
+
+export function featureFlagsToString(val: number) {
+    return featureFlagsToNames(val).toString();
+}
 
 export function maskRedundantFeatures(flags: PipelineFeatureFlags) {
     let masked = flags;

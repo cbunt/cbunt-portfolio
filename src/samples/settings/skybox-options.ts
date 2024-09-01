@@ -2,14 +2,15 @@ import { parseHDR } from '../../utils/texture-importing';
 import { equirectangularToCubemap } from '../../utils/texture-processing';
 import { ListenerSyms } from './property-listener';
 
-export const hdrs = Object.fromEntries((await Promise.all(HDRS__.map(
+const hdrPromises = HDRS__.map(
     async (path: string) => {
         const module = await import(/* webpackMode: "eager" */`public/glTF-Sample-Environments/${path}.hdr`) as unknown;
         if (typeof module !== 'object' || module == null || !('default' in module)) return undefined;
         if (typeof module.default !== 'string') return undefined;
         return [path, module.default];
-    }),
-)).filter((val) => val != null)) as Record<string, string>;
+    });
+
+export const hdrs = Object.fromEntries((await Promise.all(hdrPromises)).filter((val) => val != null) as [string, string][]) as Record<string, string>;
 
 async function processSkybox(device: GPUDevice, file: string | URL | File | ArrayBuffer) {
     let buffer: ArrayBuffer;

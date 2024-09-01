@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 
-import type { LoadModelConstructor } from '../../samples/sample-spec';
+import type { LoadModelConstructor } from '../../samples/settings/sample-spec';
 
 import SitePage from './page-wrapper';
 import SupportCheck from '../viewport/support-check';

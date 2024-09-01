@@ -1,5 +1,5 @@
 import { Mat4, mat4, Mat4Arg, Mat4Type, quat } from 'wgpu-matrix';
-import { load } from '@loaders.gl/core';
+import { DataType, load } from '@loaders.gl/core';
 import { GLTFLoader, GLTFMeshPostprocessed, GLTFNodePostprocessed, postProcessGLTF } from '@loaders.gl/gltf';
 
 import { ComponentType, AttributeDetails } from './type-conversions';
@@ -77,7 +77,7 @@ const recurseNode = (
 };
 
 export default async function importGltf(
-    url: string,
+    url: string | DataType,
     device: GPUDevice,
     descriptorMap: DescriptorMap,
     defaultMaterial: MaterialDescriptor,
@@ -89,36 +89,27 @@ export default async function importGltf(
     log('starting import');
 
     const start = Date.now();
-    const gltfWithBuffers = await load(url, GLTFLoader, {
-        gltf: {
-            // loadBuffers: false,
-            // loadImages: false,
-        },
-        log: console,
-    });
+    const gltfWithBuffers = await load(url, GLTFLoader);
     log(`finished loading: ${Date.now() - start}`);
 
     const { scene } = postProcessGLTF(gltfWithBuffers);
-    if (scene?.nodes == null) return undefined;
+    if (scene?.nodes == null) return pipelines;
     log(`finished processing: ${Date.now() - start}`);
 
     const meshes = new Map<GLTFMeshPostprocessed, Mat4[]>();
     scene.nodes.forEach(recurseNode(mat4.identity(), meshes));
     log(`finished creating instances: ${Date.now() - start}`);
 
-    const primitivePromises = [];
-
-    for (const [mesh, instances] of meshes.entries()) {
-        for (const primitive of mesh.primitives) {
-            primitivePromises.push(loadPrimitive(
-                layout,
-                primitive,
-                instances,
-                descriptorMap,
-                device,
-            ));
-        }
-    }
+    const meshEntries = Array.from(meshes.entries());
+    const primitivePromises = meshEntries.flatMap(([{ primitives }, instances]) =>
+        primitives.map((prim) => loadPrimitive(
+            layout,
+            prim,
+            instances,
+            descriptorMap,
+            device,
+        )),
+    );
 
     const primitiveDescriptors = await Promise.all(primitivePromises);
     log(`finished creating primitives: ${Date.now() - start}`);
@@ -145,17 +136,15 @@ export default async function importGltf(
     const materialDescriptors = Object.fromEntries(await Promise.all(materialEntries)) as Record<string, MaterialDescriptor>;
     log(`finished creating material descriptors: ${Date.now() - start}`);
 
-    const realDefaultMat: MaterialDescriptor = {
-        ...defaultMaterial,
-        metallicFactor: 0,
-    };
+    const fullDefaultMat: MaterialDescriptor = { ...defaultMaterial, metallicFactor: 0 };
 
     for (const [{ features, materialId }, drawDatas] of materialMap.entries()) {
-        const descriptor = materialId != null ? materialDescriptors[materialId] : realDefaultMat;
+        const descriptor = materialId != null ? materialDescriptors[materialId] : fullDefaultMat;
         const mat = new MaterialDrawData(descriptor, device, descriptorMap, features, drawDatas);
+        const { features: f } = mat;
 
-        pipelines[mat.features] ??= new GeometryPipeline(mat.features, descriptorMap);
-        pipelines[mat.features]!.addMaterials(mat); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        pipelines[f] ??= new GeometryPipeline(f, descriptorMap);
+        pipelines[f].addMaterials(mat);
     }
 
     log(`finished: ${Date.now() - start}`);

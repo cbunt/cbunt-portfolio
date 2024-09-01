@@ -22,10 +22,10 @@ export default class DescriptorMap {
     readonly shaderModules: PipelineFeatureMap<GPUShaderModule> = {};
     readonly bindgroupLayouts: PipelineFeatureMap<GPUBindGroupLayout> = {};
 
-    readonly samplers: Record<string, GPUSamplerDescriptor> = {};
+    readonly samplers: Partial<Record<string, GPUSampler>> = {};
 
     readonly forwardBindgroupLayout = this.device.createBindGroupLayout({
-        label: `forward mat bindgroup layout`,
+        label: `forward material`,
         entries: [{
             binding: 0,
             visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
@@ -79,7 +79,7 @@ export default class DescriptorMap {
         const masked: PipelineFeatureFlags = flags & PipelineFeatures.PipelineLayoutMask;
 
         this.pipelineLayouts[masked] ??= this.device.createPipelineLayout({
-            label: `forward pipeline -- ${masked}`,
+            label: PipelineFeatures.featureFlagsToString(masked),
             bindGroupLayouts: [
                 this.globals.bindGroupLayout,
                 this.getMaterialBindGroup(flags),
@@ -92,7 +92,10 @@ export default class DescriptorMap {
 
     getShaderModule(flags: PipelineFeatureFlags) {
         const masked: PipelineFeatureFlags = flags & PipelineFeatures.CodeMask;
-        this.shaderModules[masked] ??= this.device.createShaderModule({ code: include(masked) });
+        this.shaderModules[masked] ??= this.device.createShaderModule({
+            label: PipelineFeatures.featureFlagsToString(masked),
+            code: include(masked),
+        });
         return this.shaderModules[masked];
     }
 

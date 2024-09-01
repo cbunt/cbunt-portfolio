@@ -1,6 +1,6 @@
 import DescriptorMap from './descriptor-map';
 import { MaterialDrawData } from './material-draw-data';
-import { PipelineFeatureFlags, maskRedundantFeatures } from './pipeline-feature-flags';
+import { PipelineFeatureFlags, featureFlagsToString, maskRedundantFeatures } from './pipeline-feature-flags';
 
 export default class GeometryPipeline {
     features: PipelineFeatureFlags;
@@ -14,6 +14,7 @@ export default class GeometryPipeline {
         const module = maps.getShaderModule(features);
 
         this.pipeline = maps.device.createRenderPipeline({
+            label: featureFlagsToString(features),
             layout: maps.getForwardPipelineLayout(features),
             primitive: maps.getPrimitiveState(features),
             vertex: {

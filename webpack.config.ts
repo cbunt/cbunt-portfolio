@@ -10,7 +10,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import ReactRefreshTypeScript from 'react-refresh-typescript';
 
+// import { fetch, setGlobalDispatcher, Agent } from 'undici'
+
 const { sources, DefinePlugin, WebpackError } = webpack;
+
+// setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }) )
 
 declare module "fs" {
     function globSync(pattern: string): string[];
@@ -19,10 +23,14 @@ declare module "fs" {
 const __dirname = new URL('.', import.meta.url).pathname;
 const template = path.resolve(__dirname, 'public', 'index.html');
 const favicon = path.resolve(__dirname, 'public', 'favicon.ico');
+
 const robotsUrl = 'https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/robots.txt/robots.txt';
 
+const gltfBaseURL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
+const gltfIndexFile = 'model-index.json'
+
 const hdrs = globSync('public/glTF-Sample-Environments/*.hdr')
-        .map((path) => (path.match(/^.*\/(?<name>[^\.]*)\.hdr$/)?.groups!.name));
+    .map((path) => (path.match(/^.*\/(?<name>[^\.]*)\.hdr$/)?.groups!.name));
 
 const dPages = globSync('src/components/pages/**/*.{tsx,mdx}');
 
@@ -82,7 +90,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     loader: "gltf-loader",
                 },
                 {
-                    test: /\.(ktx2|bin|jpe?g|png|glb|hdr)$/,
+                    test: /\.(ktx2?|bin|jpe?g|png|hdr|webp)$/,
                     type: 'asset/resource'
                 }
             ]
@@ -103,6 +111,8 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
             new DefinePlugin({
                 SAMPLES__: JSON.stringify(samples),
                 HDRS__: JSON.stringify(hdrs),
+                GLTF_INDEX_FILE__: JSON.stringify(gltfIndexFile),
+                GLTF_BASE_URL__: JSON.stringify(gltfBaseURL),
             }),
             !isDev && {
                 apply(compiler: Compiler) {
@@ -110,8 +120,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     compiler.hooks.compilation.tap(pluginName, (compilation) => {
                         compilation.hooks.additionalAssets.tapPromise(pluginName, async () => {
                             try {
-                                const resp = await fetch(robotsUrl);
-                                const source = await resp.text();
+                                const source = await fetch(robotsUrl).then((res) => res.text());;
                                 compilation.emitAsset('robots.txt', new sources.RawSource(source));
                             } catch (err) {
                                 compilation.errors.push(new WebpackError(`${pluginName}: ${err?.message ?? err}`));

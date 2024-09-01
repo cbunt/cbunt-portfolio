@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Viewport from './viewport';
 import DistortionElement from '../core/distortion-element';
-import { LoadModelConstructor } from '../../samples/sample-spec';
+import { LoadModelConstructor } from '../../samples/settings/sample-spec';
 
 const UnsupportedWarning = styled.div`
     display: flex;

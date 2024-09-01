@@ -137,7 +137,7 @@ export default class DeferredPass {
         if (skybox != null) this.skybox = skybox;
 
         this.bindgroupLayout = device.createBindGroupLayout({
-            label: 'deferred pass bindgroup',
+            label: 'deferred pass',
             entries: [
                 {
                     binding: 0,

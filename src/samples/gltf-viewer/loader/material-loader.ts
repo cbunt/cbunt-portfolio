@@ -94,6 +94,7 @@ export default async function loadMaterial(
                     mimeType,
                     usage: GPUTextureUsage.TEXTURE_BINDING,
                     device,
+                    srgbToLinear: true,
                 });
                 if (sampler) mat.baseColorSampler = toSamplerDescription(sampler);
             }
@@ -109,8 +110,9 @@ export default async function loadMaterial(
 
     if (material.normalTexture?.texture.source != null) {
         const { data, mimeType, sampler } = getImageData(material.normalTexture.texture);
+
         if (data != null) {
-            mat.normalSampler = await imageToTexture({
+            mat.normalTexture = await imageToTexture({
                 label: `${material.id} mr texture`,
                 data,
                 mimeType,
@@ -139,6 +141,7 @@ export default async function loadMaterial(
                     mimeType,
                     usage: GPUTextureUsage.TEXTURE_BINDING,
                     device,
+                    srgbToLinear: true,
                 });
                 if (sampler) mat.emissiveSampler = toSamplerDescription(sampler);
             }
