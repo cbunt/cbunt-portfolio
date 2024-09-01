@@ -6,7 +6,6 @@ import type { LoadModelConstructor } from '../../samples/sample-spec';
 
 import SitePage from './page-wrapper';
 import SupportCheck from '../viewport/support-check';
-import SampleSelect from './sample-select';
 import styled from 'styled-components';
 import theme from './codemirror-theme';
 import DistortionElement from '../core/distortion-element';
@@ -32,6 +31,10 @@ const CodeContainer = styled(DistortionElement).attrs({
     }
 `;
 
+const NameHeader = styled.h1`
+    text-transform: capitalize;
+`;
+
 export type SampleWrapperProps = {
     getModelConstructor?: LoadModelConstructor,
     modelName: string,
@@ -47,20 +50,20 @@ export default function SampleWrapper({
 }: SampleWrapperProps) {
     return (
         <SitePage extendMainWidth>
-            <SampleSelect selected={modelName} />
+            <NameHeader>{modelName}</NameHeader>
             {getModelConstructor != null ? <SupportCheck getModelConstructor={getModelConstructor} /> : undefined}
             {children}
             {sourceText != null
                 ? (
-                    <CodeContainer>
-                        <CodeMirror
-                            theme={theme}
-                            editable={false}
-                            maxHeight="80vh"
-                            value={sourceText}
-                            extensions={[javascript({ jsx: true, typescript: true })]}
-                        />
-                    </CodeContainer>
+                        <CodeContainer>
+                            <CodeMirror
+                                theme={theme}
+                                editable={false}
+                                maxHeight="80vh"
+                                value={sourceText}
+                                extensions={[javascript({ jsx: true, typescript: true })]}
+                            />
+                        </CodeContainer>
                     )
                 : undefined}
         </SitePage>

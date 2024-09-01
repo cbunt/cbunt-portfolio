@@ -3,6 +3,7 @@ import styled, { createGlobalStyle, css } from 'styled-components';
 
 import DistortionElement from '../core/distortion-element';
 import DistortionLink from '../core/link';
+import SampleSelect from './sample-select';
 
 const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar {
@@ -121,6 +122,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     nav {
+        z-index: 10;
         display: flex;
         flex-direction: row-reverse;
         justify-content: space-between;
@@ -149,25 +151,16 @@ const GlobalStyle = createGlobalStyle`
             font-stretch: 125%;
         }
 
-        a:nth-of-type(3n+1) {
-            &:link,
-            &:visited {
-                color: var(--accent-1);
-            }  
+        *:nth-child(3n+1) {
+            color: var(--accent-1);
         }
 
-        a:nth-of-type(3n+2) {  
-            &:link,
-            &:visited {
-                color: var(--accent-2);
-            }  
+        *:nth-child(3n+2) {  
+            color: var(--accent-2);
         }
         
-        a:nth-of-type(3n+3) {  
-            &:link,
-            &:visited {
-                color: var(--accent-3);
-            }  
+        *:nth-child(3n+3) {  
+            color: var(--accent-3);
         }
     }
 
@@ -262,7 +255,7 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                 </DistortionElement>
                 <div>
                     <DistortionLink href="/">About</DistortionLink>
-                    <DistortionLink href="/samples">Samples</DistortionLink>
+                    <SampleSelect />
                     <DistortionLink href="/resume">Résumé</DistortionLink>
                 </div>
                 <div>
