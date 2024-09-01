@@ -93,7 +93,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     :root {
-        color-scheme: light dark;
+        color-scheme: dark light;
     }
 
     h1 {
@@ -129,7 +129,7 @@ const GlobalStyle = createGlobalStyle`
         align-items: center;
 
         text-transform: uppercase;
-        height: calc(100% - 5rem);
+        max-height: calc(100% - 5rem);
         padding: 2.5rem 0;
 
         font-size: 1.5rem;
@@ -205,7 +205,6 @@ const IconLink = styled(DistortionLink)`
     margin-top: 0;
     font-family: 'NerdFontsSymbols Nerd Font';
     rotate: 180deg;
-    writing-mode: initial; 
 `;
 
 export type SitePageProps = {
@@ -235,8 +234,6 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                     }}
                 >
                     <svg
-                        width="100%"
-                        height="100%"
                         viewBox="0 0 100 75"
                         fill="#0000"
                         xmlns="http://www.w3.org/2000/svg"
