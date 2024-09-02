@@ -10,11 +10,12 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import ReactRefreshTypeScript from 'react-refresh-typescript';
 
-// import { fetch, setGlobalDispatcher, Agent } from 'undici'
+import { fetch, setGlobalDispatcher, Agent } from 'undici'
 
 const { sources, DefinePlugin, WebpackError } = webpack;
 
-// setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }) )
+// allows fetching robots.txt without timing out
+setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }) )
 
 declare module "fs" {
     function globSync(pattern: string): string[];
@@ -102,7 +103,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         plugins: [
             ...htmlPaths.map(([title, filename]) => new HtmlWebpackPlugin({
                 title: `cbunt portfolio${path.basename(title) === 'index' ? '' : ' -- ' + path.basename(title)}`,
-                description: 'A Basic WGPU Renderer',
+                description: 'Cass Bunting\'s portfolio website',
                 chunks: [title],
                 filename,
                 template,
