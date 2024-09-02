@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { ChangeEvent, ChangeEventHandler, useCallback, useEffect, useId, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import type { ValueKeyCallback } from '../../samples/settings/property-listener';
@@ -15,21 +15,45 @@ const SelectBackground = styled(DistortionElement)`
     z-index: -1;
 `;
 
-const LabelContainer = styled.div`
+const ScrollableDropdown = styled.div`
+    min-height: var(--label-total-height);
+    max-height: calc(10 * var(--label-total-height));
+    display: flex;
+    overflow: hidden;
     position: absolute;
     width: 100%;
-    min-height: var(--label-total-height);
-    display: flex;
-    flex-direction: column;
-    color: var(--hi-vis-color);
 `;
 
-const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
-    --label-padding: 4px;
-    --label-total-height: calc(1rem + calc(2 * var(--label-padding)));
+const LabelContainer = styled.div`
+    overflow-y: scroll;
+    overflow-x: hidden;
 
-    height: var(--label-total-height);
-    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+
+    &::-webkit-scrollbar-thumb {
+        background-color:rgb(from var(--accent-3) r g b / 0.75);
+    }
+`;
+
+const SelectContainer = styled.div<{ $disabled?: boolean }>`
+    --label-padding-top: 6px;
+    --label-padding-bottom: 4px;
+    --label-padding: calc(var(--label-padding-bottom) + var(--label-padding-top));
+    --label-total-height: calc(1rem + var(--label-padding));
+
+    position: relative;
+    width: 100%;
+
+    min-height: var(--label-total-height);
+    max-height: calc(10 * var(--label-total-height));
+
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    color: var(--hi-vis-color);
 
     grid-column: span 2;
     position: relative;
@@ -41,9 +65,11 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
     label {
         text-overflow: ellipsis;
         white-space: nowrap;
+        overflow: hidden;
         transform-origin: center left;
-
-        padding: var(--label-padding) 10px;
+        flex-shrink: 0;
+        
+        padding: var(--label-padding-top) 10px var(--label-padding-bottom);
         display: none;
         transition: 
             transform 0.1s var(--scale-bezier),
@@ -59,11 +85,11 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
         }
 
         &:first-of-type {
-            display: inline-block;
+            display: block;
         }
     }
 
-    ${(props) => (props.$disabled
+    ${({ $disabled }) => ($disabled
         ? css`
             filter: brightness(80%);
         `
@@ -78,7 +104,7 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
                 content: "\\25BC";
                 position: absolute;
                 top: 6px;
-                right: 10px;
+                right: 8px;
                 transition: 0.25s transform ease-in-out;
                 pointer-events: none;
             }
@@ -91,6 +117,8 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
             }
 
             &:focus {
+                z-index: 2;
+
                 label {
                     display: inline-block;
                 
@@ -100,6 +128,7 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
                 }
 
                 &::after {
+                    visibility: hidden;
                     transform: rotate(180deg);
                 }
 
@@ -110,7 +139,7 @@ const SelectContainer = styled(LabelContainer)<{ $disabled?: boolean }>`
     )}
 `;
 
-function fileToOption(onInput: (name: string) => void) {
+function fileToOption(onChange: ChangeEventHandler<HTMLInputElement>) {
     const name = useId();
 
     return (keys: string[], selected?: string) => {
@@ -128,7 +157,7 @@ function fileToOption(onInput: (name: string) => void) {
                         name={name}
                         value={key}
                         checked={checked}
-                        onChange={(e) => { onInput(e.currentTarget.value); }}
+                        onChange={onChange}
                     />
                 </label>
             );
@@ -173,9 +202,14 @@ export function FileUpload<T>({
         onChange?.(files.current[selected], 'value');
     }, []);
 
-    const handleSelection = (name: string) => {
+    const handleSelection = (e: ChangeEvent<HTMLInputElement> | string) => {
+        const name = typeof e === 'string' ? e : e.currentTarget.value;
+        if (name === selected) {
+            if (document.activeElement === selectionRef.current) selectionRef.current?.blur();
+            return;
+        }
+
         selectionRef.current?.blur();
-        if (name === selected) return;
         setSelected(name);
         onChange?.(files.current[name], 'value');
     };
@@ -229,10 +263,12 @@ export function FileUpload<T>({
                 tabIndex={selectEnabled ? 0 : undefined}
                 $disabled={!selectEnabled}
             >
-                <LabelContainer>
+                <ScrollableDropdown>
                     <SelectBackground tabIndex="0" />
-                    {...createLabels(Object.keys(files.current), selected)}
-                </LabelContainer>
+                    <LabelContainer>
+                        {...createLabels(Object.keys(files.current), selected)}
+                    </LabelContainer>
+                </ScrollableDropdown>
             </SelectContainer>
         </>
     );

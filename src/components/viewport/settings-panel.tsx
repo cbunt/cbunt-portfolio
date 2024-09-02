@@ -8,7 +8,7 @@ import DistortionElement from '../core/distortion-element';
 
 const GUIContainer = styled(Collapse).attrs({ elementType: 'form' })`
     display: grid;
-    grid-template-columns: min-content 0.6fr 0.4fr;
+    grid-template-columns: minmax(4rem, auto) minmax(4rem, 0.6fr) minmax(3rem, 0.3fr);
     column-gap: 6px;
     align-items: center;
 
