@@ -12,5 +12,4 @@ My developer portfolio site, focusing on graphics programming and webdev. Writte
 
 ### Assets  
 <https://github.com/KhronosGroup/glTF-Sample-Assets>  
-
-Textures are processed with NVIDIA Texture Tools Exporter
+<https://github.com/KhronosGroup/glTF-Sample-Environments>
