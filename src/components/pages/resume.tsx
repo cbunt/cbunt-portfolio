@@ -27,10 +27,6 @@ const MarkdownStyle = styled(FencedMarkdown)`
         font-weight: bold;
     }
 
-    h2 {
-        /* font-size: large; */
-    }
-
     p {
         text-justify: auto;
         margin-left: 0;
@@ -132,11 +128,11 @@ Personal portfolio developed with React, Webpack, and Typescript, with interacti
 ### [Cubemap Gaussian Blur](https://github.com/cbunt/cbunt-portfolio/blob/main/src/samples/cubemap-blur/cubemap-guassian-pyramid.ts)  
 Algorithm and WebGPU implementation for perceptually even Gaussian blurring of 3D textures.
 
-### Stylized Voronoi Water Shader
-Novel real-time 3D water shader stylized using Voronoi noise.
+### [WebGPU glTF Viewer](https://cbunt.ing/samples/gltf-viewer/)  
+From-scratch WebGPU 3D renderer and model viewer.
 
-### Haskell Neural Network
-Neural network implementation undertaken to learn machine learning and functional programming.
+${'' || '' /* ### Stylized Voronoi Water Shader
+Novel real-time 3D water shader stylized using Voronoi noise. */}
 
 ## Education
 ### University of British Columbia  
