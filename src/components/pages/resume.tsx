@@ -131,9 +131,6 @@ Algorithm and WebGPU implementation for perceptually even Gaussian blurring of 3
 ### [WebGPU glTF Viewer](https://cbunt.ing/samples/gltf-viewer/)  
 From-scratch WebGPU 3D renderer and model viewer.
 
-${'' || '' /* ### Stylized Voronoi Water Shader
-Novel real-time 3D water shader stylized using Voronoi noise. */}
-
 ## Education
 ### University of British Columbia  
 Bachelors of Arts, Majoring in Computer Science  
