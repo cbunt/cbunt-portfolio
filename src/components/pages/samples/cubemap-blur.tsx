@@ -15,8 +15,8 @@ blurred mip level the process:
 - Calculates the minimum angular distance between any pixel and a perimeter of 
   the given pixel distance
 - Uses that minimum angle over 3 as the Guassian sigma for blurring
-- For each pixel, samples all pixels of the previous mip within the given distance
-  and weights its contribution by the Guassian of the angle between the pixels
+- For each pixel, samples all pixels of the previous mip within the given pixel distance
+  and weights their contributions by the Guassian of their angular distances from the origin pixel
 - Normalizes the result with the sum of the weights
 
 For heavy loads that could impair smooth rendering or interactivity—such
@@ -26,12 +26,12 @@ as large images, high filter distances, or both at once—
 </code> 
 is used to break up work over multiple frames.
 
-This demo accepts uncompressed .ktx2 cubemap textures to be uploaded and 
-processed. Files are exported in the same format they were uploaded as.
+This demo accepts .hdr cubemap textures to be uploaded and 
+processed. Results are exported as an rgba32 .ktx2 file, including blurred mip levels.
 *NOTE:* exported .ktx2 files are currently malformed and unreadable to some 
-programs. This is likely due to a bug in the exporting library. Re-exporting them with
-[NVIDIA Texture Tools Exporter](https://developer.nvidia.com/texture-tools-exporter)
-fixes these issues.
+programs. This is likely due to a bug in the exporting library. Opening them with
+[NVIDIA Texture Tools Exporter](https://developer.nvidia.com/texture-tools-exporter) and
+re-exporting fixes these issues.
 `;
 
 renderApp(
