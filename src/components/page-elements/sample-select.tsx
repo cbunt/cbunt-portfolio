@@ -34,6 +34,7 @@ const LinkContainer = styled(Collapse)`
         padding: 0.5rem;
         margin: 0.5rem;
         white-space: nowrap;
+        color: var(--accent-1);
     }
 `;
 
