@@ -30,8 +30,7 @@ const robotsUrl = 'https://raw.githubusercontent.com/mitchellkrogza/nginx-ultima
 const gltfBaseURL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
 const gltfIndexFile = 'model-index.json'
 
-const hdrs = globSync('public/glTF-Sample-Environments/*.hdr')
-    .map((path) => (path.match(/^.*\/(?<name>[^\.]*)\.hdr$/)?.groups!.name));
+const hdrBaseURL = 'https://api.github.com/repos/KhronosGroup/glTF-Sample-Environments/contents?ref=low_resolution_hdrs';
 
 const dPages = globSync('src/components/pages/**/*.{tsx,mdx}');
 
@@ -111,7 +110,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
             })),
             new DefinePlugin({
                 SAMPLES__: JSON.stringify(samples),
-                HDRS__: JSON.stringify(hdrs),
+                HDR_BASE_URL__: JSON.stringify(hdrBaseURL),
                 GLTF_INDEX_FILE__: JSON.stringify(gltfIndexFile),
                 GLTF_BASE_URL__: JSON.stringify(gltfBaseURL),
             }),

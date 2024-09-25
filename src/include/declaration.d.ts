@@ -74,6 +74,6 @@ declare type TypedArrayConstructor =
 declare type TypedArrayLike = Pick<TypedArray, 'buffer' | 'byteLength' | 'byteOffset'>;
 
 declare const SAMPLES__: string[];
-declare const HDRS__: string[];
+declare const HDR_BASE_URL__: string;
 declare const GLTF_INDEX_FILE__: string;
 declare const GLTF_BASE_URL__: string;
