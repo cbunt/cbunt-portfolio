@@ -90,10 +90,10 @@ const SelectContainer = styled.div<{ $disabled?: boolean }>`
     }
 
     ${({ $disabled }) => ($disabled
-        ? css`
+            ? css`
             filter: brightness(80%);
         `
-        : css`
+            : css`
             cursor: pointer;
 
             label {
@@ -136,7 +136,7 @@ const SelectContainer = styled.div<{ $disabled?: boolean }>`
                     color: var(--accent-3);
                 }
             }`
-    )}
+        )}
 `;
 
 function fileToOption(onChange: ChangeEventHandler<HTMLInputElement>) {
