@@ -3,7 +3,7 @@ import { srgbTextureToLinear, generateMips } from './texture-processing';
 
 export type imageToTextureDescriptor = {
     device: GPUDevice,
-    data: Uint8Array,
+    data: Uint8Array | Blob | File | ImageBitmap,
     mimeType?: string,
     label?: string,
     usage?: number,
@@ -24,8 +24,17 @@ export async function imageToTexture({
     label = '',
     srgbToLinear,
 }: imageToTextureDescriptor) {
-    const blob = new Blob([data], { type: mimeType });
-    const bitmap = await createImageBitmap(blob, { colorSpaceConversion: 'none' });
+    let bitmap: ImageBitmap;
+
+    if (data instanceof ImageBitmap) {
+        bitmap = data;
+    } else {
+        const blob = (data instanceof Blob || data instanceof File)
+            ? data
+            : new Blob([data], { type: mimeType });
+        bitmap = await createImageBitmap(blob, { colorSpaceConversion: 'none' });
+    }
+
     const size = { width: bitmap.width, height: bitmap.height };
 
     const texture = device.createTexture({
