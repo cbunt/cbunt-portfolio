@@ -163,7 +163,7 @@ export default function include(flags: PipelineFeatureFlags) {
         @fragment
         fn fs(inData: FragIn) -> ForwardOut {
             var out: ForwardOut;
-            let rawColor: vec4f = textureSample(baseColorTexture, baseColorSampler, inData.uv);
+            let rawColor = textureSample(baseColorTexture, baseColorSampler, inData.uv);
 
             ${ifdef(PipelineFeatureFlags.AlphaCutoff, /* wgsl */`
                 var alpha = rawColor.a * material.baseColorFactor.a;
@@ -200,7 +200,7 @@ export default function include(flags: PipelineFeatureFlags) {
             `).else(/* wgsl */`
                 let fdx = dpdx(inData.pos);
                 let fdy = dpdy(inData.pos);
-                let normal = normalize(cross(fdx, fdy));
+                let normal = normalize(cross(fdy, fdx));
             `)}
 
             out.normal = vec4f(normal, 1);
