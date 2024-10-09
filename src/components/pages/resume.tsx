@@ -82,9 +82,61 @@ const MarkdownStyle = styled(FencedMarkdown)`
 `;
 
 const content = /* md */`
-## Goal
-Recently graduated computer science student seeking to exercise and
-build upon my knowledge of real-time rendering and web development.
+
+## Education
+### University of British Columbia  
+Bachelors of Arts, Majoring in Computer Science  
+Graduated May 2024
+
+### Notable Courses  
+- [**Digital Media Practicum**](https://www.students.cs.ubc.ca/~cs-344/current-term/)  
+Served as programmer and technical artist to
+develop a Unity game MVP for external client
+Hammer & Tong. Contributed to research and
+planning, and created gameplay infrastructure,
+graphical shaders, and tools for artists and designers.  
+- [**Compiler Construction**](https://www.students.cs.ubc.ca/~cs-411/2022w2/)  
+- [**Parallel Computation**](https://vancouver.calendar.ubc.ca/course-descriptions/courses/cpscv-418-parallel-computation)  
+- [**Human Computer Interaction**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
+- **Creative Writing for Video Games**
+
+
+## Work
+### Edmonds Unitarian Universalist Congregation
+Youth Program Coordinator  
+Supported youth programming, managed teachers and volunteers,
+ordered and organized supplies, lead activities, wrote weekly
+newsletters, and developed  goals, approach, and policy.  
+2016 - 2020
+
+### Education Roles
+Instructor and Program Coordinator  
+Collaboratively developed and facilitated teen leadership training.
+
+- *YMCA Camp Orkila*, 2018
+- *Goldmine Youth Leadership School*, 2014, 2016, 2017
+
+### Various Restaurants and Bars
+- *Bánh Town*, Server, Seattle, 2018 - 2019
+- *Percy's & Co*, Server, Seattle, 2017 - 2018
+- *Giddy Up Burgers*, Server & Cook, Seattle, 2016 - 2017
+- *Miho Izakaya*, Dishwasher, Portland, 2015 - 2016
+
+
+
+## Projects
+### [Portfolio Site, cbunt.ing](https://github.com/cbunt/cbunt-portfolio)  
+Personal portfolio developed with React, Webpack, and Typescript, with interactive WebGPU samples.
+
+### [Cubemap Gaussian Blur](https://github.com/cbunt/cbunt-portfolio/blob/main/src/samples/cubemap-blur/cubemap-guassian-pyramid.ts)  
+Algorithm and implementation for perceptually even Gaussian blurring of cubemaps.
+
+### [WebGPU glTF Viewer](https://cbunt.ing/samples/gltf-viewer/)  
+From-scratch WebGPU 3D renderer and model viewer.
+
+### [Voronoi Water Shader](https://github.com/cbunt/unity-voronoi-water)
+Stylized procedural water shader made in Unity using 4D voronoi noise and flowmaps.
+
 
 ## Skills
 ### Proficient
@@ -109,6 +161,8 @@ build upon my knowledge of real-time rendering and web development.
 - <i class-name="margin-less">\ue61d</i> C++
 - <i>\ue73c</i>Python
 - Vulkan
+- CUDA
+- <i>\ue777</i> Haskell
 \`\`\`
 
 ### Non-Tech Skills
@@ -120,55 +174,6 @@ build upon my knowledge of real-time rendering and web development.
 - Typesetting
 - Writing—Technical, Professional, and Creative
 \`\`\`
-
-## Projects
-### [Portfolio Site, cbunt.ing](https://github.com/cbunt/cbunt-portfolio)  
-Personal portfolio developed with React, Webpack, and Typescript, with interactive WebGPU samples.
-
-### [Cubemap Gaussian Blur](https://github.com/cbunt/cbunt-portfolio/blob/main/src/samples/cubemap-blur/cubemap-guassian-pyramid.ts)  
-Algorithm and WebGPU implementation for perceptually even Gaussian blurring of 3D textures.
-
-### [WebGPU glTF Viewer](https://cbunt.ing/samples/gltf-viewer/)  
-From-scratch WebGPU 3D renderer and model viewer.
-
-## Education
-### University of British Columbia  
-Bachelors of Arts, Majoring in Computer Science  
-Graduated May 2024
-
-### Notable Courses  
-- [**Digital Media Practicum**](https://www.students.cs.ubc.ca/~cs-344/current-term/)  
-Served as programmer and technical artist to
-develop a Unity game MVP for external client
-Hammer & Tong. Contributed to research and
-planning, and created gameplay infrastructure,
-graphical shaders, and tools for artists and designers.  
-- [**Compiler Construction**](https://www.students.cs.ubc.ca/~cs-411/2022w2/)  
-- [**Parallel Computation**](https://vancouver.calendar.ubc.ca/course-descriptions/courses/cpscv-418-parallel-computation)  
-- [**Human Computer Interaction**](https://www.students.cs.ubc.ca/~cs-344/current-term/)
-- **Creative Writing for Video Games**
-
-
-## Work
-### Edmonds Unitarian Universalist Congregation**  
-Youth Program Coordinator  
-Supported youth programming, managed teachers and volunteers,
-ordered and organized supplies, lead activities, wrote weekly
-newsletters, and developed  goals, approach, and policy.  
-2016 - 2020
-
-### Education Roles
-Instructor and Program Coordinator  
-Collaboratively developed and facilitated teen leadership training.
-
-- *YMCA Camp Orkila*, 2018
-- *Goldmine Youth Leadership School*, 2014, 2016, 2017
-
-### Various Restaurants and Bars
-- *Bánh Town*, Server, Seattle, 2018 - 2019
-- *Percy's & Co*, Server, Seattle, 2017 - 2018
-- *Giddy Up Burgers*, Server & Cook, Seattle, 2016 - 2017
-- *Miho Izakaya*, Dishwasher, Portland, 2015 - 2016
 `;
 
 renderApp(
