@@ -6,9 +6,9 @@
 
 ### Version Information #
 ###################################################
-### Version: V4.2024.09.4773
-### Updated: Wed Sep 25 10:03:57 UTC 2024
-### Bad Bot Count: 666
+### Version: V4.2024.10.4803
+### Updated: Wed Oct  9 22:01:24 UTC 2024
+### Bad Bot Count: 667
 ###################################################
 ### Version Information ##
 
@@ -864,6 +864,8 @@ Disallow:/
 User-agent: SentiBot
 Disallow:/
 User-agent: SenutoBot
+Disallow:/
+User-agent: SeoCherryBot
 Disallow:/
 User-agent: SeoSiteCheckup
 Disallow:/
