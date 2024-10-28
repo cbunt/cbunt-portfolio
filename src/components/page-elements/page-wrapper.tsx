@@ -257,7 +257,7 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                 <div>
                     <DistortionLink href="/">About</DistortionLink>
                     <SampleSelect />
-                    <DistortionLink href="/resume">Résumé</DistortionLink>
+                    <DistortionLink href="/resume">Resume</DistortionLink>
                 </div>
                 <div>
                     <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>

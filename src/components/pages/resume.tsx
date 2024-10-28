@@ -6,7 +6,7 @@ import SitePage from '../page-elements/page-wrapper';
 import TweakedMarkdown from '../core/tweaked-markdown';
 
 const MarkdownStyle = styled(TweakedMarkdown)`
-    columns: 2;
+    columns: 2 25rem;
 
     * {
         break-before: avoid;
@@ -166,7 +166,7 @@ Stylized procedural water shader made in Unity using 4D voronoi noise and flowma
 
 renderApp(
     <SitePage>
-        <h1>Cass Bunting&apos;s Résumé</h1>
+        <h1>Cass Bunting&apos;s Resume</h1>
         <MarkdownStyle components={{
             del: ({ children }) => (typeof children === 'string' ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>) : undefined),
         }}
