@@ -123,7 +123,7 @@ export default class GBuffer {
     updateBindgroup() {
         const entries = this.textures.map(({ view }, idx) => ({
             binding: idx,
-            resource: view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            resource: view,
         }));
 
         return this.device.createBindGroup({
@@ -135,8 +135,8 @@ export default class GBuffer {
 
     updatePassDescriptor() {
         const colorAttachments = this.textures.slice(0, -1).map(({ view, clearValue }) => ({
-            view: view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-            clearValue: clearValue, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            view: view,
+            clearValue: clearValue,
             loadOp: 'clear',
             storeOp: 'store',
         }));
@@ -145,8 +145,7 @@ export default class GBuffer {
             label: 'forward pass encoder',
             colorAttachments,
             depthStencilAttachment: {
-                view: this.depth.view, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-                depthClearValue: 1.0,
+                view: this.depth.view,
                 depthLoadOp: 'clear',
                 depthStoreOp: 'store',
             },

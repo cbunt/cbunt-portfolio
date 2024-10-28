@@ -2,10 +2,18 @@ import { FileUploadProps, FileUpload, Checkbox, CheckboxProps, Slider, SliderPro
 import { ModelSetting } from '../../samples/settings/sample-spec';
 import { ListenerSyms } from '../../samples/settings/property-listener';
 import SettingsPanel from './settings-panel';
+import styled from 'styled-components';
+import { ComponentProps } from 'react';
 
 export type ModelSettingsWidgetProps = {
     settings: Record<string, ModelSetting>,
 };
+
+const WidgetButton = styled(StyledButton)`
+    grid-column: span 3; 
+    color: var(--accent-2); 
+    --border-color: var(--accent-2);
+`;
 
 export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetProps) {
     return (
@@ -26,7 +34,7 @@ export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetPro
                 };
 
                 switch (info[ListenerSyms.$type]) {
-                    case 'button': return <StyledButton style={{ gridColumn: 'span 3', color: 'var(--accent-2)', '--border-color': 'var(--accent-2)' }} type="button" {...rest}>{label}</StyledButton>;
+                    case 'button': return <WidgetButton {...rest as ComponentProps<typeof WidgetButton>}>{label}</WidgetButton>;
                     case 'checkbox': return <Checkbox {...props as CheckboxProps} />;
                     case 'slider': return <Slider {...props as SliderProps} />;
                     case 'file': return <FileUpload {...props as FileUploadProps<unknown>} />;

@@ -248,9 +248,9 @@ export default async function cubemapGuassianPyramid({
         gaussianPyramid = device.createTexture({
             label: outputTextureLabel,
             usage: GPUTextureUsage.STORAGE_BINDING
-            | GPUTextureUsage.TEXTURE_BINDING
-            | GPUTextureUsage.COPY_SRC
-            | GPUTextureUsage.COPY_DST,
+                | GPUTextureUsage.TEXTURE_BINDING
+                | GPUTextureUsage.COPY_SRC
+                | GPUTextureUsage.COPY_DST,
             dimension: '2d',
             format,
             mipLevelCount,

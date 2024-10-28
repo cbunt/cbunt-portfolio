@@ -132,7 +132,6 @@ export default class CubemapBlurModel implements FullRenderModel {
                 depthClearValue: 1,
                 depthLoadOp: 'clear',
                 depthStoreOp: 'store',
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 view: gbuffer.depth.view,
             },
         }).end();

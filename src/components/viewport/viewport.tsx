@@ -55,7 +55,7 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
     const handleMouseDown = (e: MouseEvent) => {
         moveRef.current = e.buttons & 0b111;
         if (!canFocus.current) return;
-        canvasRef.current?.requestPointerLock();
+        void canvasRef.current?.requestPointerLock();
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -107,10 +107,10 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
             void Promise.all([
                 import('../../rendering/renderer'),
                 getModelConstructor(),
-            ]).then(async ([{ default: { CreateInitialized } }, modelCtor]) => {
+            ]).then(async ([renderer, modelCtor]) => {
                 if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
 
-                rendererRef.current = await CreateInitialized(canvasRef.current);
+                rendererRef.current = await renderer.default.CreateInitialized(canvasRef.current);
                 controllerRef.current = new OrbitCameraController(rendererRef.current.camera);
                 const model = new modelCtor(rendererRef.current);
 

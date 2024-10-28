@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
 import { PipelineFeatureFlags, featureFlagsToString } from '../rendering/default-forward-pass/pipeline-feature-flags';

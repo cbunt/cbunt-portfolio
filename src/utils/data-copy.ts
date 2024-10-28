@@ -304,7 +304,6 @@ export async function textureToKTX(device: GPUDevice, texture: GPUTexture, cube 
     let imageData: Uint8Array;
 
     for (let i = 0; i < texture.mipLevelCount; i += 1) {
-        // eslint-disable-next-line no-await-in-loop
         ({ imageData, storageBuffer } = await textureToArrayBuffer({
             mipLevel: i,
             returnBuffer: true,
