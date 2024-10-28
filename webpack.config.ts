@@ -7,8 +7,6 @@ import { URL } from 'url';
 import { globSync } from 'fs';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import ReactRefreshTypeScript from 'react-refresh-typescript';
 
 import { fetch, setGlobalDispatcher, Agent } from 'undici'
 
@@ -74,9 +72,6 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     use: {
                         loader: 'ts-loader',
                         options: {
-                            getCustomTransformers: () => ({
-                                before: [isDev && ReactRefreshTypeScript()].filter(Boolean),
-                            }),
                             transpileOnly: isDev,
                         },
                     },
@@ -97,7 +92,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
-            alias: { public: path.resolve(__dirname, 'public') }
+            alias: { public: path.resolve(__dirname, 'public') },
         },
         plugins: [
             ...htmlPaths.map(([title, filename]) => new HtmlWebpackPlugin({
@@ -129,7 +124,6 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     });
                 },
             },
-            isDev && new ReactRefreshWebpackPlugin(),
         ].filter(Boolean),
         watchOptions: {
             poll: 1000,
@@ -142,7 +136,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         experiments: {
             syncWebAssembly: true
         },
-        devtool: 'eval-source-map',
+        devtool: 'eval-cheap-source-map',
         devServer: {
             open: true,
             hot: true,
@@ -152,6 +146,11 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
                 'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
             }
-        }
+        },
+        optimization: {
+            splitChunks: {
+              chunks: 'all',
+            },
+        },
     }
 };

@@ -1,13 +1,15 @@
 import { MutableRefObject, useCallback, useEffect, useState, MouseEvent } from 'react';
 import styled from 'styled-components';
 import { PolymorphicProps, svgToDataURL } from '../../utils/frontend';
-import DistortionElement from '../core/distortion-element';
+import Distortion from 'react-distortion';
 
-const FullscreenStyle = styled(DistortionElement).attrs<{ open?: boolean }>({
+const FullscreenStyle = styled(Distortion as typeof Distortion<'button'>).attrs<{ open?: boolean }>({
     forwardedAs: 'button',
-    scale: 3,
-    whileHover: {
-        mode: 'loop',
+    defaultFilter: {
+        scale: 3,
+    },
+    hoverFilter: {
+        animation: 'alternating loop',
         scale: 7,
     },
 })`
@@ -16,18 +18,18 @@ const FullscreenStyle = styled(DistortionElement).attrs<{ open?: boolean }>({
             <defs>
                 <path d="M7.707 6.242 4.42 2.977 5.71 1.7A1 1 0 0 0 5 0H1a1 1 0 0 0-1 .993v3.97a.98.98 0 0 0 .62.913 1.01 1.01 0 0 0 1.09-.208L3 4.388 6.288 7.65a1.01 1.01 0 0 0 1.42 0 .994.994 0 0 0 0-1.41z" id="a"/>
             </defs>
-            ${open
-        ? `
+        ${open
+                ? `
             <use href="#a" transform="rotate(90 -1 9)"/>
             <use href="#a" transform="rotate(-90 9 -1)"/>
             <use href="#a" transform="rotate(180 4 4)"/>
             <use href="#a" transform="translate(10 10)"/>`
-        : `
+                : `
             <use href="#a"/>
             <use href="#a" transform="rotate(90 9 9)"/>
             <use href="#a" transform="rotate(180 9 9)"/>
             <use href="#a" transform="rotate(-90 9 9)"/>`
-}
+        }
         </svg>
     `)};
 

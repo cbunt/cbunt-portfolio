@@ -1,32 +1,35 @@
-import { ChangeEvent, ChangeEventHandler, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { ChangeEvent, ChangeEventHandler, useEffect, useId, useRef, useState, JSX } from 'react';
 import styled, { css } from 'styled-components';
 
 import type { ValueKeyCallback } from '../../samples/settings/property-listener';
 
 import StyledButton from './button';
-import DistortionElement from './distortion-element';
+import Distortion from 'react-distortion';
+import { DistortBackground } from 'react-distortion/child-elements';
 
-const SelectBackground = styled(DistortionElement)`
-    border-radius: 5px;
-    background-color: color-mix(in oklab, var(--secondary-color) 85%, var(--hi-vis-gray));
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-`;
-
-const ScrollableDropdown = styled.div`
+const ScrollableDropdown = styled(Distortion as typeof Distortion<'div'>).attrs({
+    defaultFilter: { disable: true },
+    distortChildren: DistortBackground,
+})`
     min-height: var(--label-total-height);
     max-height: calc(10 * var(--label-total-height));
     display: flex;
     overflow: hidden;
     position: absolute;
     width: 100%;
+
+    & > div:last-of-type {
+        background-color: color-mix(in oklab, var(--secondary-color) 85%, var(--hi-vis-gray));
+        z-index: 0;
+        border-radius: 5px;
+    }
 `;
 
 const LabelContainer = styled.div`
     overflow-y: scroll;
     overflow-x: hidden;
+
+    z-index: 2;
 
     width: 100%;
     display: flex;
@@ -44,19 +47,16 @@ const SelectContainer = styled.div<{ $disabled?: boolean }>`
     --label-padding: calc(var(--label-padding-bottom) + var(--label-padding-top));
     --label-total-height: calc(1rem + var(--label-padding));
 
-    position: relative;
-    width: 100%;
-
     min-height: var(--label-total-height);
     max-height: calc(10 * var(--label-total-height));
 
     display: flex;
     width: 100%;
+    position: relative;
     flex-direction: column;
     color: var(--hi-vis-color);
 
     grid-column: span 2;
-    position: relative;
 
     input[type="radio"] {
         display: none;
@@ -90,10 +90,10 @@ const SelectContainer = styled.div<{ $disabled?: boolean }>`
     }
 
     ${({ $disabled }) => ($disabled
-            ? css`
+        ? css`
             filter: brightness(80%);
         `
-            : css`
+        : css`
             cursor: pointer;
 
             label {
@@ -136,7 +136,7 @@ const SelectContainer = styled.div<{ $disabled?: boolean }>`
                     color: var(--accent-3);
                 }
             }`
-        )}
+    )}
 `;
 
 function fileToOption(onChange: ChangeEventHandler<HTMLInputElement>) {
@@ -218,7 +218,7 @@ export function FileUpload<T>({
     const fullButtonText = buttonText ?? `Upload ${accept ?? 'file'}`;
     const selectEnabled = Object.keys(files.current).length > 1;
 
-    const update = useCallback(function<K extends keyof FileUploadProps<T>>(changed: FileUploadProps<T>[K], key: K) {
+    function update<K extends keyof FileUploadProps<T>>(changed: FileUploadProps<T>[K], key: K) {
         if (key !== 'selection' || changed == null) return;
         const { value: newValue, initialValues: newValues } = changed as NonNullable<FileUploadProps<T>['selection']>;
 
@@ -231,7 +231,7 @@ export function FileUpload<T>({
 
         files.current[newValue] = newValues[newValue];
         setSelected(newValue);
-    }, []);
+    };
 
     if (callbacks != null) {
         useEffect(() => {
@@ -264,7 +264,6 @@ export function FileUpload<T>({
                 $disabled={!selectEnabled}
             >
                 <ScrollableDropdown>
-                    <SelectBackground tabIndex="0" />
                     <LabelContainer>
                         {...createLabels(Object.keys(files.current), selected)}
                     </LabelContainer>

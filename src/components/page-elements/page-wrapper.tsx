@@ -1,7 +1,7 @@
-import { ReactNode, StrictMode } from 'react';
+import { ReactNode, StrictMode, JSX } from 'react';
 import styled, { createGlobalStyle, css } from 'styled-components';
 
-import DistortionElement from '../core/distortion-element';
+import Distortion from 'react-distortion';
 import DistortionLink from '../core/link';
 import SampleSelect from './sample-select';
 
@@ -210,19 +210,20 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
         <StrictMode>
             <GlobalStyle />
             <nav>
-                <DistortionElement
-                    forwardedAs="div"
+                <Distortion
                     style={{
                         pointerEvents: 'all',
                         width: '2rem',
                         transform: 'rotate(180deg)',
                         aspectRatio: 1,
                     }}
-                    baseMode="none"
-                    baseFrequency={0.02}
-                    scale={10}
-                    whileHover={{
-                        mode: 'loop',
+                    defaultFilter={{
+                        baseFrequency: 0.02,
+                        scale: 10,
+                        disable: true,
+                    }}
+                    hoverFilter={{
+                        animation: 'alternating loop',
                         scale: 15,
                     }}
                 >
@@ -252,7 +253,7 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                         <polygon style={{ mixBlendMode: 'hard-light' }} fill="url(#yellow)" points="0 75, 50 0, 100 75" />
                         <polygon style={{ mixBlendMode: 'hard-light' }} fill="url(#cyan)" points="0 75, 50 0, 100 75" />
                     </svg>
-                </DistortionElement>
+                </Distortion>
                 <div>
                     <DistortionLink href="/">About</DistortionLink>
                     <SampleSelect />

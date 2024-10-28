@@ -1,7 +1,8 @@
-import { ChangeEvent, useState, useId, useEffect, useRef, useCallback } from 'react';
+import { ChangeEvent, useState, useId, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import DistortionElement from './distortion-element';
+import Distortion, { DistortHandle } from 'react-distortion';
+import { DistortBackground } from 'react-distortion/child-elements';
 import CustomTooltip from './tooltip';
 import { clamp } from '../../utils/general';
 import { ValueKeyCallback } from '../../samples/settings/property-listener';
@@ -67,27 +68,20 @@ const StyledSlider = styled.input.attrs({ type: 'range' })`
     }
 `;
 
-const ValueTextBackground = styled(DistortionElement).attrs({
-    scale: 7,
+const ValueTextContainer = styled(Distortion).attrs({
+    defaultFilter: {
+        scale: 7,
+        disable: true,
+    },
+    distortChildren: DistortBackground,
     minRefresh: 200,
 })`
-    border-radius: 5px;
-    background-color: var(--background-color);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-`;
-
-const ValueTextContainer = styled.div`
     width: 100%;
     position: relative;
     border-radius: 3px;
     background-color: #0000;
 
-    &:has(*:focus-visible) ${ValueTextBackground} {
+    &:has(*:focus-visible) > div {
         outline: 2px solid var(--hi-vis-gray);
     }
 `;
@@ -114,13 +108,13 @@ const ValueTextInput = styled.input.attrs({ type: 'number' })`
     }
 `;
 
-const DistortionWrapper = styled(DistortionElement).attrs({
-    whileHover: {
-        mode: 'loop',
+const DistortionWrapper = styled(Distortion).attrs({
+    hoverFilter: {
+        mode: 'alternating loop',
         baseFrequency: 0.02,
         scale: 6,
     },
-    whileActive: {
+    activeFilter: {
         mode: 'static',
         baseFrequency: 0.02,
         scale: 6,
@@ -155,7 +149,7 @@ export function Slider({
 }: SliderProps) {
     const id = useId();
     const [sliderState, setSliderState] = useState({ min, max, step, value });
-    const seedCallback = useRef<(() => void) | null>(null);
+    const distortionRef = useRef<DistortHandle>(null);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         let newVal = e.target.value !== '' ? parseFloat(e.target.value) : sliderState.min;
@@ -163,7 +157,7 @@ export function Slider({
         if (newVal === sliderState.value) return;
         setSliderState({ ...sliderState, value: newVal });
         callback?.(newVal);
-        seedCallback.current?.();
+        distortionRef.current?.refreshSeed();
     };
 
     function update<K extends keyof SliderProps>(val: SliderProps[K], key: K) {
@@ -179,16 +173,12 @@ export function Slider({
         });
     }
 
-    const setSeedCallback = useCallback((fn: () => void) => {
-        seedCallback.current = fn;
-    }, []);
-
     return (
         <>
             <CustomTooltip forwardedAs="label" htmlFor={id} tooltipContent={description}>
                 {label}
             </CustomTooltip>
-            <DistortionWrapper refreshSeedCallback={setSeedCallback}>
+            <DistortionWrapper ref={distortionRef}>
                 <StyledSlider
                     aria-label={`${label}-slider`}
                     onChange={onChange}
@@ -197,7 +187,6 @@ export function Slider({
             </DistortionWrapper>
             <ValueTextContainer>
                 <ValueTextInput {...sliderState} id={id} aria-label={`${label}-text-input`} onChange={onChange} />
-                <ValueTextBackground />
             </ValueTextContainer>
         </>
     );

@@ -1,10 +1,11 @@
-import { useCallback, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { Collapse } from '@kunukn/react-collapse';
 
 import { StyledButton } from '../core';
-import DistortionElement from '../core/distortion-element';
+import Distortion, { DistortHandle } from 'react-distortion';
+import { DistortBackground } from 'react-distortion/child-elements';
 
 const GUIContainer = styled(Collapse).attrs({ elementType: 'form' })`
     display: grid;
@@ -63,7 +64,14 @@ const GridContainer = styled.div`
     margin-left: 0;
 `;
 
-const MainPanel = styled.div<{ $toggleId: string }>`
+const MainPanel = styled(Distortion).attrs({
+    defaultFilter: {
+        scale: 7,
+        disable: true,
+    },
+    distortChildren: DistortBackground,
+    minRefresh: 200,
+})`
     background-color: #0000;
     color: var(--accent-1);
     z-index: 2;
@@ -77,26 +85,16 @@ const MainPanel = styled.div<{ $toggleId: string }>`
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
-`;
 
-const PanelBackground = styled(DistortionElement).attrs({
-    scale: 7,
-    minRefresh: 200,
-})`
-    border-radius: 5px;
-    background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 6px 6px 4px;
-    z-index: -1;
+    & > div:last-of-type {
+        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
+        box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 6px 6px 4px;
+    }
 `;
 
 const ToggleLabel = styled(StyledButton).attrs({ forwardedAs: 'label' })`
     width: 100%;
-    
+
     &::after {
         transition: content 0.3s;
         content: "Show Controls";
@@ -109,34 +107,25 @@ const ToggleLabel = styled(StyledButton).attrs({ forwardedAs: 'label' })`
 
 export default function SettingsPanel({ children }: { children?: React.ReactNode }) {
     const handleId = useId();
-    const toggleId = useId();
     const nodeRef = useRef<HTMLDivElement | null>(null);
+    const distortionRef = useRef<DistortHandle>(null);
     const [isOpen, setIsOpen] = useState(true);
-    const recalcSeed = useRef<(() => void) | null>(null);
-
-    const setRecalcSeed = useCallback((fn: () => void) => {
-        recalcSeed.current = fn;
-    }, []);
-
-    const onInput = () => { setIsOpen((open) => !open); };
 
     return (
         <Draggable
             handle={`#${CSS.escape(handleId)}`}
-            onDrag={() => recalcSeed.current?.()}
+            onDrag={() => distortionRef.current?.refreshSeed()}
             bounds="parent"
             nodeRef={nodeRef}
         >
-            <MainPanel $toggleId={toggleId} ref={nodeRef}>
-                <PanelBackground refreshSeedCallback={setRecalcSeed} />
+            <MainPanel ref={distortionRef} forwardedRef={nodeRef}>
                 <DragHandle id={handleId} />
                 <GridContainer>
                     <ToggleLabel>
                         <input
-                            id={toggleId}
                             type="checkbox"
                             style={{ position: 'absolute', top: -9999, left: -9999 }}
-                            onInput={onInput}
+                            onInput={() => { setIsOpen((open) => !open); }}
                             checked={isOpen}
                             readOnly
                         />

@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import DistortionElement from './distortion-element';
+import Distortion from 'react-distortion';
 
-const DistortionLink = styled(DistortionElement).attrs({
+const DistortionLink = styled(Distortion as typeof Distortion<'a'>).attrs({
     forwardedAs: 'a',
-    baseMode: 'none',
-    whileHover: {
-        mode: 'loop',
+    defaultFilter: { disable: true },
+    activeFilter: { scale: 7 },
+    hoverFilter: {
+        animation: 'alternating loop',
         scale: 7,
     },
 })`

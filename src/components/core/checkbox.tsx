@@ -2,16 +2,18 @@ import { ChangeEvent, useState, useId, useEffect } from 'react';
 import styled from 'styled-components';
 
 import type { ValueKeyCallback } from '../../samples/settings/property-listener';
-import DistortionElement from './distortion-element';
+import Distortion from 'react-distortion';
 import CustomTooltip from './tooltip';
 
-const DistortionWrapper = styled(DistortionElement).attrs({
-    scale: 6,
-    whileHover: {
-        mode: 'loop',
+const DistortionWrapper = styled(Distortion).attrs({
+    defaultFilter: {
+        scale: 6,
+    },
+    hoverFilter: {
+        mode: 'alternating loop',
         scale: 4,
     },
-    whileActive: {
+    activeFilter: {
         mode: 'static',
         scale: 6,
     },

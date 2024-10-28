@@ -1,25 +1,27 @@
 import styled from 'styled-components';
-import DistortionElement from './distortion-element';
+import DistortComponent, { DistortOptions } from 'react-distortion';
+import { DistortBorder } from 'react-distortion/child-elements';
 
-const StyledButton = styled(DistortionElement).attrs({
+const StyledButton = styled(DistortComponent).attrs({
     forwardedAs: 'button',
     type: 'button',
-    baseMode: 'none',
-    border: true,
-    scale: 5,
-    numOctaves: 1,
-    baseFrequency: 0.02,
-    whileHover: {
-        mode: 'loop',
+    defaultFilter: {
+        disable: true,
+        scale: 5,
+        baseFrequency: 0.02,
+        numOctaves: 1,
+    },
+    hoverFilter: {
+        animation: 'alternating loop',
         scale: 4,
         baseFrequency: 0.01,
     },
-    whileActive: {
-        mode: 'static',
+    activeFilter: {
         scale: 5,
         baseFrequency: 0.01,
     },
-})`
+    distortChildren: DistortBorder,
+} as DistortOptions)`
     color: var(--accent-3);
     --border-color: var(--accent-3);
     --border-width: max(3px, 0.1rem);

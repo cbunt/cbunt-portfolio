@@ -8,11 +8,12 @@ import SitePage from './page-wrapper';
 import SupportCheck from '../viewport/support-check';
 import styled from 'styled-components';
 import theme from './codemirror-theme';
-import DistortionElement from '../core/distortion-element';
+import Distortion from 'react-distortion';
+import { DistortBorder } from 'react-distortion/child-elements';
 
-const CodeContainer = styled(DistortionElement).attrs({
-    border: true,
-    baseMode: 'none',
+const CodeContainer = styled(Distortion).attrs({
+    defaultFilter: { disable: true },
+    distortChildren: DistortBorder,
 })`
     position: relative;
     --border-color: var(--secondary-color);
