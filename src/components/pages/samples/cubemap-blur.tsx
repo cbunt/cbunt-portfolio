@@ -1,9 +1,8 @@
-import Markdown from 'markdown-to-jsx';
-
 import SampleWrapper from '../../page-elements/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
 
 import source from '../../../samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
+import TweakedMarkdown from '../../core/tweaked-markdown';
 
 const getModelConstructor = () => import('../../../samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default);
 
@@ -40,6 +39,6 @@ renderApp(
         getModelConstructor={getModelConstructor}
         sourceText={source}
     >
-        <Markdown options={{ wrapper: 'article' }}>{content}</Markdown>
+        <TweakedMarkdown>{content}</TweakedMarkdown>
     </SampleWrapper>,
 );

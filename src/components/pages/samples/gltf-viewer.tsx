@@ -1,7 +1,6 @@
-import Markdown from 'markdown-to-jsx';
-
 import SampleWrapper from '../../page-elements/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
+import TweakedMarkdown from '../../core/tweaked-markdown';
 
 const getModelConstructor = () => import('../../../samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default);
 
@@ -26,6 +25,6 @@ renderApp(
         modelName="glTF Viewer"
         getModelConstructor={getModelConstructor}
     >
-        <Markdown options={{ wrapper: 'article' }}>{content}</Markdown>
+        <TweakedMarkdown>{content}</TweakedMarkdown>
     </SampleWrapper>,
 );
