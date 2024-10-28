@@ -1,14 +1,17 @@
 import webpack from 'webpack';
-import type { Compiler, Configuration } from 'webpack';
+import { Compiler, Configuration, BannerPlugin } from 'webpack';
 import type {} from 'webpack-dev-server'
 
 import path from 'path';
 import { URL } from 'url';
 import { globSync } from 'fs';
-
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-
 import { fetch, setGlobalDispatcher, Agent } from 'undici'
+
+
+import LicenseWebpackPlugin from 'webpack-license-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import Terser from 'terser-webpack-plugin';
+
 
 const { sources, DefinePlugin, WebpackError } = webpack;
 
@@ -124,6 +127,11 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     });
                 },
             },
+            !isDev && new LicenseWebpackPlugin(),
+            !isDev && new BannerPlugin({
+                banner: `For license information see: https://cbunt.ing/oss-licenses.json`,
+                stage: webpack.Compilation.PROCESS_ASSETS_STAGE_DEV_TOOLING,
+            }),
         ].filter(Boolean),
         watchOptions: {
             poll: 1000,
@@ -136,7 +144,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         experiments: {
             syncWebAssembly: true
         },
-        devtool: 'eval-cheap-source-map',
+        devtool: isDev ? 'eval-cheap-source-map' : 'source-map',
         devServer: {
             open: true,
             hot: true,
@@ -149,8 +157,17 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         },
         optimization: {
             splitChunks: {
-              chunks: 'all',
+                chunks: 'all',
             },
+            minimize: !isDev,
+            minimizer: isDev ? undefined : [new Terser({
+                extractComments: false,  
+                terserOptions: {
+                    format: {
+                      comments: false,
+                    },
+                  },
+            })],
         },
     }
 };
