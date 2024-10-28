@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import { Compiler, Configuration, BannerPlugin } from 'webpack';
+import { Compiler, Configuration } from 'webpack';
 import type {} from 'webpack-dev-server'
 
 import path from 'path';
@@ -128,7 +128,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 },
             },
             !isDev && new LicenseWebpackPlugin(),
-            !isDev && new BannerPlugin({
+            !isDev && new webpack.BannerPlugin({
                 banner: `For license information see: https://cbunt.ing/oss-licenses.json`,
                 stage: webpack.Compilation.PROCESS_ASSETS_STAGE_DEV_TOOLING,
             }),
