@@ -6,7 +6,8 @@ import SitePage from '../page-elements/page-wrapper';
 import TweakedMarkdown from '../core/tweaked-markdown';
 
 const MarkdownStyle = styled(TweakedMarkdown)`
-    columns: 2 25rem;
+    columns: 2 max(15rem, 30vw);
+    column-gap: 3rem;
 
     * {
         break-before: avoid;
