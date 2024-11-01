@@ -62,7 +62,7 @@ const MarkdownStyle = styled(TweakedMarkdown)`
             align-content: center;
             font-weight: bold;
             display: block;
-            
+
             &:not(:first-child) {
                 margin-top: 0;
             }
@@ -85,9 +85,10 @@ const content = await fetch(resumeURL).then((res) => res.text());
 renderApp(
     <SitePage>
         <h1>Cass Bunting&apos;s Resume</h1>
-        <MarkdownStyle components={{
-            del: ({ children }) => (typeof children === 'string' ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>) : undefined),
-        }}
+        <MarkdownStyle
+            options={{ components: {
+                del: ({ children }) => (typeof children === 'string' ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>) : undefined),
+            } }}
         >
             {content}
         </MarkdownStyle>

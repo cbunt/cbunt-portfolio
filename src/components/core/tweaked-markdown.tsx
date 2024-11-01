@@ -1,14 +1,26 @@
-import Markdown, { Options } from 'react-markdown';
+import { JSX } from 'react';
+import Markdown, { Options as MarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export default function TweakedMarkdown({ components, children, remarkPlugins, ...rest }: Options) {
+export type TweakedMarkdownProps = {
+    options?: MarkdownOptions,
+    children?: string | null,
+} & JSX.IntrinsicElements['article'];
+
+export default function TweakedMarkdown({
+    children,
+    options: { remarkPlugins, components, ...restOptions } = {},
+    ...rest
+}: TweakedMarkdownProps) {
     return (
-        <Markdown
-            components={{ h1: 'h2', h2: 'h3', ...components }}
-            remarkPlugins={[remarkGfm, ...(remarkPlugins ?? [])]}
-            {...rest}
-        >
-            {children}
-        </Markdown>
+        <article {...rest}>
+            <Markdown
+                components={{ h1: 'h2', h2: 'h3', ...components }}
+                remarkPlugins={[remarkGfm, ...(remarkPlugins ?? [])]}
+                {...restOptions}
+            >
+                {children}
+            </Markdown>
+        </article>
     );
 }
