@@ -1,19 +1,22 @@
-import { JSX } from 'react';
+import { ElementType, ComponentProps } from 'react';
 import Markdown, { Options as MarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export type TweakedMarkdownProps = {
+export type TweakedMarkdownProps<E extends ElementType> = {
+    as?: E,
     options?: MarkdownOptions,
     children?: string | null,
-} & JSX.IntrinsicElements['article'];
+} & Omit<ComponentProps<E>, 'as' | 'options' | 'children'>;
 
-export default function TweakedMarkdown({
+export default function TweakedMarkdown<E extends ElementType = 'article'>({
+    as,
     children,
     options: { remarkPlugins, components, ...restOptions } = {},
     ...rest
-}: TweakedMarkdownProps) {
+}: TweakedMarkdownProps<E>) {
+    const As = as ?? 'article';
     return (
-        <article {...rest}>
+        <As {...rest}>
             <Markdown
                 components={{ h1: 'h2', h2: 'h3', ...components }}
                 remarkPlugins={[remarkGfm, ...(remarkPlugins ?? [])]}
@@ -21,6 +24,6 @@ export default function TweakedMarkdown({
             >
                 {children}
             </Markdown>
-        </article>
+        </As>
     );
 }
