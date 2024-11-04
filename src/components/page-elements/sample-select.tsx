@@ -11,7 +11,6 @@ const Container = styled.div<{ $isOpen?: boolean }>`
     display: flex;
     flex-direction: column;
     text-transform: capitalize;
-    position: relative;
     overflow: visible;
     z-index: 10;
 `;
@@ -25,17 +24,17 @@ const LinkContainer = styled(Distortion).attrs({
     },
     distortChildren: DistortBackground,
 })`
-    transition: height 300ms ease-out; // cubic-bezier(.53,.65,.48,1.12);
-
-    position: fixed;
-    transform-origin: top;
-    height: 100vh;
-    bottom: 0;
-    right: 80%;
+    transition: height 300ms ease-out;
     
-    display: flex;
+    width: 100vh;
     justify-content: space-evenly;
-
+    
+    transform: rotate(90deg);
+    writing-mode: initial;
+    position: absolute;
+    top: 0;
+    transform-origin: top left;
+    
     font-weight: bold;
     font-size: 1.4rem;
 
@@ -98,8 +97,8 @@ export default function SampleSelect() {
             >
                 Samples
             </Button>
-            <LinkContainer isOpen={linksOpen} collapseHeight="0px">
-                    {...items}
+            <LinkContainer isOpen={linksOpen}>
+                {...items}
             </LinkContainer>
         </Container>
     );
