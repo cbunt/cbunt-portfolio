@@ -88,7 +88,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     loader: "gltf-loader",
                 },
                 {
-                    test: /\.(ktx2?|bin|jpe?g|png|hdr|webp)$/,
+                    test: /\.(ktx2?|bin|jpe?g|png|hdr|webp|mp4)$/,
                     type: 'asset/resource'
                 }
             ]
