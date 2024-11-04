@@ -49,7 +49,7 @@
     }
 
     div {
-        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
+        background-color: var(--secondary-color);
     }
 `,x=(0,i.Ay)(s).attrs({forwardedAs:"button"})`
     text-transform: uppercase;
@@ -102,33 +102,30 @@
         --scale-bezier: cubic-bezier(0.81, 0, 0.37, 3.69);
         --scale-transition: transform 0.2s cubic-bezier(0.81, 0, 0.37, 3.69);
 
-        --ok-l1: 1.5;
         --ok-l2: 0.6;
-        --ok-l3: 75%;
-        --ok-c-factor: 1.5;
         
-        --secondary-color: #415153;
         --background-color: #0A102E;
         --hi-vis-color: #DBE4FF;
+
+        --secondary-color: oklch(from var(--background-color) calc(l * 1.5) calc(c * 1.5) h);
+
         
         --accent-1: #18F7F7;
         --accent-2: #FF61FF;
         --accent-3: #FFFF16;
         
         @media (prefers-color-scheme: light) {
-            --ok-l1: 0.95;
             --ok-l2: 1.3;
-            --ok-l3: 50%;
-            --ok-c-factor: 1.4;
             
             --background-color: #FEF6C7;
             --hi-vis-color: #0c007d;
-            --secondary-color: #d6d6d6;
-            
+            --secondary-color: oklch(from var(--background-color) calc(l * 0.95) calc(c * 1.4) h);
+
             --accent-1: #D61500;
             --accent-2: #2F8000;
             --accent-3: #034cdf;
         }
+
 
         code {
             font-family: 'Space Mono', monospace;
@@ -186,22 +183,23 @@
     }
 
     nav {
-        z-index: 10;
         display: flex;
+        flex: 1 1;
         flex-direction: row-reverse;
         justify-content: space-between;
+        align-items: center;
+        
         position: sticky;
         top: 0;
-        align-items: center;
-
-        text-transform: uppercase;
-        max-height: calc(100% - 5rem);
+        z-index: 10;
+        max-height: 100vh;
+        max-width: 6rem;
+        box-sizing: border-box;
         padding: 2.5rem 0;
-
+        
+        text-transform: uppercase;
         font-size: 1.5rem;
         font-weight: 550;
-        flex: 1 1;
-        max-width: 6rem;
 
         writing-mode: vertical-lr;
         transform: rotate(180deg);
@@ -215,17 +213,9 @@
             font-stretch: 125%;
         }
 
-        *:nth-child(3n+1) {
-            color: var(--accent-1);
-        }
-
-        *:nth-child(3n+2) {  
-            color: var(--accent-2);
-        }
-        
-        *:nth-child(3n+3) {  
-            color: var(--accent-3);
-        }
+        *:nth-child(3n+1) { color: var(--accent-1); }
+        *:nth-child(3n+2) { color: var(--accent-2); }
+        *:nth-child(3n+3) { color: var(--accent-3); }
     }
 
     p {
@@ -256,7 +246,7 @@
     rotate: 180deg;
 `;var k=o(9576);const _=i.Ay.div.attrs({className:m.background})`
     transition: background-color 0.2s ease;
-    --background-color: var(--new-background);
+    --background-color: var(--secondary-color);
 
 `,A=i.Ay.div`
     position: relative;
@@ -265,7 +255,7 @@
     border: none;
     border-radius: 20px;
     --border-width: 10px;
-    --border-color: var(--new-background);
+    --border-color: var(--secondary-color);
 
     * {
         transition: border-color 0.2s ease;
@@ -285,7 +275,6 @@
 
     border-radius: 20px;
     background: none;
-    --new-background: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
 
     transition:
         opacity 0.3s ease,
@@ -294,15 +283,14 @@
 
     &:hover {
         transform: scale(1.025);
-
-        h3 {
-            color: var(--accent-1);
-        }
-
         transition:
             opacity 0.3s ease,
             color 0.2s ease, 
             transform 0.2s cubic-bezier(.38,-0.65,.41,1.67);
+
+        h3 {
+            color: var(--accent-1);
+        }
     }
     
     &:active {
@@ -323,9 +311,9 @@
         left: 0;
         z-index: 3;
     }
-`;function O({name:e,description:r,videoURL:o,projectURL:i}){const a=(0,n.useRef)(null),s=(0,n.useId)();return(0,t.jsxs)(F,{filterId:s,onMouseEnter:()=>{a.current?.play()},onMouseLeave:()=>{a.current?.pause()},children:[(0,t.jsx)("h3",{children:e}),null!=o?(0,t.jsxs)(A,{children:[(0,t.jsx)("video",{ref:a,loop:!0,muted:!0,disablePictureInPicture:!0,disableRemotePlayback:!0,src:o}),(0,t.jsx)("div",{className:m.border,style:{filter:`url(#${s})`}})]}):void 0,(0,t.jsx)("p",{children:r}),null!=i?(0,t.jsx)("a",{href:i}):void 0]})}const z=o.p+"792f4dbd0f0ff54c9c28.mp4",R=o.p+"090239f5df9dbef4d959.mp4",C=o.p+"d8e2a849b19f9c3a2f3f.mp4",E=o.p+"fd6cbd240cf758430057.mp4",L=i.Ay.div`
+`;function z({name:e,description:r,videoURL:o,projectURL:i}){const a=(0,n.useRef)(null),s=(0,n.useRef)(!0),l=(0,n.useId)();return(0,t.jsxs)(F,{filterId:l,onMouseEnter:()=>{s.current&&a.current?.play().catch((()=>{s.current=!1}))},onMouseLeave:()=>{a.current?.pause()},children:[(0,t.jsx)("h3",{children:e}),null!=o?(0,t.jsxs)(A,{children:[(0,t.jsx)("video",{ref:a,loop:!0,muted:!0,disablePictureInPicture:!0,disableRemotePlayback:!0,playsInline:!0,preload:"metadata",src:`${o}#t=0.1`}),(0,t.jsx)("div",{className:m.border,style:{filter:`url(#${l})`}})]}):void 0,(0,t.jsx)("p",{children:r}),null!=i?(0,t.jsx)("a",{href:i,"aria-label":e}):void 0]})}const O=o.p+"792f4dbd0f0ff54c9c28.mp4",R=o.p+"090239f5df9dbef4d959.mp4",C=o.p+"d8e2a849b19f9c3a2f3f.mp4",E=o.p+"fd6cbd240cf758430057.mp4",L=i.Ay.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), max-content));
     padding: 1rem 2rem 3rem;
 
     h2 {
@@ -362,9 +350,8 @@
     padding: 0.5rem 1rem 0;
 
     &:hover > :not(:hover) {
-        --ok-l1: 1;
-        --ok-c-factor: 1;
+        --secondary-color: var(--background-color);
         opacity: 0.5;
     }
-`;!function(e,r="root"){const o=document.getElementById(r);if(null==o)throw new Error("Could not find root element");(0,k.H)(o).render(e)}((0,t.jsxs)((function({children:e,extendMainWidth:r}){return(0,t.jsxs)(n.StrictMode,{children:[(0,t.jsx)(g,{}),(0,t.jsxs)("nav",{children:[(0,t.jsx)(a.A,{style:{pointerEvents:"all",width:"2rem",transform:"rotate(180deg)",aspectRatio:1},defaultFilter:{baseFrequency:.02,scale:10,disable:!0},hoverFilter:{animation:"alternating loop",scale:15},children:(0,t.jsxs)("svg",{viewBox:"0 0 100 75",fill:"#0000",xmlns:"http://www.w3.org/2000/svg",version:"1.1",xlinkHref:"http://www.w3.org/1999/xlink",children:[(0,t.jsxs)("defs",{children:[(0,t.jsxs)("linearGradient",{id:"cyan",x1:"0",y1:"1",x2:"0.75",y2:"0.5",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-2)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]}),(0,t.jsxs)("linearGradient",{id:"yellow",x1:"0.5",y1:"0",x2:"0.5",y2:"1",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-1)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]}),(0,t.jsxs)("linearGradient",{id:"magenta",x1:"1",y1:"1",x2:"0.25",y2:"0.5",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-3)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]})]}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"white",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#magenta)",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#yellow)",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#cyan)",points:"0 75, 50 0, 100 75"})]})}),(0,t.jsxs)("div",{children:[(0,t.jsx)(s,{href:"/",children:"About"}),(0,t.jsx)(v,{}),(0,t.jsx)(s,{href:"/resume",children:"Resume"})]}),(0,t.jsxs)("div",{children:[(0,t.jsx)(j,{href:"https://github.com/cbunt",target:"_blank",rel:"noreferrer noopener",children:""}),(0,t.jsx)(j,{href:"https://www.linkedin.com/in/cbunt",target:"_blank",rel:"noreferrer noopener",children:"󰌻"}),(0,t.jsx)(j,{href:"mailto:cass@cbunt.ing",children:"󰇮"})]})]}),(0,t.jsx)(y,{children:(0,t.jsxs)(w,{$extendWidth:r,children:[(0,t.jsx)("main",{children:e}),(0,t.jsx)("footer",{children:"MIT © 2024"})]})})]})}),{children:[(0,t.jsxs)(L,{children:[(0,t.jsxs)("div",{children:[(0,t.jsx)("h2",{children:"Cass Bunting"}),(0,t.jsx)("h3",{children:"Graphics Programmer"}),(0,t.jsx)("h3",{children:"Web Developer"})]}),(0,t.jsx)("p",{children:"\nI'm a recent computer science grad looking to help build unique interactive experiences \nin games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.\n"})]}),(0,t.jsxs)(M,{children:[(0,t.jsx)(O,{name:"React Distortion",description:"A React component library for adding procedural distortion to other components.",projectURL:"https://github.com/cbunt/react-distortion",videoURL:R}),(0,t.jsx)(O,{name:"glTF Viewer",description:"A WebGPU deferred 3D renderer and glTF model viewer.",projectURL:"/samples/gltf-viewer",videoURL:E}),(0,t.jsx)(O,{name:"Cubemap Blur",description:"A tool to seamlessly and evenly blur cubemap textures.",projectURL:"/samples/cubemap-blur",videoURL:C}),(0,t.jsx)(O,{name:"Voronoi Water",description:"A stylized procedural water shader through voronoi noise and flowmaps",projectURL:"https://github.com/cbunt/unity-voronoi-water",videoURL:z})]})]}))}},o={};function t(e){var n=o[e];if(void 0!==n)return n.exports;var i=o[e]={exports:{}};return r[e](i,i.exports,t),i.exports}t.m=r,e=[],t.O=(r,o,n,i)=>{if(!o){var a=1/0;for(d=0;d<e.length;d++){for(var[o,n,i]=e[d],s=!0,l=0;l<o.length;l++)(!1&i||a>=i)&&Object.keys(t.O).every((e=>t.O[e](o[l])))?o.splice(l--,1):(s=!1,i<a&&(a=i));if(s){e.splice(d--,1);var c=n();void 0!==c&&(r=c)}}return r}i=i||0;for(var d=e.length;d>0&&e[d-1][2]>i;d--)e[d]=e[d-1];e[d]=[o,n,i]},t.n=e=>{var r=e&&e.__esModule?()=>e.default:()=>e;return t.d(r,{a:r}),r},t.d=(e,r)=>{for(var o in r)t.o(r,o)&&!t.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:r[o]})},t.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),t.p="/",(()=>{var e={57:0};t.O.j=r=>0===e[r];var r=(r,o)=>{var n,i,[a,s,l]=o,c=0;if(a.some((r=>0!==e[r]))){for(n in s)t.o(s,n)&&(t.m[n]=s[n]);if(l)var d=l(t)}for(r&&r(o);c<a.length;c++)i=a[c],t.o(e,i)&&e[i]&&e[i][0](),e[i]=0;return t.O(d)},o=self.webpackChunkcbunt_portfolio=self.webpackChunkcbunt_portfolio||[];o.forEach(r.bind(null,0)),o.push=r.bind(null,o.push.bind(o))})(),t.nc=void 0;var n=t.O(void 0,[856],(()=>t(4551)));n=t.O(n)})();
+`;!function(e,r="root"){const o=document.getElementById(r);if(null==o)throw new Error("Could not find root element");(0,k.H)(o).render(e)}((0,t.jsxs)((function({children:e,extendMainWidth:r}){return(0,t.jsxs)(n.StrictMode,{children:[(0,t.jsx)(g,{}),(0,t.jsxs)("nav",{children:[(0,t.jsx)(a.A,{style:{pointerEvents:"all",width:"2rem",transform:"rotate(180deg)",aspectRatio:1},defaultFilter:{baseFrequency:.02,scale:10,disable:!0},hoverFilter:{animation:"alternating loop",scale:15},children:(0,t.jsxs)("svg",{viewBox:"0 0 100 75",fill:"#0000",xmlns:"http://www.w3.org/2000/svg",version:"1.1",xlinkHref:"http://www.w3.org/1999/xlink",children:[(0,t.jsxs)("defs",{children:[(0,t.jsxs)("linearGradient",{id:"cyan",x1:"0",y1:"1",x2:"0.75",y2:"0.5",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-2)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]}),(0,t.jsxs)("linearGradient",{id:"yellow",x1:"0.5",y1:"0",x2:"0.5",y2:"1",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-1)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]}),(0,t.jsxs)("linearGradient",{id:"magenta",x1:"1",y1:"1",x2:"0.25",y2:"0.5",children:[(0,t.jsx)("stop",{offset:"0%",stopColor:"var(--accent-3)"}),(0,t.jsx)("stop",{offset:"100%",stopColor:"#0000"})]})]}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"white",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#magenta)",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#yellow)",points:"0 75, 50 0, 100 75"}),(0,t.jsx)("polygon",{style:{mixBlendMode:"hard-light"},fill:"url(#cyan)",points:"0 75, 50 0, 100 75"})]})}),(0,t.jsxs)("div",{children:[(0,t.jsx)(s,{href:"/",children:"About"}),(0,t.jsx)(v,{}),(0,t.jsx)(s,{href:"/resume",children:"Resume"})]}),(0,t.jsxs)("div",{children:[(0,t.jsx)(j,{href:"https://github.com/cbunt",target:"_blank",rel:"noreferrer noopener",children:""}),(0,t.jsx)(j,{href:"https://www.linkedin.com/in/cbunt",target:"_blank",rel:"noreferrer noopener",children:"󰌻"}),(0,t.jsx)(j,{href:"mailto:cass@cbunt.ing",children:"󰇮"})]})]}),(0,t.jsx)(y,{children:(0,t.jsxs)(w,{$extendWidth:r,children:[(0,t.jsx)("main",{children:e}),(0,t.jsx)("footer",{children:"MIT © 2024"})]})})]})}),{children:[(0,t.jsxs)(L,{children:[(0,t.jsxs)("div",{children:[(0,t.jsx)("h2",{children:"Cass Bunting"}),(0,t.jsx)("h3",{children:"Graphics Programmer"}),(0,t.jsx)("h3",{children:"Web Developer"})]}),(0,t.jsx)("p",{children:"\nI'm a recent computer science grad looking to help build unique interactive experiences \nin games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.\n"})]}),(0,t.jsxs)(M,{children:[(0,t.jsx)(z,{name:"React Distortion",description:"A React component library for adding procedural distortion to other components.",projectURL:"https://github.com/cbunt/react-distortion",videoURL:R}),(0,t.jsx)(z,{name:"glTF Viewer",description:"A WebGPU deferred 3D renderer and glTF model viewer.",projectURL:"/samples/gltf-viewer",videoURL:E}),(0,t.jsx)(z,{name:"Cubemap Blur",description:"A tool to seamlessly and evenly blur cubemap textures.",projectURL:"/samples/cubemap-blur",videoURL:C}),(0,t.jsx)(z,{name:"Voronoi Water",description:"A stylized procedural water shader through voronoi noise and flowmaps",projectURL:"https://github.com/cbunt/unity-voronoi-water",videoURL:O})]})]}))}},o={};function t(e){var n=o[e];if(void 0!==n)return n.exports;var i=o[e]={exports:{}};return r[e](i,i.exports,t),i.exports}t.m=r,e=[],t.O=(r,o,n,i)=>{if(!o){var a=1/0;for(d=0;d<e.length;d++){for(var[o,n,i]=e[d],s=!0,l=0;l<o.length;l++)(!1&i||a>=i)&&Object.keys(t.O).every((e=>t.O[e](o[l])))?o.splice(l--,1):(s=!1,i<a&&(a=i));if(s){e.splice(d--,1);var c=n();void 0!==c&&(r=c)}}return r}i=i||0;for(var d=e.length;d>0&&e[d-1][2]>i;d--)e[d]=e[d-1];e[d]=[o,n,i]},t.n=e=>{var r=e&&e.__esModule?()=>e.default:()=>e;return t.d(r,{a:r}),r},t.d=(e,r)=>{for(var o in r)t.o(r,o)&&!t.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:r[o]})},t.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),t.p="/",(()=>{var e={57:0};t.O.j=r=>0===e[r];var r=(r,o)=>{var n,i,[a,s,l]=o,c=0;if(a.some((r=>0!==e[r]))){for(n in s)t.o(s,n)&&(t.m[n]=s[n]);if(l)var d=l(t)}for(r&&r(o);c<a.length;c++)i=a[c],t.o(e,i)&&e[i]&&e[i][0](),e[i]=0;return t.O(d)},o=self.webpackChunkcbunt_portfolio=self.webpackChunkcbunt_portfolio||[];o.forEach(r.bind(null,0)),o.push=r.bind(null,o.push.bind(o))})(),t.nc=void 0;var n=t.O(void 0,[856],(()=>t(4551)));n=t.O(n)})();
 //# sourceMappingURL=index.bundle.js.map
