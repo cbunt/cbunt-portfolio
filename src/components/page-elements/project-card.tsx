@@ -7,7 +7,7 @@ const CardBackground = styled.div.attrs({
     className: DistortStyles.background,
 })`
     transition: background-color 0.2s ease;
-    --background-color: var(--new-background);
+    --background-color: var(--secondary-color);
 
 `;
 
@@ -18,7 +18,7 @@ const VideoWrapper = styled.div`
     border: none;
     border-radius: 20px;
     --border-width: 10px;
-    --border-color: var(--new-background);
+    --border-color: var(--secondary-color);
 
     * {
         transition: border-color 0.2s ease;
@@ -55,7 +55,6 @@ const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).a
 
     border-radius: 20px;
     background: none;
-    --new-background: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
 
     transition:
         opacity 0.3s ease,
@@ -64,15 +63,14 @@ const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).a
 
     &:hover {
         transform: scale(1.025);
-
-        h3 {
-            color: var(--accent-1);
-        }
-
         transition:
             opacity 0.3s ease,
             color 0.2s ease, 
             transform 0.2s cubic-bezier(.38,-0.65,.41,1.67);
+
+        h3 {
+            color: var(--accent-1);
+        }
     }
     
     &:active {
@@ -104,12 +102,18 @@ type ProjectCardProps = {
 
 export default function ProjectCard({ name, description, videoURL, projectURL }: ProjectCardProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const canPlayRef = useRef(true);
     const filterId = useId();
 
     return (
         <CardWrapper
             filterId={filterId}
-            onMouseEnter={() => { void videoRef.current?.play(); }}
+            onMouseEnter={() => {
+                if (canPlayRef.current) {
+                    videoRef.current?.play()
+                        .catch(() => { canPlayRef.current = false; });
+                }
+            }}
             onMouseLeave={() => { videoRef.current?.pause(); }}
         >
             <h3>{name}</h3>
@@ -122,7 +126,9 @@ export default function ProjectCard({ name, description, videoURL, projectURL }:
                                 muted
                                 disablePictureInPicture
                                 disableRemotePlayback
-                                src={videoURL}
+                                playsInline
+                                preload="metadata"
+                                src={`${videoURL}#t=0.1`}
                             />
                             <div
                                 className={DistortStyles.border}
@@ -132,7 +138,7 @@ export default function ProjectCard({ name, description, videoURL, projectURL }:
                     )
                 : undefined}
             <p>{description}</p>
-            {projectURL != null ? <a href={projectURL} /> : undefined}
+            {projectURL != null ? <a href={projectURL} aria-label={name} /> : undefined}
         </CardWrapper>
     );
 }

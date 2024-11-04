@@ -38,33 +38,30 @@ const GlobalStyle = createGlobalStyle`
         --scale-bezier: cubic-bezier(0.81, 0, 0.37, 3.69);
         --scale-transition: transform 0.2s cubic-bezier(0.81, 0, 0.37, 3.69);
 
-        --ok-l1: 1.5;
         --ok-l2: 0.6;
-        --ok-l3: 75%;
-        --ok-c-factor: 1.5;
         
-        --secondary-color: #415153;
         --background-color: #0A102E;
         --hi-vis-color: #DBE4FF;
+
+        --secondary-color: oklch(from var(--background-color) calc(l * 1.5) calc(c * 1.5) h);
+
         
         --accent-1: #18F7F7;
         --accent-2: #FF61FF;
         --accent-3: #FFFF16;
         
         @media (prefers-color-scheme: light) {
-            --ok-l1: 0.95;
             --ok-l2: 1.3;
-            --ok-l3: 50%;
-            --ok-c-factor: 1.4;
             
             --background-color: #FEF6C7;
             --hi-vis-color: #0c007d;
-            --secondary-color: #d6d6d6;
-            
+            --secondary-color: oklch(from var(--background-color) calc(l * 0.95) calc(c * 1.4) h);
+
             --accent-1: #D61500;
             --accent-2: #2F8000;
             --accent-3: #034cdf;
         }
+
 
         code {
             font-family: 'Space Mono', monospace;
@@ -122,22 +119,23 @@ const GlobalStyle = createGlobalStyle`
     }
 
     nav {
-        z-index: 10;
         display: flex;
+        flex: 1 1;
         flex-direction: row-reverse;
         justify-content: space-between;
+        align-items: center;
+        
         position: sticky;
         top: 0;
-        align-items: center;
-
-        text-transform: uppercase;
-        max-height: calc(100% - 5rem);
+        z-index: 10;
+        max-height: 100vh;
+        max-width: 6rem;
+        box-sizing: border-box;
         padding: 2.5rem 0;
-
+        
+        text-transform: uppercase;
         font-size: 1.5rem;
         font-weight: 550;
-        flex: 1 1;
-        max-width: 6rem;
 
         writing-mode: vertical-lr;
         transform: rotate(180deg);
@@ -151,17 +149,9 @@ const GlobalStyle = createGlobalStyle`
             font-stretch: 125%;
         }
 
-        *:nth-child(3n+1) {
-            color: var(--accent-1);
-        }
-
-        *:nth-child(3n+2) {  
-            color: var(--accent-2);
-        }
-        
-        *:nth-child(3n+3) {  
-            color: var(--accent-3);
-        }
+        *:nth-child(3n+1) { color: var(--accent-1); }
+        *:nth-child(3n+2) { color: var(--accent-2); }
+        *:nth-child(3n+3) { color: var(--accent-3); }
     }
 
     p {

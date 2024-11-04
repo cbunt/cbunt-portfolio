@@ -11,7 +11,7 @@ import gltfThumbnail from 'public/thumbnails/gltf-viewer.mp4';
 
 const Bio = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), max-content));
     padding: 1rem 2rem 3rem;
 
     h2 {
@@ -50,8 +50,7 @@ const Cards = styled.div`
     padding: 0.5rem 1rem 0;
 
     &:hover > :not(:hover) {
-        --ok-l1: 1;
-        --ok-c-factor: 1;
+        --secondary-color: var(--background-color);
         opacity: 0.5;
     }
 `;

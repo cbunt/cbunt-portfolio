@@ -46,7 +46,7 @@ const LinkContainer = styled(Distortion).attrs({
     }
 
     div {
-        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
+        background-color: var(--secondary-color);
     }
 `;
 

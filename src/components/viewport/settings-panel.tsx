@@ -87,7 +87,7 @@ const MainPanel = styled(Distortion).attrs({
     left: 0.5rem;
 
     & > div:last-of-type {
-        background-color: oklch(from var(--background-color) calc(l * var(--ok-l1)) calc(c * var(--ok-c-factor)) h);
+        background-color: var(--secondary-color);
         box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 6px 6px 4px;
     }
 `;
