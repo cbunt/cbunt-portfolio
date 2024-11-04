@@ -1,54 +1,101 @@
 import SitePage from '../page-elements/page-wrapper';
-import { renderApp } from '../../utils/frontend';
 import styled from 'styled-components';
 
-import portrait from 'public/portrait.png';
-import TweakedMarkdown from '../core/tweaked-markdown';
+import { renderApp } from '../../utils/frontend';
+import ProjectCard from '../page-elements/project-card';
 
-const StyledMarkdown = styled(TweakedMarkdown)`
-    img {
-        width: 256px; 
-        float: left; 
-        margin: 1rem; 
-        margin-top: 0; 
-        border-radius: 5px;
+import voronoiImage from 'public/thumbnails/voronoi-water-example.mp4';
+import distortionImage from 'public/thumbnails/react-distortion.mp4';
+import cubemapBlurImage from 'public/thumbnails/cubemap-blur.mp4';
+import gltfThumbnail from 'public/thumbnails/gltf-viewer.mp4';
+
+const Bio = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+    padding: 1rem 2rem 3rem;
+
+    h2 {
+        font-size: 2rem;
+        width: max-content;
+        padding: 0 0 0.5rem;
+        margin: 0;
+    }
+
+    h3 {
+        font-style: italic;
+        width: max-content;
+        margin: 0;
+        padding: 0.5rem 1rem;
+        font-weight: 300;
+        font-stretch: 110%;
+    }
+
+    div {
+        align-content: center;
+        width: fit-content;
+    }
+
+    p {
+        padding: 1rem 0 0;
+        margin: 0;
     }
 `;
 
-const content = /* md */`
-![Headshot of Cass Bunting, smiling in front of a background of trees](${portrait})
+const Cards = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    column-gap: 1.5rem;
+    row-gap: 2rem;
 
-# About the Dev
+    padding: 0.5rem 1rem 0;
 
-I'm Cass Bunting, a graphics-programmer,
-technical artist, and (now, with this site) web developer based in Vancouver, BC. I'm
-excited about real time rendering, developing useful, streamlined technical 
-tools for other artists and developers, and creating unique interactive experiences.
+    &:hover > :not(:hover) {
+        --ok-l1: 1;
+        --ok-c-factor: 1;
+        opacity: 0.5;
+    }
+`;
 
-My experience includes designing water surfaces through voronoi noise for 
-a game about Metis history, creating tools and workflows for Unity, and everything you 
-see on this very website. I love to work with stylized graphics, procedural 
-generation, and combinations of the two. During my recently-completed 
-studies at the University of British Columbia, I honed my skills with and developed
-my passion for both low- and high- level programming—from functional languages to 
-assembly. I also have significant experience working outside of tech. I worked just 
-about every position in restaurants for six years, and in education, particularly
-teen leadership building, for four.
-
-Aside from working with graphics, my overwhelmingly numerous hobbies include
-playing music, hiking, cooking, reading about history and social theory,
-creative writing, and—of course—playing video games.
-
-# About the Site
-
-This website is my effort to present my knowledge and work in a unified way.
-It was made from the ground up in Typescript and React, with realtime samples 
-created with WebGPU. Its source code can be found at <https://github.com/cbunt/cbunt-portfolio>.
+const bio = `
+I'm a recent computer science grad looking to help build unique interactive experiences 
+in games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.
 `;
 
 renderApp(
     <SitePage>
-        <h1>cbunt.ing, a Portfolio</h1>
-        <StyledMarkdown>{content}</StyledMarkdown>
+        <Bio>
+            <div>
+                <h2>Cass Bunting</h2>
+                <h3>Graphics Programmer</h3>
+                <h3>Web Developer</h3>
+            </div>
+            <p>{bio}</p>
+        </Bio>
+        <Cards>
+            <ProjectCard
+                name="React Distortion"
+                description="A React component library for adding procedural distortion to other components."
+                projectURL="https://github.com/cbunt/react-distortion"
+                videoURL={distortionImage}
+            />
+            <ProjectCard
+                name="glTF Viewer"
+                description="A WebGPU deferred 3D renderer and glTF model viewer."
+                projectURL="/samples/gltf-viewer"
+                videoURL={gltfThumbnail}
+            />
+            <ProjectCard
+                name="Cubemap Blur"
+                description="A tool to seamlessly and evenly blur cubemap textures."
+                projectURL="/samples/cubemap-blur"
+                videoURL={cubemapBlurImage}
+            />
+            <ProjectCard
+                name="Voronoi Water"
+                description="A stylized procedural water shader through voronoi noise and flowmaps"
+                projectURL="https://github.com/cbunt/unity-voronoi-water"
+                videoURL={voronoiImage}
+            />
+        </Cards>
     </SitePage>,
 );
