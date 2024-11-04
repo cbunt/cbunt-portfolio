@@ -148,6 +148,7 @@ export default class GBuffer {
                 view: this.depth.view,
                 depthLoadOp: 'clear',
                 depthStoreOp: 'store',
+                depthClearValue: 1.0,
             },
         } as GPURenderPassDescriptor;
     }
