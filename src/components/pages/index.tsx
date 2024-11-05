@@ -4,10 +4,15 @@ import styled from 'styled-components';
 import { renderApp } from '../../utils/frontend';
 import ProjectCard from '../page-elements/project-card';
 
-import voronoiImage from 'public/thumbnails/voronoi-water-example.mp4';
-import distortionImage from 'public/thumbnails/react-distortion.mp4';
-import cubemapBlurImage from 'public/thumbnails/cubemap-blur.mp4';
-import gltfThumbnail from 'public/thumbnails/gltf-viewer.mp4';
+import voronoiMp4 from 'public/thumbnails/voronoi-water.mp4';
+import distortionMp4 from 'public/thumbnails/react-distortion.mp4';
+import cubemapBlurMp4 from 'public/thumbnails/cubemap-blur.mp4';
+import gltfViewerMp4 from 'public/thumbnails/gltf-viewer.mp4';
+
+import voronoiPng from 'public/thumbnails/voronoi-water.png';
+import distortionPng from 'public/thumbnails/react-distortion.png';
+import cubemapBlurPng from 'public/thumbnails/cubemap-blur.png';
+import gltfViewerPng from 'public/thumbnails/gltf-veiwer.png';
 
 const Bio = styled.div`
     display: grid;
@@ -75,25 +80,29 @@ renderApp(
                 name="React Distortion"
                 description="A React component library for adding procedural distortion to other components."
                 projectURL="https://github.com/cbunt/react-distortion"
-                videoURL={distortionImage}
+                videoURL={distortionMp4}
+                thumbnailURL={distortionPng}
             />
             <ProjectCard
                 name="glTF Viewer"
                 description="A WebGPU deferred 3D renderer and glTF model viewer."
                 projectURL="/samples/gltf-viewer"
-                videoURL={gltfThumbnail}
+                videoURL={gltfViewerMp4}
+                thumbnailURL={gltfViewerPng}
             />
             <ProjectCard
                 name="Cubemap Blur"
                 description="A tool to seamlessly and evenly blur cubemap textures."
                 projectURL="/samples/cubemap-blur"
-                videoURL={cubemapBlurImage}
+                videoURL={cubemapBlurMp4}
+                thumbnailURL={cubemapBlurPng}
             />
             <ProjectCard
                 name="Voronoi Water"
                 description="A stylized procedural water shader through voronoi noise and flowmaps"
                 projectURL="https://github.com/cbunt/unity-voronoi-water"
-                videoURL={voronoiImage}
+                videoURL={voronoiMp4}
+                thumbnailURL={voronoiPng}
             />
         </Cards>
     </SitePage>,

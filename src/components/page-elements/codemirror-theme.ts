@@ -13,6 +13,7 @@ export default createTheme({
         gutterBackground: 'var(--background-color)',
         gutterForeground: 'var(--accent-3)',
         fontFamily: 'Space Mono',
+        fontSize: 'min(2vw, 1rem)',
     },
     styles: [
         { tag: t.propertyName, 'font-style': 'italic' },

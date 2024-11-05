@@ -100,7 +100,13 @@ type ProjectCardProps = {
     projectURL?: string,
 };
 
-export default function ProjectCard({ name, description, videoURL, projectURL }: ProjectCardProps) {
+export default function ProjectCard({
+    name,
+    description,
+    videoURL,
+    projectURL,
+    thumbnailURL,
+}: ProjectCardProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canPlayRef = useRef(true);
     const filterId = useId();
@@ -128,6 +134,7 @@ export default function ProjectCard({ name, description, videoURL, projectURL }:
                                 disableRemotePlayback
                                 playsInline
                                 preload="metadata"
+                                poster={thumbnailURL}
                                 src={`${videoURL}#t=0.1`}
                             />
                             <div
