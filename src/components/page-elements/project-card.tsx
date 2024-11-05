@@ -98,6 +98,7 @@ type ProjectCardProps = {
     description: string,
     videoURL?: string,
     projectURL?: string,
+    thumbnailURL?: string,
 };
 
 export default function ProjectCard({

@@ -172,6 +172,7 @@ const MainWrapper = styled.div`
     flex: 10;
     margin: 2.5rem 1rem 1.5rem 0rem;
     min-height: calc(100vh - 4rem);
+    max-width: calc(100vw - 3.5rem);
 `;
 
 const ContentFooterDivide = styled.div<{ $extendWidth?: boolean }>`
@@ -188,6 +189,7 @@ const IconLink = styled(DistortionLink)`
     margin-top: 0;
     font-family: 'NerdFontsSymbols Nerd Font';
     rotate: 180deg;
+    writing-mode: initial;
 `;
 
 export type SitePageProps = {
@@ -219,19 +221,21 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                 >
                     <svg
                         viewBox="0 0 100 75"
-                        fill="#0000"
+                        fill="#00000000"
                         xmlns="http://www.w3.org/2000/svg"
                         version="1.1"
                         xlinkHref="http://www.w3.org/1999/xlink"
+                        width="100%"
+                        height="100%"
                     >
                         <defs>
                             <linearGradient id="cyan" x1="0" y1="1" x2="0.75" y2="0.5">
                                 <stop offset="0%" stopColor="var(--accent-2)" />
-                                <stop offset="100%" stopColor="#0000" />
+                                <stop offset="100%" stopColor="#00000000" />
                             </linearGradient>
                             <linearGradient id="yellow" x1="0.5" y1="0" x2="0.5" y2="1">
                                 <stop offset="0%" stopColor="var(--accent-1)" />
-                                <stop offset="100%" stopColor="#0000" />
+                                <stop offset="100%" stopColor="#00000000" />
                             </linearGradient>
                             <linearGradient id="magenta" x1="1" y1="1" x2="0.25" y2="0.5">
                                 <stop offset="0%" stopColor="var(--accent-3)" />

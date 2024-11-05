@@ -20,9 +20,7 @@ blurred mip level the process:
 
 For heavy loads that could impair smooth rendering or interactivity—such
 as large images, high filter distances, or both at once—
-<code>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame</a>
-</code> 
+[\`requestAnimationFrame\`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
 is used to break up work over multiple frames.
 
 This demo accepts .hdr cubemap textures to be uploaded and 
