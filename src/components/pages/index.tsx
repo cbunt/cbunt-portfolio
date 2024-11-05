@@ -61,8 +61,8 @@ const Cards = styled.div`
 `;
 
 const bio = `
-I'm a recent computer science grad looking to help build unique interactive experiences 
-in games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.
+Recent computer science grad looking to help build unique interactive experiences in
+games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.
 `;
 
 renderApp(
