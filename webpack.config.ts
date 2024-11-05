@@ -146,6 +146,7 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
         },
         devtool: isDev ? 'eval-cheap-source-map' : 'source-map',
         devServer: {
+            host: '0.0.0.0',
             open: true,
             hot: true,
             port: 3000,
