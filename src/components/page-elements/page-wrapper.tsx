@@ -185,11 +185,16 @@ const ContentFooterDivide = styled.div<{ $extendWidth?: boolean }>`
     justify-content: space-between;
 `;
 
-const IconLink = styled(DistortionLink)`
-    margin-top: 0;
-    font-family: 'NerdFontsSymbols Nerd Font';
-    rotate: 180deg;
+const Icons = styled.div`
     writing-mode: initial;
+    display: flex;
+    flex-direction: column-reverse;
+
+    a {
+        margin-top: 0;
+        font-family: 'NerdFontsSymbols Nerd Font';
+        rotate: 180deg;
+    }
 `;
 
 export type SitePageProps = {
@@ -253,11 +258,11 @@ export default function SitePage({ children, extendMainWidth }: SitePageProps): 
                     <SampleSelect />
                     <DistortionLink href="/resume">Resume</DistortionLink>
                 </div>
-                <div>
-                    <IconLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</IconLink>
-                    <IconLink href="https://www.linkedin.com/in/cbunt" target="_blank" rel="noreferrer noopener">{'\udb80\udf3b'}</IconLink>
-                    <IconLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</IconLink>
-                </div>
+                <Icons>
+                    <DistortionLink href="https://github.com/cbunt" target="_blank" rel="noreferrer noopener">{'\uf092'}</DistortionLink>
+                    <DistortionLink href="https://www.linkedin.com/in/cbunt" target="_blank" rel="noreferrer noopener">{'\udb80\udf3b'}</DistortionLink>
+                    <DistortionLink href="mailto:cass@cbunt.ing">{'\udb80\uddee'}</DistortionLink>
+                </Icons>
             </nav>
             <MainWrapper>
                 <ContentFooterDivide $extendWidth={extendMainWidth}>
