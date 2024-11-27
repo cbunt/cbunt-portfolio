@@ -28,4 +28,3 @@ jobs:
         with:
           folder: build
           clean: true
-          dry-run: true
