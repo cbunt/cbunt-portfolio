@@ -12,7 +12,7 @@ import gltfViewerMp4 from 'public/thumbnails/gltf-viewer.mp4';
 import voronoiPng from 'public/thumbnails/voronoi-water.png';
 import distortionPng from 'public/thumbnails/react-distortion.png';
 import cubemapBlurPng from 'public/thumbnails/cubemap-blur.png';
-import gltfViewerPng from 'public/thumbnails/gltf-veiwer.png';
+import gltfViewerPng from 'public/thumbnails/gltf-viewer.png';
 
 const Bio = styled.div`
     display: grid;
