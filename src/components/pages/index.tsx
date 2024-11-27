@@ -47,12 +47,18 @@ const Bio = styled.div`
 `;
 
 const Cards = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    column-gap: 1.5rem;
-    row-gap: 2rem;
-
     padding: 0.5rem 1rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+
+    &, > div {
+        display: grid;
+        column-gap: 1.5rem;
+        row-gap: 2rem;
+    }
+
+    > div {
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    }
 
     &:hover > :not(:hover) {
         --secondary-color: var(--background-color);
@@ -76,34 +82,38 @@ renderApp(
             <p>{bio}</p>
         </Bio>
         <Cards>
-            <ProjectCard
-                name="React Distortion"
-                description="A React component library for adding procedural distortion to other components."
-                projectURL="https://github.com/cbunt/react-distortion"
-                videoURL={distortionMp4}
-                thumbnailURL={distortionPng}
-            />
-            <ProjectCard
-                name="glTF Viewer"
-                description="A WebGPU deferred 3D renderer and glTF model viewer."
-                projectURL="/samples/gltf-viewer"
-                videoURL={gltfViewerMp4}
-                thumbnailURL={gltfViewerPng}
-            />
-            <ProjectCard
-                name="Cubemap Blur"
-                description="A tool to seamlessly and evenly blur cubemap textures."
-                projectURL="/samples/cubemap-blur"
-                videoURL={cubemapBlurMp4}
-                thumbnailURL={cubemapBlurPng}
-            />
-            <ProjectCard
-                name="Voronoi Water"
-                description="A stylized procedural water shader through voronoi noise and flowmaps"
-                projectURL="https://github.com/cbunt/unity-voronoi-water"
-                videoURL={voronoiMp4}
-                thumbnailURL={voronoiPng}
-            />
+            <div>
+                <ProjectCard
+                    name="React Distortion"
+                    description="A React component library for adding procedural distortion to other components."
+                    projectURL="https://github.com/cbunt/react-distortion"
+                    videoURL={distortionMp4}
+                    thumbnailURL={distortionPng}
+                />
+                <ProjectCard
+                    name="glTF Viewer"
+                    description="A WebGPU deferred 3D renderer and glTF model viewer."
+                    projectURL="/samples/gltf-viewer"
+                    videoURL={gltfViewerMp4}
+                    thumbnailURL={gltfViewerPng}
+                />
+            </div>
+            <div>
+                <ProjectCard
+                    name="Cubemap Blur"
+                    description="A tool to seamlessly and evenly blur cubemap textures."
+                    projectURL="/samples/cubemap-blur"
+                    videoURL={cubemapBlurMp4}
+                    thumbnailURL={cubemapBlurPng}
+                />
+                <ProjectCard
+                    name="Voronoi Water"
+                    description="A stylized procedural water shader through voronoi noise and flowmaps"
+                    projectURL="https://github.com/cbunt/unity-voronoi-water"
+                    videoURL={voronoiMp4}
+                    thumbnailURL={voronoiPng}
+                />
+            </div>
         </Cards>
     </SitePage>,
 );

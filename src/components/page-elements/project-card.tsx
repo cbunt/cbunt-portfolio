@@ -78,8 +78,7 @@ const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).a
     }
 
     p, h3 {
-        margin: 0rem;
-        margin-left: 1rem;
+        margin: 0 1rem;
         z-index: 2;
     }
 
