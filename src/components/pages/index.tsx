@@ -60,7 +60,7 @@ const Cards = styled.div`
         grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     }
 
-    &:hover > :not(:hover) {
+    &:hover > div > :not(:hover) {
         --secondary-color: var(--background-color);
         opacity: 0.5;
     }
