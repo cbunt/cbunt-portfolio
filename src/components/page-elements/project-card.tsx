@@ -1,15 +1,7 @@
 import { useId, useRef } from 'react';
 import styled from 'styled-components';
 import DistortComponent from 'react-distortion';
-import { DistortStyles } from 'react-distortion/child-elements';
-
-const CardBackground = styled.div.attrs({
-    className: DistortStyles.background,
-})`
-    transition: background-color 0.2s ease;
-    --background-color: var(--secondary-color);
-
-`;
+import { DistortStyles, DistortBackground } from 'react-distortion/child-elements';
 
 const VideoWrapper = styled.div`
     position: relative;
@@ -33,7 +25,7 @@ const VideoWrapper = styled.div`
     margin: 0.5rem 0;
 `;
 
-const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).attrs({
+const CardWrapper = styled(DistortComponent).attrs({
     defaultFilter: {
         disable: true,
         scale: 10,
@@ -47,7 +39,7 @@ const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).a
         animationInterval: 700,
         animationJitter: 200,
     },
-    distortChildren: <CardBackground />,
+    distortChildren: DistortBackground,
 })`
     position: relative;
     transform-origin: center;
@@ -89,6 +81,11 @@ const CardWrapper = styled(DistortComponent as typeof DistortComponent<'div'>).a
         top:0;
         left: 0;
         z-index: 3;
+    }
+
+    > div {
+        transition: background-color 0.2s ease;
+        --background-color: var(--secondary-color);
     }
 `;
 

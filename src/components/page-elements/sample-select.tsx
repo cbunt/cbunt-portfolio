@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Collapse } from '@kunukn/react-collapse';
 import { useState, useMemo } from 'react';
 import Distortion from 'react-distortion';
 import { DistortBackground } from 'react-distortion/child-elements';
@@ -10,13 +9,9 @@ const sampleNames = SAMPLES__.map((sample) => sample.replaceAll('-', ' '));
 const Container = styled.div<{ $isOpen?: boolean }>`
     display: flex;
     flex-direction: column;
-    text-transform: capitalize;
-    overflow: visible;
-    z-index: 10;
 `;
 
-const LinkContainer = styled(Distortion).attrs({
-    forwardedAs: Collapse,
+const LinkContainer = styled(Distortion).attrs<{ $isOpen: boolean }>({
     defaultFilter: {
         disable: true,
         scale: 10,
@@ -25,6 +20,7 @@ const LinkContainer = styled(Distortion).attrs({
     distortChildren: DistortBackground,
 })`
     transition: height 300ms ease-out;
+    display: ${({ $isOpen }) => $isOpen ? 'flex' : 'none'};
     
     width: 100vh;
     justify-content: space-evenly;
@@ -65,12 +61,13 @@ const Button = styled(DistortionLink).attrs({
 `;
 
 const Link = styled(DistortionLink)`
+    display: flex;
     text-transform: uppercase;
     max-width: 100%;
     overflow: hidden;
 
     &, &:visited {
-        color: light-dark(var(--accent-3), var(--accent-1));
+        color: light-dark(var(--accent-3), var(--accent-1)) !important;
     }
 `;
 
@@ -97,7 +94,7 @@ export default function SampleSelect() {
             >
                 Samples
             </Button>
-            <LinkContainer isOpen={linksOpen}>
+            <LinkContainer $isOpen={linksOpen}>
                 {...items}
             </LinkContainer>
         </Container>

@@ -14,10 +14,14 @@ import distortionPng from 'public/thumbnails/react-distortion.png';
 import cubemapBlurPng from 'public/thumbnails/cubemap-blur.png';
 import gltfViewerPng from 'public/thumbnails/gltf-viewer.png';
 
-const Bio = styled.div`
+const Bio = styled.hgroup`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), max-content));
+    grid-template-rows: auto auto 1fr;
+    grid-auto-flow: column;
+
     padding: 1rem 2rem 3rem;
+    width: fit-content;
 
     h2 {
         font-size: 2rem;
@@ -35,12 +39,8 @@ const Bio = styled.div`
         font-stretch: 110%;
     }
 
-    div {
-        align-content: center;
-        width: fit-content;
-    }
-
     p {
+        grid-row: span 3;
         padding: 1rem 0 0;
         margin: 0;
     }
@@ -74,11 +74,9 @@ games and on the web. I'm also big into guitar, songwriting, containing multitud
 renderApp(
     <SitePage>
         <Bio>
-            <div>
-                <h2>Cass Bunting</h2>
-                <h3>Graphics Programmer</h3>
-                <h3>Web Developer</h3>
-            </div>
+            <h2>Cass Bunting</h2>
+            <h3>Graphics Programmer</h3>
+            <h3>Web Developer</h3>
             <p>{bio}</p>
         </Bio>
         <Cards>
