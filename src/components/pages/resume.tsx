@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { renderApp } from '../../utils/frontend';
 import SitePage from '../page-elements/page-wrapper';
 
-import TweakedMarkdown from '../core/tweaked-markdown';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-const MarkdownStyle = styled(TweakedMarkdown)`
+const StyledArticle = styled.article`
     columns: 2 max(15rem, 30vw);
     column-gap: 3rem;
 
@@ -18,14 +19,14 @@ const MarkdownStyle = styled(TweakedMarkdown)`
         break-before: auto;
     }
 
-    a {
-        text-decoration: none;
-    }
-
     h3 {
         margin-bottom: 0;
         font-size: medium;
         font-weight: bold;
+    }
+
+    a {
+        text-decoration: none;
     }
 
     p {
@@ -84,13 +85,20 @@ const content = await fetch(resumeURL).then((res) => res.text());
 
 renderApp(
     <SitePage>
-        <h1>Cass Bunting&apos;s Resume</h1>
-        <MarkdownStyle
-            options={{ components: {
-                del: ({ children }) => (typeof children === 'string' ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>) : undefined),
-            } }}
-        >
-            {content}
-        </MarkdownStyle>
+        <h1>Cass Bunting&#39;s Resume</h1>
+        <StyledArticle>
+            <Markdown
+                components={{
+                    h1: 'h2',
+                    h2: 'h3',
+                    del: ({ children }) => typeof children === 'string'
+                        ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>)
+                        : undefined,
+                }}
+                rehypePlugins={[remarkGfm]}
+            >
+                {content}
+            </Markdown>
+        </StyledArticle>
     </SitePage>,
 );

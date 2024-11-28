@@ -2,7 +2,9 @@ import SampleWrapper from '../../page-elements/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
 
 import source from '../../../samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
-import TweakedMarkdown from '../../core/tweaked-markdown';
+
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const getModelConstructor = () => import('../../../samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default);
 
@@ -37,6 +39,8 @@ renderApp(
         loadModelConstructor={getModelConstructor}
         sourceText={source}
     >
-        <TweakedMarkdown>{content}</TweakedMarkdown>
+        <article>
+            <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+        </article>
     </SampleWrapper>,
 );

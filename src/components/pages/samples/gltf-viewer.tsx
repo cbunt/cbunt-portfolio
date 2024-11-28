@@ -1,6 +1,8 @@
 import SampleWrapper from '../../page-elements/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
-import TweakedMarkdown from '../../core/tweaked-markdown';
+
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const getModelConstructor = () => import('../../../samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default);
 
@@ -25,6 +27,8 @@ renderApp(
         modelName="glTF Viewer"
         loadModelConstructor={getModelConstructor}
     >
-        <TweakedMarkdown>{content}</TweakedMarkdown>
+        <article>
+            <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+        </article>
     </SampleWrapper>,
 );
