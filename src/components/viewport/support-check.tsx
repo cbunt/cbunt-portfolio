@@ -36,10 +36,10 @@ export const CheckWrapper = styled(Distortion).attrs({
 `;
 
 export type SupportCheckProps = {
-    getModelConstructor: LoadModelConstructor,
+    loadModelConstructor: LoadModelConstructor,
 };
 
-export default function SupportCheck({ getModelConstructor }: SupportCheckProps) {
+export default function SupportCheck({ loadModelConstructor }: SupportCheckProps) {
     return (
         <CheckWrapper>
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
@@ -59,7 +59,7 @@ export default function SupportCheck({ getModelConstructor }: SupportCheckProps)
                             </p>
                         </UnsupportedWarning>
                     )
-                : <Viewport getModelConstructor={getModelConstructor} />}
+                : <Viewport getModelConstructor={loadModelConstructor} />}
         </CheckWrapper>
     );
 }

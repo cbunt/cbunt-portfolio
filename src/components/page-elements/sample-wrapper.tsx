@@ -37,14 +37,14 @@ const NameHeader = styled.h1`
 `;
 
 export type SampleWrapperProps = {
-    getModelConstructor?: LoadModelConstructor,
+    loadModelConstructor: LoadModelConstructor,
     modelName: string,
     sourceText?: string,
     children?: ReactNode,
 };
 
 export default function SampleWrapper({
-    getModelConstructor,
+    loadModelConstructor: loadModelConstructor,
     modelName,
     sourceText,
     children,
@@ -52,7 +52,7 @@ export default function SampleWrapper({
     return (
         <SitePage extendMainWidth>
             <NameHeader>{modelName}</NameHeader>
-            {getModelConstructor != null ? <SupportCheck getModelConstructor={getModelConstructor} /> : undefined}
+            <SupportCheck loadModelConstructor={loadModelConstructor} />
             {children}
             {sourceText != null
                 ? (

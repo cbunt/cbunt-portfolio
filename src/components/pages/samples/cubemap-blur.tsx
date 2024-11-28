@@ -34,7 +34,7 @@ re-exporting fixes these issues.
 renderApp(
     <SampleWrapper
         modelName="Cubemap Blur"
-        getModelConstructor={getModelConstructor}
+        loadModelConstructor={getModelConstructor}
         sourceText={source}
     >
         <TweakedMarkdown>{content}</TweakedMarkdown>

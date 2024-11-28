@@ -23,7 +23,7 @@ Supported extensions:
 renderApp(
     <SampleWrapper
         modelName="glTF Viewer"
-        getModelConstructor={getModelConstructor}
+        loadModelConstructor={getModelConstructor}
     >
         <TweakedMarkdown>{content}</TweakedMarkdown>
     </SampleWrapper>,
