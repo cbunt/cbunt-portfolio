@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import type { ValueKeyCallback } from '../../samples/settings/property-listener';
 import Distortion from 'react-distortion';
-import CustomTooltip from './tooltip';
+import { useTooltip } from './hooks';
 
 const DistortionWrapper = styled(Distortion).attrs({
     defaultFilter: {
@@ -125,12 +125,20 @@ export function Checkbox({
         });
     }
 
+    const [tooltip, show, hide] = useTooltip(description);
+
     return (
         <>
-            <CustomTooltip forwardedAs="label" htmlFor={id} tooltipContent={description}>
+            <label
+                style={{ position: 'relative' }}
+                htmlFor={id}
+                onMouseEnter={show}
+                onMouseLeave={hide}
+            >
                 {label}
-            </CustomTooltip>
-            <DistortionWrapper>
+                {tooltip}
+            </label>
+            <DistortionWrapper tabindex={0}>
                 <StyledCheckbox
                     aria-label={label}
                     checked={value}

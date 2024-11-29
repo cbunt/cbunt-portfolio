@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 import Distortion, { DistortHandle } from 'react-distortion';
 import { DistortBackground } from 'react-distortion/child-elements';
-import CustomTooltip from './tooltip';
+import { useTooltip } from './hooks';
+
 import { clamp } from '../../utils/general';
 import { ValueKeyCallback } from '../../samples/settings/property-listener';
 
@@ -119,6 +120,7 @@ const DistortionWrapper = styled(Distortion).attrs({
         baseFrequency: 0.02,
         scale: 6,
     },
+    tabIndex: 0,
 })`
     display: flex;
 `;
@@ -173,11 +175,19 @@ export function Slider({
         });
     }
 
+    const [tooltip, show, hide] = useTooltip(description);
+
     return (
         <>
-            <CustomTooltip forwardedAs="label" htmlFor={id} tooltipContent={description}>
+            {tooltip}
+            <label
+                style={{ position: 'relative' }}
+                htmlFor={id}
+                onMouseEnter={show}
+                onMouseLeave={hide}
+            >
                 {label}
-            </CustomTooltip>
+            </label>
             <DistortionWrapper ref={distortionRef}>
                 <StyledSlider
                     aria-label={`${label}-slider`}
