@@ -133,9 +133,6 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 stage: webpack.Compilation.PROCESS_ASSETS_STAGE_DEV_TOOLING,
             }),
         ].filter(Boolean),
-        watchOptions: {
-            poll: 1000,
-        },
         performance: {
             hints: isDev ? false : 'warning',
             maxEntrypointSize: 512000,
