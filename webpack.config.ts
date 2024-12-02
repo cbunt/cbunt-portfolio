@@ -69,6 +69,13 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     type: 'asset/source'
                 },
                 {
+                    test: /\.css$/,
+                    use: [
+                      "style-loader",
+                        "css-loader",
+                    ],
+                },
+                {
                     test: /\.(ts|tsx)$/,
                     exclude: /node_modules/,
                     resourceQuery: { not: /raw/ },
