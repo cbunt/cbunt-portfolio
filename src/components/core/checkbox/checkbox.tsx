@@ -5,6 +5,7 @@ import type { ValueKeyCallback } from '../../../samples/settings/property-listen
 import { useTooltip } from '../../../utils/hooks';
 
 import styles from './checkbox.module.css';
+import { interactiveFilters } from '../../distortion-styles';
 
 export type CheckboxProps = {
     label: string,
@@ -56,17 +57,7 @@ export function Checkbox({
             </label>
             <Distortion
                 className={styles['distortion-checkbox']}
-                defaultFilter={{
-                    scale: 6,
-                }}
-                hoverFilter={{
-                    animation: 'alternating loop',
-                    scale: 4,
-                }}
-                activeFilter={{
-                    animation: 'static',
-                    scale: 6,
-                }}
+                {...(disabled ? {} : interactiveFilters)}
             >
                 <input
                     disabled={disabled}

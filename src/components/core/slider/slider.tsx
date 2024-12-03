@@ -8,6 +8,7 @@ import { clamp } from '../../../utils/general';
 import { ValueKeyCallback } from '../../../samples/settings/property-listener';
 
 import styles from './slider.module.css';
+import { interactiveFilters } from '../../distortion-styles';
 
 export type SliderState = {
     min: number,
@@ -85,24 +86,7 @@ export function Slider({
             <Distortion
                 className={styles['distortion-slider']}
                 ref={distortionRef}
-                hoverFilter={
-                    disabled
-                        ? undefined
-                        : {
-                                animation: 'alternating loop',
-                                baseFrequency: 0.02,
-                                scale: 6,
-                            }
-                }
-                activeFilter={
-                    disabled
-                        ? undefined
-                        : {
-                                animation: 'static',
-                                baseFrequency: 0.02,
-                                scale: 6,
-                            }
-                }
+                {...(disabled ? {} : interactiveFilters)}
                 minRefresh={200}
             >
                 <input

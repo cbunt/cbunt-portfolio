@@ -3,6 +3,7 @@ import { PolymorphicProps } from '../../../utils/frontend';
 import Distortion from 'react-distortion';
 
 import styles from './fullscreen-button.module.css';
+import { interactiveFilters } from '../../distortion-styles';
 
 export type FullscreenButtonProps = PolymorphicProps<
     undefined,
@@ -66,13 +67,7 @@ export default function FullscreenButton({
             className={styles['fullscreen-button']}
             aria-label="fullscreen"
             onClick={handleChange}
-            defaultFilter={{
-                scale: 3,
-            }}
-            hoverFilter={{
-                animation: 'alternating loop',
-                scale: 7,
-            }}
+            {...interactiveFilters}
             {...rest}
         >
             <svg
