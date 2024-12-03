@@ -71,8 +71,16 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 {
                     test: /\.css$/,
                     use: [
-                      "style-loader",
-                        "css-loader",
+                        "style-loader",
+                        {
+                            loader: "css-loader",
+                            options: {
+                                modules: {
+                                    namedExport: false,
+                                    exportLocalsConvention: "as-is",
+                                }
+                            }
+                        }
                     ],
                 },
                 {
