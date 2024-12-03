@@ -5,9 +5,9 @@ import { injectStyle } from './frontend';
 
 const tooltipStyle = /* css */`
     .distortion-tooltip {
-        position: fixed;
-        top: auto;
-        left: 0;
+        position: absolute;
+        top: calc(100% + 1em);
+        left: -1em;
         z-index: 1;
 
         --background-color: var(--secondary-color);
