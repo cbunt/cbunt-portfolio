@@ -9,7 +9,7 @@ import { interactiveFilters } from '../../distortion-styles';
 
 export type CheckboxProps = {
     label: string,
-    defaultChecked?: boolean,
+    value?: boolean,
     disabled?: boolean,
     description?: string,
     onChange?: (val: boolean) => void,
@@ -19,13 +19,13 @@ export type CheckboxProps = {
 export function Checkbox({
     label,
     onChange: callback = () => {},
-    defaultChecked,
+    value: propVal,
     disabled,
     callbacks,
     description,
 }: CheckboxProps) {
     const id = useId();
-    const [value, setValue] = useState(defaultChecked);
+    const [value, setValue] = useState(propVal);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.checked);
         callback(e.target.checked);
@@ -35,12 +35,10 @@ export function Checkbox({
         if (typeof val === 'boolean' && val !== value) setValue(val);
     };
 
-    if (callbacks != null) {
-        useEffect(() => {
-            callbacks.add(update);
-            return () => { callbacks.delete(update); };
-        });
-    }
+    useEffect(() => {
+        callbacks?.add(update);
+        return () => { callbacks?.delete(update); };
+    });
 
     const [tooltip, show, hide] = useTooltip(description);
 
@@ -61,7 +59,6 @@ export function Checkbox({
             >
                 <input
                     disabled={disabled}
-                    defaultChecked={defaultChecked}
                     type="checkbox"
                     aria-label={label}
                     checked={value}
