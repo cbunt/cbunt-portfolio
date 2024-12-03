@@ -9,15 +9,6 @@ export type PolymorphicProps<
     Omit<PropsWithChildren<ComponentPropsWithoutRef<E extends undefined ? D : E>
     & { forwardedAs?: E }>, keyof Base> & Base;
 
-// adapted from https://github.com/yoksel/url-encoder/blob/master/src/js/script.js
-export function svgToDataURL(svg: string) {
-    let encoded = svg.replace(/"/g, '\'');
-    encoded = encoded.replace(/>\s{1,}\n*</g, '><');
-    encoded = encoded.replace(/(\s{2,}|\n)/g, ' ');
-    encoded = encoded.replace(/[\r\n%#()<>?[\\\]^`{|}]/g, encodeURIComponent);
-    return `url("data:image/svg+xml,${encoded}")`;
-}
-
 export const injectStyle = (() => {
     // this is basically a temporary polyfill for react 19's <style>
     // functionality until its release

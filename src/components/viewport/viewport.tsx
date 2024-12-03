@@ -6,7 +6,7 @@ import type Renderer from '../../rendering/renderer';
 import type { LoadModelConstructor, ModelSetting } from '../../samples/settings/sample-spec';
 
 import ModelSettingsWidget from './model-settings-gui';
-import FullscreenButton from './fullscreen-button';
+import FullscreenButton from './fullscreen-button/fullscreen-button';
 import { OrbitCameraController } from '../../rendering/camera';
 
 const ViewportStyle = styled.div`
