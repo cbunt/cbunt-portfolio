@@ -1,21 +1,11 @@
+import { ComponentProps } from 'react';
+
 import { FileUploadProps, FileUpload, Checkbox, CheckboxProps, Slider, SliderProps, StyledButton } from '../core';
 import { ModelSetting } from '../../samples/settings/sample-spec';
 import { ListenerSyms } from '../../samples/settings/property-listener';
-import SettingsPanel from './settings-panel';
-import styled from 'styled-components';
-import { ComponentProps } from 'react';
+import SettingsPanel from './settings-panel/settings-panel';
 
-export type ModelSettingsWidgetProps = {
-    settings: Record<string, ModelSetting>,
-};
-
-const WidgetButton = styled(StyledButton)`
-    grid-column: span 3; 
-    color: var(--accent-2); 
-    --border-color: var(--accent-2);
-`;
-
-export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetProps) {
+export default function ModelSettingsWidget(settings: Record<string, ModelSetting>) {
     return (
         <SettingsPanel>
             {...Object.entries(settings).map(([label, info]) => {
@@ -34,7 +24,18 @@ export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetPro
                 };
 
                 switch (info[ListenerSyms.$type]) {
-                    case 'button': return <WidgetButton {...rest as ComponentProps<typeof WidgetButton>}>{label}</WidgetButton>;
+                    case 'button': return (
+                        <StyledButton
+                            style={{
+                                gridColumn: 'span 3',
+                                color: 'var(--accent-2)',
+                                '--border-color': 'var(--accent-2)',
+                            }}
+                            {...rest as ComponentProps<typeof StyledButton>}
+                        >
+                            {label}
+                        </StyledButton>
+                    );
                     case 'checkbox': return <Checkbox {...props as CheckboxProps} />;
                     case 'slider': return <Slider {...props as SliderProps} />;
                     case 'file': return <FileUpload {...props as FileUploadProps<unknown>} />;
