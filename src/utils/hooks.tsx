@@ -1,13 +1,14 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Distortion, { DistortHandle } from 'react-distortion';
 import { DistortBackground } from 'react-distortion/child-elements';
+import { injectStyle } from './frontend';
 
 const tooltipStyle = /* css */`
     .distortion-tooltip {
         position: fixed;
-        top: 10;
+        top: auto;
         left: 0;
-        z-index: 5;
+        z-index: 1;
 
         --background-color: var(--secondary-color);
         background-color: #0000;
@@ -22,13 +23,16 @@ const tooltipStyle = /* css */`
     }
 `;
 
-export function useTooltip(content?: string) {
+export function useTooltip(content?: string, id?: string) {
     const distortionRef = useRef<DistortHandle>(null);
     const [shown, setShown] = useState(false);
+
+    injectStyle(tooltipStyle, 'tooltip');
 
     const tooltip = content != null
         ? (
                 <Distortion
+                    id={id}
                     className="distortion-tooltip"
                     defaultFilter={{
                         scale: 10,
@@ -37,7 +41,6 @@ export function useTooltip(content?: string) {
                     distortChildren={DistortBackground}
                     ref={distortionRef}
                 >
-                    <style>{tooltipStyle}</style>
                     {content}
                 </Distortion>
             )

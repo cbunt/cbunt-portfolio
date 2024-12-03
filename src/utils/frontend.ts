@@ -18,6 +18,23 @@ export function svgToDataURL(svg: string) {
     return `url("data:image/svg+xml,${encoded}")`;
 }
 
+export const injectStyle = (() => {
+    // this is basically a temporary polyfill for react 19's <style>
+    // functionality until its release
+    // https://react.dev/blog/2024/04/25/react-19#support-for-stylesheets
+    const injectedStyle = document.createElement('style');
+    const tags: Record<string, boolean> = {};
+    document.head.appendChild(injectedStyle);
+
+    return (css: string, tag: string) => {
+        if (tags[tag]) return;
+        tags[tag] = true;
+
+        const node = document.createTextNode(css);
+        injectedStyle.appendChild(node);
+    };
+})();
+
 export function renderApp(app: ReactNode, rootId: string = 'root') {
     const elm = document.getElementById(rootId);
     if (elm == null) {
