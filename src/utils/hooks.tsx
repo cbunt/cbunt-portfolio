@@ -55,3 +55,19 @@ export function useTooltip(content?: string, id?: string) {
 
     return [shown ? tooltip : undefined, show, hide] as const;
 }
+
+export function useRerenderEffect(fn: () => void, inputs: unknown[]) {
+    const isMountingRef = useRef(false);
+
+    useEffect(() => {
+        isMountingRef.current = true;
+    }, []);
+
+    useEffect(() => {
+        if (!isMountingRef.current) {
+            fn();
+        } else {
+            isMountingRef.current = false;
+        }
+    }, inputs);
+}
