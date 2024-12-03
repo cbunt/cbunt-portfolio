@@ -1,14 +1,7 @@
-import styled from 'styled-components';
-
-import { renderApp } from '../../utils/frontend';
-import SitePage from '../page-elements/page-wrapper';
-
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-
-const StyledArticle = styled.article`
-    columns: 2 max(15rem, 30vw);
-    column-gap: 3rem;
+article {
+    @container (width >= 40rem) {
+        columns: 2;
+    }
 
     * {
         break-before: avoid;
@@ -78,27 +71,4 @@ const StyledArticle = styled.article`
             font-family: 'NerdFontsSymbols Nerd Font';
         }
     }
-`;
-
-const resumeURL = 'https://raw.githubusercontent.com/cbunt/resume/refs/heads/main/resume.md';
-const content = await fetch(resumeURL).then((res) => res.text());
-
-renderApp(
-    <SitePage>
-        <h1>Cass Bunting&#39;s Resume</h1>
-        <StyledArticle>
-            <Markdown
-                components={{
-                    h1: 'h2',
-                    h2: 'h3',
-                    del: ({ children }) => typeof children === 'string'
-                        ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>)
-                        : undefined,
-                }}
-                rehypePlugins={[remarkGfm]}
-            >
-                {content}
-            </Markdown>
-        </StyledArticle>
-    </SitePage>,
-);
+}
