@@ -1,6 +1,5 @@
-import { useRef, useEffect, useState, WheelEvent, MouseEvent } from 'react';
+import { useRef, useEffect, useState, WheelEvent, MouseEvent, RefObject } from 'react';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import styled from 'styled-components';
 
 import type Renderer from '../../rendering/renderer';
 import type { LoadModelConstructor, ModelSetting } from '../../samples/settings/sample-spec';
@@ -8,19 +7,6 @@ import type { LoadModelConstructor, ModelSetting } from '../../samples/settings/
 import ModelSettingsWidget from './model-settings-gui';
 import FullscreenButton from './fullscreen-button/fullscreen-button';
 import { OrbitCameraController } from '../../rendering/camera';
-
-const ViewportStyle = styled.div`
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    canvas {
-        width: 100%;
-        height: 100%;
-        cursor: grab;
-        display: block;
-    }
-`;
 
 const enum MoveState {
     none = 0,
@@ -31,15 +17,15 @@ const enum MoveState {
 
 export type ViewportProps = {
     getModelConstructor: LoadModelConstructor,
+    viewportRef: RefObject<HTMLDivElement>,
 };
 
-export default function Viewport({ getModelConstructor }: ViewportProps) {
+export default function Viewport({ getModelConstructor, viewportRef }: ViewportProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const rendererRef = useRef<Renderer | null>(null);
     const controllerRef = useRef<OrbitCameraController | null>(null);
     const isFocusedRef = useRef(false);
     const canFocus = useRef(true);
-    const mainRef = useRef<HTMLDivElement | null>(null);
     const moveRef = useRef(MoveState.none);
     const [settings, setSettings] = useState<Record<string, ModelSetting> | null>(null);
 
@@ -123,12 +109,12 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
     });
 
     const settingsWidget = settings != null
-        ? (<ModelSettingsWidget settings={settings} />)
+        ? (<ModelSettingsWidget {...settings} />)
         : undefined;
 
     return (
-        <ViewportStyle ref={mainRef}>
-            <FullscreenButton element={mainRef} />
+        <>
+            <FullscreenButton element={viewportRef} />
             <canvas
                 ref={canvasRef}
                 onMouseDown={handleMouseDown}
@@ -137,6 +123,6 @@ export default function Viewport({ getModelConstructor }: ViewportProps) {
                 tabIndex={0}
             />
             {settingsWidget}
-        </ViewportStyle>
+        </>
     );
 }
