@@ -1,4 +1,4 @@
-import SampleWrapper from '../../page-elements/sample-wrapper';
+import SampleWrapper from '../../sample-wrapper/sample-wrapper';
 import { renderApp } from '../../../utils/frontend';
 
 import Markdown from 'react-markdown';
