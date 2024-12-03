@@ -1,5 +1,5 @@
 import { renderApp } from '../../../utils/frontend';
-import SitePage from '../../page-elements/page-wrapper';
+import SitePage from '../../site-page/site-page';
 
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

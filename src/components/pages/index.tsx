@@ -1,4 +1,4 @@
-import SitePage from '../page-elements/page-wrapper';
+import SitePage from '../site-page/site-page';
 import styled from 'styled-components';
 
 import { renderApp } from '../../utils/frontend';

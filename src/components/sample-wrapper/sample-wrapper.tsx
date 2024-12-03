@@ -8,7 +8,7 @@ import { DistortBorder } from 'react-distortion/child-elements';
 
 import type { LoadModelConstructor } from '../../samples/settings/sample-spec';
 import SupportCheck from '../viewport/support-check/support-check';
-import SitePage from '../page-elements/page-wrapper';
+import SitePage from '../site-page/site-page';
 
 import styles from './sample-wrapper.module.css';
 
