@@ -89,9 +89,12 @@
         padding-left: 6px;
         background-color: inherit;
         caret-color: var(--hi-vis-gray);
+        
+        -moz-appearance:textfield;
     
         &::-webkit-inner-spin-button {
             appearance: none;
+            margin: 0;
         }
     }
 }
