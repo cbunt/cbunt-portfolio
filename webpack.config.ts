@@ -7,7 +7,6 @@ import { URL } from 'url';
 import { globSync } from 'fs';
 import { fetch, setGlobalDispatcher, Agent } from 'undici'
 
-
 import LicenseWebpackPlugin from 'webpack-license-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import Terser from 'terser-webpack-plugin';

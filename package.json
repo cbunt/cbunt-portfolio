@@ -36,7 +36,6 @@
     "react-draggable": "^4.4.6",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
-    "styled-components": "^6.1.13",
     "wgpu-matrix": "^3.3.0"
   },
   "devDependencies": {
@@ -45,7 +44,6 @@
     "@stylistic/eslint-plugin": "^2.11.0",
     "@types/body-scroll-lock": "^3.1.2",
     "@types/eslint": "^9.6.1",
-    "@types/gh-pages": "^6.1.0",
     "@types/node": "^22.9.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -55,7 +53,6 @@
     "css-loader": "^7.1.2",
     "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",
-    "gh-pages": "^6.2.0",
     "globals": "^15.12.0",
     "gltf-loader": "^1.0.0",
     "html-webpack-plugin": "^5.6.3",
