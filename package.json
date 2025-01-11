@@ -40,7 +40,7 @@
     "wgpu-matrix": "^3.3.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.18.0",
     "@ladle/react": "^5.0.1",
     "@mdx-js/loader": "^3.1.0",
     "@stylistic/eslint-plugin": "^2.12.1",
@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "^8.19.1",
     "@webgpu/types": "^0.1.52",
     "css-loader": "^7.1.2",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "eslint-plugin-react": "^7.37.3",
     "globals": "^15.14.0",
     "gltf-loader": "^1.0.0",
@@ -68,7 +68,7 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.19.1",
-    "undici": "^7.2.0",
+    "undici": "^7.2.1",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
