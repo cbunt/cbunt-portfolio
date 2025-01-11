@@ -1,0 +1,38 @@
+@use "../mixins.module.scss" as mixins;
+
+main button:not([class]) {
+    @include mixins.clickable;
+    @include mixins.distortion-border(0.2lh);
+
+    --hover-scale: 1.05;
+    --active-scale: 1;
+
+    border-radius: 6px;
+
+    white-space: nowrap;
+
+    height: 1lh;
+    padding: 0.75lh 0.5lh;
+    width: 100%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+
+    transition:
+        font-stretch 0.15s var(--scale-bezier),
+        var(--scale-transition);
+
+    &:hover:not(:disabled) {
+        font-stretch: 110%;
+        filter: 
+            drop-shadow(0 0 2px currentColor)
+            var(--distortion-filter);
+    }
+
+    &:active:not(:disabled) {
+        font-stretch: 105%;
+    }
+}

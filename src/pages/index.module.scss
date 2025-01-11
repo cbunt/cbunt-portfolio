@@ -1,0 +1,113 @@
+@use "../components/mixins.module.scss" as mixins;
+
+@property --card-color {
+    syntax: '<color>';
+    initial-value: transparent;
+    inherits: true;
+}
+
+main > hgroup {
+    padding: 1rem 2rem 3rem;
+    width: 100%;
+
+    @container (width > 35rem) {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, auto-fill, minmax(min(16rem, 100%), max-content));
+        grid-template-rows: auto auto 1fr;
+        grid-auto-flow: column;
+    }
+
+    h1 {
+        font-size: 2em;
+        font-stretch: 125%;
+        margin: 0;
+    }
+
+    h2 {
+        font-size: 1.25em;
+        font-style: italic;
+        margin: 1em 0 0 1em;
+        font-weight: 300;
+        font-stretch: 125%;
+    }
+
+    p {
+        margin: 0 0 0 1rem;
+        line-height: 2em;
+        grid-column: 3;
+        margin-left: 1rem;
+        max-width: 30rem;
+        width: fit-content;
+        grid-row: span 3;
+        padding: 1rem 0 0;
+    }
+}
+
+main > ul {
+    list-style: none;
+    padding: 0.5rem 1rem 0;
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    @container (width <= 56rem) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @container (width <= 30rem) {
+        grid-template-columns: 1fr;
+    }
+
+    &:hover > :not(:hover) {
+        @media (hover: hover) {
+            --card-color: var(--background-color);
+            opacity: 0.5;
+        }
+    }
+}
+
+main > ul > li {
+    @include mixins.clickable;
+    @include mixins.distortion-background(var(--card-color));
+    
+    --card-color: var(--secondary-color);
+    --scale-transition-duration: 0.3s;
+
+    padding: 1.5rem 0.5rem;
+    border-radius: 20px;
+
+    transition:
+        --card-color 0.5s ease,
+        opacity 0.3s ease,
+        color 0.1s ease,
+        var(--scale-transition);
+
+    &:hover h3 {
+        color: var(--accent-1);
+    }
+
+    p, h3 {
+        margin: 0 1rem;
+    }
+
+    a {
+        display: block;
+        color: inherit;
+        &:visited { color: inherit; }
+    }
+
+    video {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: inherit;
+    }
+
+    :has(>video) {
+        @include mixins.distortion-border(10px, var(--card-color));
+
+        margin: 0.5rem;
+        border-radius: 20px;
+        border: none;
+    }
+}

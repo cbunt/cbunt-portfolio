@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import webpack, { sources, DefinePlugin, WebpackError } from 'webpack';
 import { Compiler, Configuration } from 'webpack';
 import type {} from 'webpack-dev-server'
 
@@ -7,13 +7,11 @@ import { URL } from 'url';
 import { globSync } from 'fs';
 import { fetch, setGlobalDispatcher, Agent } from 'undici'
 
-
 import LicenseWebpackPlugin from 'webpack-license-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import Terser from 'terser-webpack-plugin';
-
-
-const { sources, DefinePlugin, WebpackError } = webpack;
+import VirtualModulesPlugin from 'webpack-virtual-modules';
+import { PageLoaderOptions } from './page-loader';
 
 // allows fetching robots.txt without timing out
 setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }) )
@@ -27,35 +25,51 @@ const template = path.resolve(__dirname, 'public', 'index.html');
 const favicon = path.resolve(__dirname, 'public', 'favicon.ico');
 
 const robotsUrl = 'https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/robots.txt/robots.txt';
-
 const gltfBaseURL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
 const gltfIndexFile = 'model-index.json'
-
 const hdrBaseURL = 'https://api.github.com/repos/KhronosGroup/glTF-Sample-Environments/contents?ref=low_resolution_hdrs';
 
-const dPages = globSync('src/components/pages/**/*.{tsx,mdx}');
+const pageDir = path.resolve(__dirname, 'src', 'pages');
+const pages = globSync(`${pageDir}/**/*.{mdx,tsx}`);
 
-const pagePaths = dPages.map((p) => {
-    const file = p.replace('src/components/pages/', '');
-    const page = file.replace(/(index)?.(tsx|mdx)/, '');
-    return page.replace(/\/$/, '');
+const entryPoints = pages.map((p) => {
+    const page = p.replace(pageDir, '')
+        .replace(/.(tsx|mdx)/, '')
+        .replaceAll('/index', '')
+        .replace(/^\//, '');
+
+    return [page, p];
 });
 
-const entryNames = pagePaths.map((p) => p === '' ? 'index' : p);
-const entryPaths = dPages.map((p, i) => [entryNames[i], path.resolve(__dirname, p)]);
-const htmlPaths = entryNames.map((p, i) => [p, `${pagePaths[i]}/index.html`.replace(/^\//, '')]);
+const samples = entryPoints
+    .filter(([name]) => name.startsWith('samples/'))
+    .map(([name]) => name.replace('samples/', ''));
 
-const samples = entryNames
-    .filter((path) => path.startsWith('samples/'))
-    .map((path) => path.replace('samples/', ''));
-
-export default (env: Record<string, string>, argv: Record<string, string>): Configuration => {
+export default (env: Record<string, string>, argv: Record<string, string>) => {
     const { mode = 'development' } = argv;
     const isDev = mode === 'development';
+    const virtualModules = new VirtualModulesPlugin();
+
+    const tsLoader = {
+        loader: 'ts-loader',
+        options: {
+            transpileOnly: isDev,
+        },
+    };
+
+    const cssLoader = {
+        loader: "css-loader",
+        options: {
+            modules: {
+                namedExport: false,
+                exportLocalsConvention: "as-is",
+            }
+        }
+    };
 
     return {
         target: 'web',
-        entry: Object.fromEntries(entryPaths),
+        entry: Object.fromEntries(entryPoints),
         output: {
             path: path.resolve(__dirname, 'build'),
             filename: '[name].bundle.js',
@@ -69,42 +83,56 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                     type: 'asset/source'
                 },
                 {
+                    test: /\.css$/,
+                    use: ["style-loader", cssLoader],
+                },
+                {
+                    test: /\.s[ac]ss$/,
+                    use: ["style-loader", cssLoader, "sass-loader"],
+                },
+                {
                     test: /\.(ts|tsx)$/,
-                    exclude: /node_modules/,
                     resourceQuery: { not: /raw/ },
-                    use: {
-                        loader: 'ts-loader',
-                        options: {
-                            transpileOnly: isDev,
-                        },
-                    },
+                    exclude: [/node_modules/, ...pages],
+                    use: tsLoader,
                 },
                 {
-                    test: /\.wgsl$/,
-                    type: 'asset/source'
+                    include: pages,
+                    use: [
+                        tsLoader,
+                        {
+                            loader: path.resolve('./page-loader.ts'),
+                            options: {
+                                virtualModules,
+                                renderSource: 'src/utils/render-page.tsx',
+                            } satisfies PageLoaderOptions
+                        }
+                    ],
                 },
                 {
-                    test: /\.(gltf)$/,
-                    loader: "gltf-loader",
+                    test: /\.mdx$/,
+                    exclude: pages,
+                    use: '@mdx-js/loader',
                 },
                 {
-                    test: /\.(ktx2?|bin|jpe?g|png|hdr|webp|mp4)$/,
-                    type: 'asset/resource'
-                }
-            ]
+                    test: /\.(jpe?g|png|mp4)$/,
+                    type: 'asset/resource',
+                },
+            ],
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
             alias: { public: path.resolve(__dirname, 'public') },
         },
         plugins: [
-            ...htmlPaths.map(([title, filename]) => new HtmlWebpackPlugin({
-                title: `cbunt portfolio${path.basename(title) === 'index' ? '' : ' -- ' + path.basename(title)}`,
+            virtualModules,
+            ...entryPoints.map(([name]) => new HtmlWebpackPlugin({
+                title: `cbunt portfolio${path.basename(name) === '' ? '' : ' - ' + path.basename(name)}`,
                 description: 'Cass Bunting\'s portfolio website',
-                chunks: [title],
-                filename,
+                chunks: [name],
+                filename: `${name}/index.html`.replace(/^\//, ''),
                 template,
-                favicon
+                favicon,
             })),
             new DefinePlugin({
                 SAMPLES__: JSON.stringify(samples),
@@ -133,9 +161,6 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 stage: webpack.Compilation.PROCESS_ASSETS_STAGE_DEV_TOOLING,
             }),
         ].filter(Boolean),
-        watchOptions: {
-            poll: 1000,
-        },
         performance: {
             hints: isDev ? false : 'warning',
             maxEntrypointSize: 512000,
@@ -165,10 +190,10 @@ export default (env: Record<string, string>, argv: Record<string, string>): Conf
                 extractComments: false,  
                 terserOptions: {
                     format: {
-                      comments: false,
+                        comments: false,
                     },
                   },
             })],
         },
-    }
+    } satisfies Configuration;
 };

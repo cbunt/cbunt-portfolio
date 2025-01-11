@@ -1,0 +1,64 @@
+article {
+    margin-bottom: 0;
+
+    @container (width >= 40rem) {
+        columns: 2;
+    }
+
+    *:not(h2) {
+        break-before: avoid;
+        break-inside: avoid;
+    }
+
+    h3 {
+        margin-bottom: 0;
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    p {
+        text-align: justify;
+        line-height: 1.5rem;
+
+        margin-left: 0;
+    }
+
+    ul {
+        margin-left: 1rem;
+        padding: 0;
+        list-style-type: none;
+        list-style-position: outside;
+        line-height: 1.5rem;
+        margin-top: 0.25rem;
+
+        li:not(:first-child) {
+            margin-top: 0.25rem;
+        }
+    }
+
+    ol {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 2em;
+        row-gap: 1.5em;
+        list-style-type: none;
+        list-style-position: outside;
+
+        margin: 0.5em 0 0.5em 1em;
+        padding: 1em 0;
+        line-height: normal;
+
+        li {
+            align-content: center;
+            font-weight: bold;
+        }
+
+        i {
+            margin-right: 0.33ch;
+
+            font-weight: normal;
+            font-style: normal;
+            font-family: 'NerdFontsSymbols Nerd Font';
+        }
+    }
+}

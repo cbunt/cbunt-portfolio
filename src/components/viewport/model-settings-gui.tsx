@@ -1,24 +1,18 @@
-import { FileUploadProps, FileUpload, Checkbox, CheckboxProps, Slider, SliderProps, StyledButton } from '../core';
-import { ModelSetting } from '../../samples/settings/sample-spec';
-import { ListenerSyms } from '../../samples/settings/property-listener';
-import SettingsPanel from './settings-panel';
-import styled from 'styled-components';
-import { ComponentProps } from 'react';
+import { ComponentProps, CSSProperties } from 'react';
 
-export type ModelSettingsWidgetProps = {
-    settings: Record<string, ModelSetting>,
-};
+import FileUpload, { FileUploadProps } from '../file-upload/file-upload';
+import Checkbox, { CheckboxProps } from '../checkbox/checkbox';
+import Slider, { SliderProps } from '../slider/slider';
+import StyledButton from '../button/button';
 
-const WidgetButton = styled(StyledButton)`
-    grid-column: span 3; 
-    color: var(--accent-2); 
-    --border-color: var(--accent-2);
-`;
+import { ModelSetting } from '../../rendering/samples/settings/sample-spec';
+import { ListenerSyms } from '../../rendering/samples/settings/property-listener';
+import SettingsPanel from './settings-panel/settings-panel';
 
-export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetProps) {
+export default function ModelSettingsWidget(settings: Record<string, ModelSetting>) {
     return (
         <SettingsPanel>
-            {...Object.entries(settings).map(([label, info]) => {
+            {Object.entries(settings).map(([label, info]) => {
                 const {
                     [ListenerSyms.$type]: _type,
                     [ListenerSyms.$callback]: _privateCallback,
@@ -34,10 +28,22 @@ export default function ModelSettingsWidget({ settings }: ModelSettingsWidgetPro
                 };
 
                 switch (info[ListenerSyms.$type]) {
-                    case 'button': return <WidgetButton {...rest as ComponentProps<typeof WidgetButton>}>{label}</WidgetButton>;
-                    case 'checkbox': return <Checkbox {...props as CheckboxProps} />;
-                    case 'slider': return <Slider {...props as SliderProps} />;
-                    case 'file': return <FileUpload {...props as FileUploadProps<unknown>} />;
+                    case 'button': return (
+                        <StyledButton
+                            key={label}
+                            style={{
+                                gridColumn: 'span 3',
+                                color: 'var(--accent-2)',
+                                '--border-color': 'var(--accent-2)',
+                            } as CSSProperties}
+                            {...rest as ComponentProps<typeof StyledButton>}
+                        >
+                            {label}
+                        </StyledButton>
+                    );
+                    case 'checkbox': return <Checkbox key={label} {...props as CheckboxProps} />;
+                    case 'slider': return <Slider key={label} {...props as SliderProps} />;
+                    case 'file': return <FileUpload key={label} {...props as FileUploadProps<unknown>} />;
                     default: throw new Error();
                 }
             })}
