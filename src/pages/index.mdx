@@ -1,0 +1,53 @@
+import ProjectCard from '../components/project-card/project-card';
+
+import voronoiMp4 from 'public/thumbnails/voronoi-water.mp4';
+import distortionMp4 from 'public/thumbnails/react-distortion.mp4';
+import cubemapBlurMp4 from 'public/thumbnails/cubemap-blur.mp4';
+import gltfViewerMp4 from 'public/thumbnails/gltf-viewer.mp4';
+
+import voronoiPng from 'public/thumbnails/voronoi-water.png';
+import distortionPng from 'public/thumbnails/react-distortion.png';
+import cubemapBlurPng from 'public/thumbnails/cubemap-blur.png';
+import gltfViewerPng from 'public/thumbnails/gltf-viewer.png';
+
+import './index.module.scss';
+
+<hgroup>
+    # Cass Bunting
+    ## Graphics Programmer
+    ## Web Developer
+
+    Recent computer science grad looking to help build unique interactive experiences in
+    games and on the web. I'm also big into guitar, songwriting, containing multitudes, etc.
+</hgroup>
+
+<ul>
+    <ProjectCard
+        name="React Distortion"
+        description="A React component library for adding procedural distortion to other components."
+        projectURL="https://github.com/cbunt/react-distortion"
+        videoURL={distortionMp4}
+        thumbnailURL={distortionPng}
+    />
+    <ProjectCard
+        name="glTF Viewer"
+        description="A WebGPU deferred 3D renderer and glTF model viewer."
+        projectURL="/samples/gltf-viewer"
+        videoURL={gltfViewerMp4}
+        thumbnailURL={gltfViewerPng}
+    />
+    <ProjectCard
+        name="Cubemap Blur"
+        description="A tool to seamlessly and evenly blur cubemap textures."
+        projectURL="/samples/cubemap-blur"
+        videoURL={cubemapBlurMp4}
+        thumbnailURL={cubemapBlurPng}
+    />
+    <ProjectCard
+        name="Voronoi Water"
+        description="A stylized procedural water shader through voronoi noise and flowmaps"
+        projectURL="https://github.com/cbunt/unity-voronoi-water"
+        videoURL={voronoiMp4}
+        thumbnailURL={voronoiPng}
+    />
+</ul>

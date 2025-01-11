@@ -1,44 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import Distortion, { DistortHandle } from 'react-distortion';
-import { DistortBackground } from 'react-distortion/child-elements';
-import { injectStyle } from './frontend';
-
-const tooltipStyle = /* css */`
-    .distortion-tooltip {
-        position: absolute;
-        top: calc(100% + 1em);
-        left: -1em;
-        z-index: 1;
-
-        --background-color: var(--secondary-color);
-        background-color: #0000;
-        color: var(--hi-vis-gray);
-        
-        padding: 12px;
-        max-width: 10rem;
-        width: max-content;
-        
-        border-radius: 8px;
-        font-size: inherit;
-    }
-`;
 
 export function useTooltip(content?: string, id?: string) {
     const distortionRef = useRef<DistortHandle>(null);
     const [shown, setShown] = useState(false);
 
-    injectStyle(tooltipStyle, 'tooltip');
-
     const tooltip = content != null
         ? (
                 <Distortion
                     id={id}
-                    className="distortion-tooltip"
+                    role="tooltip"
                     defaultFilter={{
                         scale: 10,
                         disable: true,
                     }}
-                    distortChildren={DistortBackground}
                     ref={distortionRef}
                 >
                     {content}
@@ -56,12 +31,10 @@ export function useTooltip(content?: string, id?: string) {
     return [shown ? tooltip : undefined, show, hide] as const;
 }
 
-export function useRerenderEffect(fn: () => void, inputs: unknown[]) {
+export function useRerenderEffect(fn: () => void, deps: unknown[]) {
     const isMountingRef = useRef(false);
 
-    useEffect(() => {
-        isMountingRef.current = true;
-    }, []);
+    useEffect(() => { isMountingRef.current = true; }, []);
 
     useEffect(() => {
         if (!isMountingRef.current) {
@@ -69,5 +42,5 @@ export function useRerenderEffect(fn: () => void, inputs: unknown[]) {
         } else {
             isMountingRef.current = false;
         }
-    }, inputs);
+    }, deps);
 }

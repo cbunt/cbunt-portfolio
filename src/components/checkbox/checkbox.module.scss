@@ -1,0 +1,74 @@
+@use "../mixins.module.scss" as mixins;
+
+input[type="checkbox"] {
+    @include mixins.clickable;
+
+    --height: 1lh;
+    height: var(--height);
+
+    appearance: none;
+    margin: 0;
+
+    aspect-ratio: 1;
+    position: relative;
+
+    border: 0.25lh solid oklch(from var(--accent-2) calc(l * var(--ok-l2)) c h);
+    border-radius: 5px;
+    background-color: var(--background-color);
+
+    transition:
+        var(--scale-transition),
+        background-color 0.2s ease-out,
+        border-color 0.2s ease-out;
+
+    label {
+        position: relative;
+    }
+
+    &:checked {
+        background-color: var(--accent-2);
+        border-color: var(--accent-2);
+    }
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: -0.2lh;
+
+        width: calc(var(--height) * sqrt(2));
+        height: max(4px, 0.2rem);
+        scale: 0 1;
+
+        background: oklch(from var(--accent-2) calc(l * var(--ok-l2)) c h);
+        border-radius: 6px;
+        
+        transition-property: scale;
+        transition-timing-function: ease-in;
+        transition-duration: 75ms;
+    }
+
+    &:checked::before,
+    &:checked:after {
+        scale: 1;
+        transition-timing-function: ease-out;
+        transition-duration: 100ms;
+    }
+
+    &:before {
+        rotate: 45deg;
+        left: 0;
+        transform-origin: left top;
+        transition-delay: 100ms;
+    }
+
+    &:after {
+        rotate: -45deg;
+        right: 0;
+        transform-origin: right top;
+    }
+
+    &:checked:after {
+        transition-delay: 150ms;
+    }
+}

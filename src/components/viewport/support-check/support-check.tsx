@@ -1,10 +1,9 @@
 import Viewport from '../viewport';
 import Distortion from 'react-distortion';
-import { DistortBorder } from 'react-distortion/child-elements';
-import { LoadModelConstructor } from '../../../samples/settings/sample-spec';
+import { LoadModelConstructor } from '../../../rendering/samples/settings/sample-spec';
 import { useRef } from 'react';
 
-import styles from './support-check.module.css';
+import styles from './support-check.module.scss';
 
 export type SupportCheckProps = {
     loadModelConstructor: LoadModelConstructor,
@@ -21,7 +20,6 @@ export default function SupportCheck({ loadModelConstructor }: SupportCheckProps
                 disable: true,
                 scale: 5,
             }}
-            distortChildren={DistortBorder}
         >
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {navigator.gpu?.requestAdapter == null
@@ -38,7 +36,12 @@ export default function SupportCheck({ loadModelConstructor }: SupportCheckProps
                             .
                         </p>
                     )
-                : <Viewport viewportRef={viewportRef} getModelConstructor={loadModelConstructor} />}
+                : (
+                        <Viewport
+                            viewportRef={viewportRef as { current: NonNullable<typeof viewportRef.current> }}
+                            getModelConstructor={loadModelConstructor}
+                        />
+                    )}
         </Distortion>
     );
 }

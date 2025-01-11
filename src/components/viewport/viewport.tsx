@@ -1,12 +1,12 @@
-import { useRef, useEffect, useState, WheelEvent, MouseEvent, RefObject } from 'react';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { useRef, useEffect, useReducer } from 'react';
 
-import type Renderer from '../../rendering/renderer';
-import type { LoadModelConstructor, ModelSetting } from '../../samples/settings/sample-spec';
+import type { WheelEvent, MouseEvent, RefObject, MouseEventHandler, JSX } from 'react';
+import type { LoadModelConstructor } from '../../rendering/samples/settings/sample-spec';
 
 import ModelSettingsWidget from './model-settings-gui';
 import FullscreenButton from './fullscreen-button/fullscreen-button';
-import { OrbitCameraController } from '../../rendering/camera';
+import { OrbitCameraController } from '../../rendering/core/camera/orbit-camera-controller';
 
 const enum MoveState {
     none = 0,
@@ -15,57 +15,93 @@ const enum MoveState {
     pan = 4,
 }
 
+type ViewportState = {
+    controller?: OrbitCameraController,
+    focused: boolean,
+    canFocus: boolean,
+    moveState: MoveState,
+    settings?: JSX.Element,
+    mouseHandler?: MouseEventHandler,
+};
+
+type ViewportAction =
+    ({ type: 'update' } & Partial<ViewportState>)
+    | { type: 'mouseMove', x: number, y: number };
+
 export type ViewportProps = {
     getModelConstructor: LoadModelConstructor,
     viewportRef: RefObject<HTMLDivElement>,
 };
 
+function reducer(state: ViewportState, action: ViewportAction) {
+    switch (action.type) {
+        case 'update': {
+            const { type, ...rest } = action;
+            return { ...state, ...rest };
+        };
+        case 'mouseMove': {
+            const { x, y } = action;
+            if (state.moveState & MoveState.rotate) state.controller?.rotate(x, y);
+            if (state.moveState & MoveState.zoom) state.controller?.zoom(10 * y);
+            if (state.moveState & MoveState.pan) state.controller?.pan(-x, y);
+            return state;
+        }
+        default: return state;
+    }
+}
+
 export default function Viewport({ getModelConstructor, viewportRef }: ViewportProps) {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const rendererRef = useRef<Renderer | null>(null);
-    const controllerRef = useRef<OrbitCameraController | null>(null);
-    const isFocusedRef = useRef(false);
-    const canFocus = useRef(true);
-    const moveRef = useRef(MoveState.none);
-    const [settings, setSettings] = useState<Record<string, ModelSetting> | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const handleMouseMove = (e: globalThis.MouseEvent) => {
-        if (controllerRef.current == null) return;
-        const controller = controllerRef.current;
-        const { movementX: x, movementY: y } = e;
-        if (moveRef.current & MoveState.rotate) controller.rotate(x, y);
-        if (moveRef.current & MoveState.zoom) controller.zoom(10 * y);
-        if (moveRef.current & MoveState.pan) controller.pan(-x, y);
-    };
+    const [{ controller, focused, canFocus, settings }, dispatch] = useReducer(reducer, {
+        controller: undefined,
+        focused: false,
+        canFocus: true,
+        moveState: MoveState.none,
+        mouseHandler: undefined,
+    });
 
-    const handleMouseDown = (e: MouseEvent) => {
-        moveRef.current = e.buttons & 0b111;
-        if (!canFocus.current) return;
+    const onMouseDown = (e: MouseEvent) => {
+        if (!canFocus) return;
+
         void canvasRef.current?.requestPointerLock();
+
+        dispatch({
+            type: 'update',
+            moveState: e.buttons & 0b111,
+            focused: true,
+        });
     };
 
-    const handleMouseUp = (e: MouseEvent) => {
-        moveRef.current = e.buttons & 0b111;
-        if (moveRef.current !== MoveState.none) return;
-        isFocusedRef.current = false;
-        document.exitPointerLock();
-    };
+    const onMouseUp = (e: MouseEvent) => {
+        const moveState = (e.buttons & 0b111) as MoveState;
+        const moving = moveState !== MoveState.none;
 
-    const unlock = () => {
-        document.removeEventListener('mousemove', handleMouseMove, false);
-        canvasRef.current?.blur();
+        dispatch({
+            type: 'update',
+            focused: moving,
+            moveState,
+        });
 
-        if (canvasRef.current) enableBodyScroll(canvasRef.current);
-        if (isFocusedRef.current) {
-            isFocusedRef.current = false;
-            canFocus.current = false;
-            setTimeout(() => { canFocus.current = true; }, 1500);
+        if (!moving) {
+            document.exitPointerLock();
         }
     };
 
-    const onWheel = (e: WheelEvent<HTMLCanvasElement>) => {
-        if (!isFocusedRef.current) return;
-        controllerRef.current?.zoom(e.deltaY);
+    const onWheel = focused
+        ? (e: WheelEvent<HTMLCanvasElement>) => { controller?.zoom(e.deltaY); }
+        : undefined;
+
+    const unlock = () => {
+        if (canvasRef.current) {
+            canvasRef.current.blur();
+            enableBodyScroll(canvasRef.current);
+        }
+
+        if (focused) {
+            dispatch({ type: 'update', focused: false, canFocus: false });
+            setTimeout(() => { dispatch({ type: 'update', canFocus: true }); }, 1500);
+        }
     };
 
     const handleLockChange = () => {
@@ -74,55 +110,53 @@ export default function Viewport({ getModelConstructor, viewportRef }: ViewportP
             return;
         }
 
-        isFocusedRef.current = true;
-        if (canvasRef.current) disableBodyScroll(canvasRef.current, { reserveScrollBarGap: true });
-        document.addEventListener('mousemove', handleMouseMove, false);
-    };
+        dispatch({ type: 'update', focused: true });
 
-    const cleanup = () => {
-        document.removeEventListener('pointerlockchange', handleLockChange);
-        if (isFocusedRef.current) unlock();
+        if (canvasRef.current) disableBodyScroll(canvasRef.current, { reserveScrollBarGap: true });
     };
 
     useEffect(() => {
-        if (canvasRef.current == null) return () => {};
+        // dynamically imported to avoid loading in on unsupported browsers
+        void Promise.all([
+            import('../../rendering/core/renderer'),
+            getModelConstructor(),
+        ]).then(async ([rendererModule, modelCtor]) => {
+            if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
+
+            const renderer = await rendererModule.default.CreateInitialized(canvasRef.current);
+            const model = new modelCtor(renderer);
+
+            dispatch({
+                type: 'update',
+                controller: new OrbitCameraController(renderer.camera, [-0.5, 3.5, 0], 20),
+                settings: <ModelSettingsWidget {...model.settings} />,
+            });
+
+            requestAnimationFrame(renderer.render);
+        });
+
         document.addEventListener('pointerlockchange', handleLockChange, false);
 
-        if (rendererRef.current == null) {
-            // dynamically imported to avoid loading in on unsupported browsers
-            void Promise.all([
-                import('../../rendering/renderer'),
-                getModelConstructor(),
-            ]).then(async ([renderer, modelCtor]) => {
-                if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
-
-                rendererRef.current = await renderer.default.CreateInitialized(canvasRef.current);
-                controllerRef.current = new OrbitCameraController(rendererRef.current.camera);
-                const model = new modelCtor(rendererRef.current);
-
-                setSettings(model.settings);
-                requestAnimationFrame(rendererRef.current.render);
-            });
-        }
-
-        return cleanup;
-    });
-
-    const settingsWidget = settings != null
-        ? (<ModelSettingsWidget {...settings} />)
-        : undefined;
+        return () => {
+            document.removeEventListener('pointerlockchange', handleLockChange);
+            unlock();
+        };
+    }, []);
 
     return (
         <>
-            <FullscreenButton element={viewportRef} />
             <canvas
                 ref={canvasRef}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+                onMouseMove={({ movementX: x, movementY: y }) => {
+                    if (!focused) return;
+                    dispatch({ type: 'mouseMove', x, y });
+                }}
                 onWheel={onWheel}
-                tabIndex={0}
             />
-            {settingsWidget}
+            {settings}
+            <FullscreenButton element={viewportRef} />
         </>
     );
 }

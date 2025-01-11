@@ -1,0 +1,24 @@
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+import './resume.module.scss';
+
+export const resumeURL = 'https://raw.githubusercontent.com/cbunt/resume/refs/heads/main/resume.md';
+export const content = await fetch(resumeURL).then((res) => res.text());
+
+# Cass Bunting's Resume
+
+<article>
+    <Markdown
+        components={{
+            h1: 'h2',
+            h2: 'h3',
+            del: ({ children }) => typeof children === 'string'
+                ? (<i>{String.fromCodePoint(parseInt(children, 16))}</i>)
+                : undefined,
+        }}
+        rehypePlugins={[remarkGfm]}
+    >
+        {content}
+    </Markdown>
+</article>

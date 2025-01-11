@@ -1,16 +1,14 @@
-import { ReactNode } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { createTheme } from '@uiw/codemirror-themes';
 import { tags as t } from '@lezer/highlight';
 import Distortion from 'react-distortion';
-import { DistortBorder } from 'react-distortion/child-elements';
 
-import type { LoadModelConstructor } from '../../samples/settings/sample-spec';
+import type { LoadModelConstructor } from '../../rendering/samples/settings/sample-spec';
 import SupportCheck from '../viewport/support-check/support-check';
-import SitePage from '../site-page/site-page';
 
-import styles from './sample-wrapper.module.css';
+import styles from './sample-wrapper.module.scss';
+import { ReactNode } from 'react';
 
 const theme = createTheme({
     theme: 'dark',
@@ -56,38 +54,38 @@ const theme = createTheme({
 export type SampleWrapperProps = {
     loadModelConstructor: LoadModelConstructor,
     modelName: string,
-    sourceText?: string,
+    source?: string,
     children?: ReactNode,
 };
 
 export default function SampleWrapper({
-    loadModelConstructor: loadModelConstructor,
+    loadModelConstructor,
     modelName,
-    sourceText,
+    source,
     children,
 }: SampleWrapperProps) {
     return (
-        <SitePage extendMainWidth>
-            <h1 style={{ textTransform: 'capitalize' }}>{modelName}</h1>
+        <>
+            <h1>{modelName}</h1>
             <SupportCheck loadModelConstructor={loadModelConstructor} />
             {children}
-            {sourceText != null
-                ? (
-                        <Distortion
-                            className={styles['code-container']}
-                            defaultFilter={{ disable: true }}
-                            distortChildren={DistortBorder}
-                        >
-                            <CodeMirror
+            {source == null
+                ? undefined
+                : (
+                        <>
+                            <h2>Source Code</h2>
+                            <Distortion
+                                className={styles['code-container']}
+                                defaultFilter={{ disable: true }}
+                                as={CodeMirror}
                                 theme={theme}
                                 editable={false}
                                 maxHeight="80vh"
-                                value={sourceText}
-                                extensions={[javascript({ jsx: true, typescript: true })]}
+                                value={source}
+                                extensions={[javascript({ typescript: true })]}
                             />
-                        </Distortion>
-                    )
-                : undefined}
-        </SitePage>
+                        </>
+                    )}
+        </>
     );
 }

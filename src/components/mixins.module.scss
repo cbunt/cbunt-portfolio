@@ -1,0 +1,70 @@
+html {
+    --hover-scale: 1.075;
+    --active-scale: 0.95;
+    --scale-bezier: cubic-bezier(0.81, 0, 0.37, 3.69);
+    --scale-transition-duration: 0.2s; 
+
+    @media (prefers-reduced-motion) OR (hover: none) { 
+        --hover-scale: 1 !important;
+        --active-scale: 1 !important;
+    }
+}
+
+@mixin clickable {
+    --scale-transition: scale var(--scale-transition-duration) var(--scale-bezier);
+    transition: var(--scale-transition);
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+    
+    &:hover:not(:disabled) {
+        scale: var(--hover-scale);
+    }
+    
+    &:active:not(:disabled) {
+        scale: var(--active-scale);
+    }
+}
+
+@mixin distortion-border($width, $color: currentColor) {
+    position: relative;
+    border: #{$width} solid transparent;
+
+    &:before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+    
+        width: calc(100% + #{$width});
+        height: calc(100% + #{$width});
+        top: calc(-0.5 * #{$width});
+        left: calc(-0.5 * #{$width});
+        filter: var(--distortion-filter);
+    
+        border: solid;
+        background-color: #0000;
+        border-radius: inherit;
+        border-width: #{$width};
+        border-color: #{$color};
+    }
+}
+
+@mixin distortion-background($color:var(--background-color)) {
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: var(--distortion-filter);
+
+        border-radius: inherit;
+        background-color: #{$color};
+    }
+}

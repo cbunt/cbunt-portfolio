@@ -1,0 +1,8 @@
+@use "../mixins.module.scss" as mixins;
+
+.code-container {
+    @include mixins.distortion-border(5px, var(--secondary-color));
+
+    padding: 0.5em;
+    border-radius: 6px;
+}

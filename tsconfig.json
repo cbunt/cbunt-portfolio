@@ -21,6 +21,7 @@
     ]
   },
   "include": [
+    "./src/**/*.mdx",
     "./src/**/*.tsx",
     "./src/**/*.ts",
     "./src/**/*.d.ts",

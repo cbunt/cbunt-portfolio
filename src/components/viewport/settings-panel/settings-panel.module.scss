@@ -1,0 +1,69 @@
+@use "../../mixins.module.scss" as mixins;
+
+.settings-panel {
+    @include mixins.distortion-background(var(--secondary-color));
+
+    display: grid;
+    grid-template-columns: minmax(4rem, auto) minmax(4rem, 0.6fr) minmax(3rem, 0.3fr);
+
+    gap: 0.5lh 1lh;
+
+    color: var(--hi-vis-gray);
+
+    border-radius: 10px;
+    font-size: 0.7em;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font-weight: 600;
+
+    padding: 1em 1em 1em 3em;
+
+    > button:not([class]) {
+        color: var(--accent-3);
+    }
+
+    input[type="checkbox"] {
+        justify-self: center;
+    }
+
+    label {
+        margin: auto 0 auto 0.5em;
+        color: var(--accent-1);
+        grid-column: 1;
+    }
+
+    /* drag handle */
+    > svg:first-child {
+        position: absolute;
+        padding: 1rem 0 1rem 0.5rem;
+        width: 2rem;
+        height: 100%;
+
+        cursor: grab;
+        fill: var(--background-color);
+    }
+
+    &:before {
+        box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 6px 6px 4px;
+    }
+
+    &.disabled {
+        row-gap: 0;
+
+        >:not(button:first-of-type):not(svg:first-of-type),
+        >:not(button:first-of-type):before {
+            border-top-width: 0;
+            border-bottom-width: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            height: 0;
+            min-height: 0;
+            overflow: clip;
+        }
+    }
+}
