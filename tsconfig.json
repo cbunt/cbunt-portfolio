@@ -3,6 +3,7 @@
     "resolveJsonModule": true,
     "module": "es2022",
     "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "rootDir": "./src",
     "outDir": "build",
     "jsx": "react-jsx",
@@ -27,4 +28,7 @@
     "./src/**/*.d.ts",
     "./node_modules/@webgpu/types/dist/*",
   ],
+  "exclude": [
+    "./src/**/*.stories.tsx"
+  ]
 }
