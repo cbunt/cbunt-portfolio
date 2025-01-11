@@ -8,6 +8,9 @@ export type PageLoaderOptions = {
     renderSource: string,
 }
 
+const  normalizeTSX = (path: string) => path.endsWith('tsx') ? path.replace('.tsx', '') : path;
+
+
 export default function PageLoader(
     this: LoaderContext<PageLoaderOptions>,
     source: string,
@@ -28,8 +31,8 @@ export default function PageLoader(
     this.resourcePath = path.format({ name, dir, ext: 'ts' });
 
     return `
-        import render from '${renderPath}';
-        import Page from '${importPath}';
+        import render from '${normalizeTSX(renderPath)}';
+        import Page from '${normalizeTSX(importPath)}';
 
         render(Page);
     `;
