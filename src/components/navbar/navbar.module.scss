@@ -18,9 +18,9 @@ aside {
     font-weight: 550;
 
     nav {
+        writing-mode: vertical-rl;
         width: fit-content;
         display: flex;
-        flex-direction: column;
         gap: 2rem;
     }
 
@@ -62,8 +62,7 @@ aside {
         }
 
         &:not(:has(i)) {
-            writing-mode: vertical-rl;
-            rotate: .5turn;
+            rotate: 0.5turn;
         }
     }
 }
@@ -81,7 +80,6 @@ aside {
 
         list-style: none;
         display: flex;
-        flex-direction: column;
         visibility: hidden;
 
         @media (hover: hover) {        
@@ -102,19 +100,18 @@ aside {
             top: 0;
             right: 100%;
             height: 100%;
-            padding: 0 1.5ch;
+            width: 3ch;
             z-index: -1;
         }
     }
 
     li {
-        margin: 0;
-        padding: 0 1.5ch;
+        margin: 0 0.5lh;
+        padding: 0;
     }
 
     a,
     a:visited {
-        margin: 0 0.5ch;
         color: var(--accent-1);
     }
 
