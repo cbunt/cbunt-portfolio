@@ -1,7 +1,7 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { useRef, useEffect, useReducer } from 'react';
 
-import type { WheelEvent, MouseEvent, RefObject, MouseEventHandler, JSX } from 'react';
+import type { WheelEvent, MouseEvent, MouseEventHandler, JSX, RefObject } from 'react';
 import type { LoadModelConstructor } from '../../rendering/samples/settings/sample-spec';
 
 import ModelSettingsWidget from './model-settings-gui';
@@ -30,7 +30,7 @@ type ViewportAction =
 
 export type ViewportProps = {
     getModelConstructor: LoadModelConstructor,
-    viewportRef: RefObject<HTMLDivElement>,
+    viewportRef: RefObject<HTMLDivElement | null>,
 };
 
 function reducer(state: ViewportState, action: ViewportAction) {

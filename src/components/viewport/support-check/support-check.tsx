@@ -4,10 +4,18 @@ import { LoadModelConstructor } from '../../../rendering/samples/settings/sample
 import { useRef } from 'react';
 
 import styles from './support-check.module.scss';
+import Markdown from 'react-markdown';
 
 export type SupportCheckProps = {
     loadModelConstructor: LoadModelConstructor,
 };
+
+const unsupportedWarning = /* md */`
+This browser does not support webgpu.  
+\\
+For an up to date list of supported browsers,  
+see [caniuse.com/webgpu](https://caniuse.com/webgpu).
+`;
 
 export default function SupportCheck({ loadModelConstructor }: SupportCheckProps) {
     const viewportRef = useRef<HTMLDivElement>(null);
@@ -23,25 +31,8 @@ export default function SupportCheck({ loadModelConstructor }: SupportCheckProps
         >
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {navigator.gpu?.requestAdapter == null
-                ? (
-                        <p>
-                            This browser does not support webgpu.
-                            <br />
-                            <br />
-                            For an up to date list of supported browsers,
-                            <br />
-                            see
-                            {' '}
-                            <a href="https://caniuse.com/webgpu">caniuse.com/webgpu</a>
-                            .
-                        </p>
-                    )
-                : (
-                        <Viewport
-                            viewportRef={viewportRef as { current: NonNullable<typeof viewportRef.current> }}
-                            getModelConstructor={loadModelConstructor}
-                        />
-                    )}
+                ? <Markdown>{unsupportedWarning}</Markdown>
+                : <Viewport viewportRef={viewportRef} getModelConstructor={loadModelConstructor} />}
         </Distortion>
     );
 }
