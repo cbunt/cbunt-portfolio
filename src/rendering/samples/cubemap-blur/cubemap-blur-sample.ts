@@ -1,7 +1,7 @@
 import { showSaveFilePicker } from 'native-file-system-adapter';
 
 import getSkyboxOptions from '../settings/skybox-options';
-import { FullRenderModel } from '../settings/sample-spec';
+import { RenderModel } from '../settings/sample-spec';
 import propertyListener, { ListenerSyms } from '../settings/property-listener';
 
 import { textureToKTX } from '../../utils/data-copy';
@@ -11,7 +11,7 @@ import cubemapGuassianPyramid from './cubemap-guassian-pyramid';
 
 enum BlurState { IDLE, BLUR, WAIT }
 
-export default class CubemapBlurModel implements FullRenderModel {
+export default class CubemapBlurModel implements RenderModel {
     static title = '';
     static description = '';
 

@@ -1,10 +1,13 @@
 import SampleWrapper from '../../components/sample-wrapper/sample-wrapper'
 
-export const getModelConstructor = () => import('../../rendering/samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default);
 
 <SampleWrapper 
     modelName="glTF Viewer"
-    loadModelConstructor={getModelConstructor}
+    ModelConstructor={
+        navigator.gpu?.requestAdapter != null
+            ? await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default)
+            : undefined
+    }
 >
     A glTF renderer written in WebGPU and Typescript. Includes deferred rendering and 
     multi-scattering image based lighting adapted from https://bruop.github.io/ibl/. 

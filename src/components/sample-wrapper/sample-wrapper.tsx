@@ -4,7 +4,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import { tags as t } from '@lezer/highlight';
 import Distortion from 'react-distortion';
 
-import type { LoadModelConstructor } from '../../rendering/samples/settings/sample-spec';
+import type { ModelConstructor } from '../../rendering/samples/settings/sample-spec';
 import SupportCheck from '../viewport/support-check/support-check';
 
 import styles from './sample-wrapper.module.scss';
@@ -52,14 +52,14 @@ const theme = createTheme({
 });
 
 export type SampleWrapperProps = {
-    loadModelConstructor: LoadModelConstructor,
+    ModelConstructor?: ModelConstructor,
     modelName: string,
     source?: string,
     children?: ReactNode,
 };
 
 export default function SampleWrapper({
-    loadModelConstructor,
+    ModelConstructor,
     modelName,
     source,
     children,
@@ -67,7 +67,7 @@ export default function SampleWrapper({
     return (
         <>
             <h1>{modelName}</h1>
-            <SupportCheck loadModelConstructor={loadModelConstructor} />
+            <SupportCheck ModelConstructor={ModelConstructor} />
             {children}
             {source == null
                 ? undefined

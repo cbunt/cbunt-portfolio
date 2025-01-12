@@ -2,8 +2,9 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { useRef, useEffect, useReducer } from 'react';
 
 import type { WheelEvent, MouseEvent, MouseEventHandler, JSX, RefObject } from 'react';
-import type { LoadModelConstructor } from '../../rendering/samples/settings/sample-spec';
+import type { ModelConstructor } from '../../rendering/samples/settings/sample-spec';
 
+import Renderer from '../../rendering/core/renderer';
 import ModelSettingsWidget from './model-settings-gui';
 import FullscreenButton from './fullscreen-button/fullscreen-button';
 import { OrbitCameraController } from '../../rendering/core/camera/orbit-camera-controller';
@@ -29,7 +30,7 @@ type ViewportAction =
     | { type: 'mouseMove', x: number, y: number };
 
 export type ViewportProps = {
-    getModelConstructor: LoadModelConstructor,
+    ModelConstructor: ModelConstructor,
     viewportRef: RefObject<HTMLDivElement | null>,
 };
 
@@ -50,7 +51,7 @@ function reducer(state: ViewportState, action: ViewportAction) {
     }
 }
 
-export default function Viewport({ getModelConstructor, viewportRef }: ViewportProps) {
+export default function Viewport({ ModelConstructor, viewportRef }: ViewportProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [{ controller, focused, canFocus, settings }, dispatch] = useReducer(reducer, {
@@ -116,14 +117,9 @@ export default function Viewport({ getModelConstructor, viewportRef }: ViewportP
     };
 
     useEffect(() => {
-        // dynamically imported to avoid loading in on unsupported browsers
-        Promise.all([
-            import('../../rendering/core/renderer'),
-            getModelConstructor(),
-        ]).then(async ([rendererModule, ModelConstructor]) => {
-            if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
+        if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
 
-            const renderer = await rendererModule.default.CreateInitialized(canvasRef.current);
+        Renderer.CreateInitialized(canvasRef.current).then((renderer) => {
             const model = new ModelConstructor(renderer);
 
             dispatch({

@@ -1,11 +1,17 @@
 import SampleWrapper from '../../components/sample-wrapper/sample-wrapper'
 import source from '../../rendering/samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
 
-export const getModelConstructor = () => import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default);
+export const ModelConstructor = navigator.gpu?.requestAdapter != null
+  ? await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default)
+  : undefined;
 
 <SampleWrapper 
     modelName="Cubemap Blur"
-    loadModelConstructor={getModelConstructor}
+    ModelConstructor={
+        navigator.gpu?.requestAdapter != null
+            ? await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default)
+            : undefined
+    }
     source={source}
 >
     Computes an approximate, perceptually-even Gaussian pyramid of a cubemap 

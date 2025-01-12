@@ -1,4 +1,4 @@
-import { FullRenderModel } from '../settings/sample-spec';
+import { RenderModel } from '../settings/sample-spec';
 import propertyListener, { ListenerSyms } from '../settings/property-listener';
 import getSkyboxOptions from '../settings/skybox-options';
 
@@ -47,7 +47,7 @@ async function getGltfIndex() {
     return Object.fromEntries(entries);
 }
 
-export default class GltfModel implements FullRenderModel {
+export default class GltfModel implements RenderModel {
     static readonly title = 'glTF Model Viewer';
     static readonly description = '';
 

@@ -3,7 +3,7 @@ import type { GuiSetting } from './property-listener';
 import type { CheckboxProps } from '../../../components/checkbox/checkbox';
 import type { FileUploadProps } from '../../../components/file-upload/file-upload';
 import type { SliderProps } from '../../../components/slider/slider';
-import Renderer from '../../core/renderer';
+import type Renderer from '../../core/renderer';
 
 type SettingWrapper<BaseType> = Omit<BaseType, 'label' | 'callbacks' | 'onChange'>;
 
@@ -23,11 +23,6 @@ export type FullSettings = {
     publicSettings: Record<string, ModelSetting>,
 };
 
-export type ModelConstructor = new(renderer: Renderer) => unknown;
-
-export type FullRenderModel = { settings: Record<string, ModelSetting> };
-
-export type FullModelConstructor =
-    new(...args: ConstructorParameters<ModelConstructor>) => FullRenderModel;
-
-export type LoadModelConstructor = () => Promise<FullModelConstructor>;
+export type RenderModel = { settings: Record<string, ModelSetting> };
+export type ModelConstructor = new(renderer: Renderer) => RenderModel;
+export type LoadModelConstructor = () => Promise<ModelConstructor>;
