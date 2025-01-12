@@ -117,14 +117,14 @@ export default function Viewport({ getModelConstructor, viewportRef }: ViewportP
 
     useEffect(() => {
         // dynamically imported to avoid loading in on unsupported browsers
-        void Promise.all([
+        Promise.all([
             import('../../rendering/core/renderer'),
             getModelConstructor(),
-        ]).then(async ([rendererModule, modelCtor]) => {
+        ]).then(async ([rendererModule, ModelConstructor]) => {
             if (canvasRef.current == null) throw new Error('webgpu render -- canvas uninitialized');
 
             const renderer = await rendererModule.default.CreateInitialized(canvasRef.current);
-            const model = new modelCtor(renderer);
+            const model = new ModelConstructor(renderer);
 
             dispatch({
                 type: 'update',
@@ -133,6 +133,9 @@ export default function Viewport({ getModelConstructor, viewportRef }: ViewportP
             });
 
             requestAnimationFrame(renderer.render);
+        }).catch((e: unknown) => {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, no-console
+            console.warn(`failed to initialize renderer:\n${e}`);
         });
 
         document.addEventListener('pointerlockchange', handleLockChange, false);
