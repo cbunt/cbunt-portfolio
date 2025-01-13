@@ -1,28 +1,22 @@
-import SampleWrapper from '../../components/sample-wrapper/sample-wrapper'
+export const modelName = 'glTF Viewer';
+export const ModelConstructor = navigator.gpu?.requestAdapter != null
+    ? await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default)
+    : undefined;
 
-<SampleWrapper 
-    modelName="glTF Viewer"
-    ModelConstructor={
-        navigator.gpu?.requestAdapter != null
-            ? await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default)
-            : undefined
-    }
->
-    A glTF renderer written in WebGPU and Typescript. Includes deferred rendering and 
-    multi-scattering image based lighting adapted from https://bruop.github.io/ibl/. 
-    Models with unsupported features will likely load without issue, but will display 
-    incorrectly. Included assets are pulled directly from their repos. Models are from 
-    [glTF Sample Assets](https://github.com/KhronosGroup/glTF-Sample-Assets)
-    and environment maps are from 
-    [glTF Sample Environments](https://github.com/KhronosGroup/glTF-Sample-Environments).
+A glTF renderer written in WebGPU and Typescript. Includes deferred rendering and 
+multi-scattering image based lighting adapted from https://bruop.github.io/ibl/. 
+Models with unsupported features will likely load without issue, but will display 
+incorrectly. Included assets are pulled directly from their repos. Models are from 
+[glTF Sample Assets](https://github.com/KhronosGroup/glTF-Sample-Assets)
+and environment maps are from 
+[glTF Sample Environments](https://github.com/KhronosGroup/glTF-Sample-Environments).
 
-    Unsupported features:
+Unsupported features:
 
-    - Skinned Meshes
-    - Animations
-    - Cameras
+- Skinned Meshes
+- Animations
+- Cameras
 
-    Supported extensions:
+Supported extensions:
 
-    - [KHR_materials_emissive_strength](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)
-</SampleWrapper>
+- [KHR_materials_emissive_strength](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)

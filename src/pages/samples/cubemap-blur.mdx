@@ -1,35 +1,31 @@
-import SampleWrapper from '../../components/sample-wrapper/sample-wrapper'
-import source from '../../rendering/samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
+import code from '../../rendering/samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
 
-<SampleWrapper 
-    modelName="Cubemap Blur"
-    source={source}
-    ModelConstructor={
-        navigator.gpu?.requestAdapter != null
-            ? await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default)
-            : undefined
-    }
->
-    Computes an approximate, perceptually-even Gaussian pyramid of a cubemap 
-    texture. Given an image and a desired maximum distance in pixels, for each
-    blurred mip level the process:
+export const modelName =" Cubemap Blur";
+export const source = code;
 
-    - Calculates the minimum angular distance between any pixel and a perimeter of 
-      the given pixel distance
-    - Uses that minimum angle over 3 as the Guassian sigma for blurring
-    - For each pixel, samples all pixels of the previous mip within the given pixel distance
-      and weights their contributions by the Guassian of their angular distances from the origin pixel
-    - Normalizes the result with the sum of the weights
+export const ModelConstructor = navigator.gpu?.requestAdapter != null
+    ? await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default)
+    : undefined;
 
-    For heavy loads that could impair smooth rendering or interactivity—such
-    as large images, high filter distances, or both at once—
-    [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-    is used to break up work over multiple frames.
+Computes an approximate, perceptually-even Gaussian pyramid of a cubemap 
+texture. Given an image and a desired maximum distance in pixels, for each
+blurred mip level the process:
 
-    This demo accepts .hdr cubemap textures to be uploaded and 
-    processed. Results are exported as an rgba32 .ktx2 file, including blurred mip levels.
-    *NOTE:* exported .ktx2 files are currently malformed and unreadable to some 
-    programs. This is likely due to a bug in the exporting library. Opening them with
-    [NVIDIA Texture Tools Exporter]('https://developer.nvidia.com/texture-tools-exporter') and
-    re-exporting fixes these issues.
-</SampleWrapper>
+- Calculates the minimum angular distance between any pixel and a perimeter of 
+    the given pixel distance
+- Uses that minimum angle over 3 as the Guassian sigma for blurring
+- For each pixel, samples all pixels of the previous mip within the given pixel distance
+    and weights their contributions by the Guassian of their angular distances from the origin pixel
+- Normalizes the result with the sum of the weights
+
+For heavy loads that could impair smooth rendering or interactivity—such
+as large images, high filter distances, or both at once—
+[`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
+is used to break up work over multiple frames.
+
+This demo accepts .hdr cubemap textures to be uploaded and 
+processed. Results are exported as an rgba32 .ktx2 file, including blurred mip levels.
+*NOTE:* exported .ktx2 files are currently malformed and unreadable to some 
+programs. This is likely due to a bug in the exporting library. Opening them with
+[NVIDIA Texture Tools Exporter]('https://developer.nvidia.com/texture-tools-exporter') and
+re-exporting fixes these issues.
