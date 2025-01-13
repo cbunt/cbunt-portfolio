@@ -12,9 +12,6 @@ import cubemapGuassianPyramid from './cubemap-guassian-pyramid';
 enum BlurState { IDLE, BLUR, WAIT }
 
 export default class CubemapBlurModel implements RenderModel {
-    static title = '';
-    static description = '';
-
     skybox?: GPUTexture;
     state: BlurState = BlurState.IDLE;
 
