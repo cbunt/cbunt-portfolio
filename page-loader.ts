@@ -31,8 +31,8 @@ export default function PageLoader(
 
     return `
         import render from '${normalizeTSX(renderPath)}';
-        import * as PageModule from '${normalizeTSX(importPath)}';
+        import Page from '${normalizeTSX(importPath)}';
 
-        render(PageModule);
+        render(Page);
     `;
 };

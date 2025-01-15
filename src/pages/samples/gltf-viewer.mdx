@@ -1,7 +1,10 @@
-export const modelName = 'glTF Viewer';
-export const ModelConstructor = navigator.gpu?.requestAdapter != null
-    ? await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample').then((m) => m.default)
-    : undefined;
+import SupportCheck, { WEBGPU_SUPPORTED } from '../../components/viewport/support-check/support-check'
+
+export const ModelModule = WEBGPU_SUPPORTED && await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample');
+
+# glTF Viewer
+
+<SupportCheck ModelModule={ModelModule} />
 
 A glTF renderer written in WebGPU and Typescript. Includes deferred rendering and 
 multi-scattering image based lighting adapted from https://bruop.github.io/ibl/. 

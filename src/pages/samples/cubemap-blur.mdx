@@ -1,11 +1,13 @@
-import code from '../../rendering/samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
+import SupportCheck, { WEBGPU_SUPPORTED } from '../../components/viewport/support-check/support-check'
+import CodeDisplay from '../../components/code-display/code-display'
 
-export const modelName =" Cubemap Blur";
-export const source = code;
+import source from '../../rendering/samples/cubemap-blur/cubemap-guassian-pyramid.ts?raw';
 
-export const ModelConstructor = navigator.gpu?.requestAdapter != null
-    ? await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample').then((m) => m.default)
-    : undefined;
+export const ModelModule = WEBGPU_SUPPORTED && await import('../../rendering/samples/cubemap-blur/cubemap-blur-sample');
+
+# Cubemap Blur
+
+<SupportCheck ModelModule={ModelModule} />
 
 Computes an approximate, perceptually-even Gaussian pyramid of a cubemap 
 texture. Given an image and a desired maximum distance in pixels, for each
@@ -29,3 +31,8 @@ processed. Results are exported as an rgba32 .ktx2 file, including blurred mip l
 programs. This is likely due to a bug in the exporting library. Opening them with
 [NVIDIA Texture Tools Exporter]('https://developer.nvidia.com/texture-tools-exporter') and
 re-exporting fixes these issues.
+
+
+## Source Code
+
+<CodeDisplay source={source} />

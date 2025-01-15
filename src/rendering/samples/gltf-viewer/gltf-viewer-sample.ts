@@ -24,7 +24,7 @@ async function getGltfIndex() {
     const indexJson = JSON.parse(indexStr) as unknown;
 
     if (!Array.isArray(indexJson)) {
-        throw new Error('could not load gtlf model index');
+        throw new Error('Could not load index for glTF sample models.');
     }
 
     const entries: [string, string][] = indexJson.flatMap((gltf: unknown) => {
@@ -48,9 +48,6 @@ async function getGltfIndex() {
 }
 
 export default class GltfModel implements RenderModel {
-    static readonly title = 'glTF Model Viewer';
-    static readonly description = '';
-
     static readonly goalLayout: AttributeDetails[] = [
         {
             name: 'POSITION',
