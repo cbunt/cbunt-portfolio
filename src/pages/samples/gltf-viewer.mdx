@@ -1,4 +1,4 @@
-import SupportCheck, { WEBGPU_SUPPORTED } from '../../components/viewport/support-check/support-check'
+import SupportCheck, { WEBGPU_SUPPORTED } from '../../components/support-check/support-check'
 
 export const ModelModule = WEBGPU_SUPPORTED && await import('../../rendering/samples/gltf-viewer/gltf-viewer-sample');
 

@@ -1,5 +1,5 @@
 import Distortion from 'react-distortion';
-import { ModelConstructor } from '../../../rendering/samples/settings/sample-spec';
+import { ModelConstructor } from '../../rendering/samples/settings/sample-spec';
 import { lazy, useRef } from 'react';
 
 import styles from './support-check.module.scss';
@@ -15,7 +15,7 @@ For an up to date list of supported browsers,
 see [caniuse.com/webgpu](https://caniuse.com/webgpu).
 `;
 
-const Viewport = lazy(() => import('../viewport'));
+const Viewport = lazy(() => import('../viewport/viewport'));
 
 export type SupportCheckProps = {
     ModelModule?: { default: ModelConstructor },

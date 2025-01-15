@@ -1,4 +1,4 @@
-@use "../../mixins.module.scss" as mixins;
+@use "../mixins.module.scss" as mixins;
 
 .viewport {
     @include mixins.distortion-border(10px, var(--background-color));
