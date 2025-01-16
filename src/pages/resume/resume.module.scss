@@ -5,9 +5,19 @@ article {
         columns: 2;
     }
 
-    *:not(h2) {
+    >* {
+        display: block;
         break-before: avoid;
         break-inside: avoid;
+        break-after: avoid;
+    }
+
+    h2 {
+        break-before: auto;
+    }
+
+    *:has(+ h2) {
+        break-after: auto;
     }
 
     h3 {
