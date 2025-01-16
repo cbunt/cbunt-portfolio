@@ -14,7 +14,7 @@ export default function ModelSettingsWidget(settings: Record<string, ModelSettin
         <SettingsPanel>
             {Object.entries(settings).map(([label, info]) => {
                 const {
-                    [ListenerSyms.$type]: _type,
+                    [ListenerSyms.$type]: type,
                     [ListenerSyms.$callback]: _privateCallback,
                     [ListenerSyms.$listeners]: callbacks,
                     ...rest
@@ -27,7 +27,7 @@ export default function ModelSettingsWidget(settings: Record<string, ModelSettin
                     onChange: (val: unknown) => { info.value = val; },
                 };
 
-                switch (info[ListenerSyms.$type]) {
+                switch (type) {
                     case 'button': return (
                         <StyledButton
                             key={label}
