@@ -57,7 +57,14 @@ export default function NavBar() {
                     >
                         Samples
                     </DistortComponent>
-                    <ul>
+                    <DistortComponent
+                        as="ul"
+                        defaultFilter={{
+                            disable: true,
+                            scale: 10,
+                            baseFrequency: 0.02,
+                        }}
+                    >
                         {SAMPLES__.map((sample) => (
                             <li key={sample}>
                                 <Link href={`/samples/${sample}`}>
@@ -65,7 +72,7 @@ export default function NavBar() {
                                 </Link>
                             </li>
                         ))}
-                    </ul>
+                    </DistortComponent>
                 </div>
                 <Link href="/resume">Resume</Link>
             </nav>
