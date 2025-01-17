@@ -14,12 +14,12 @@ const iconGradients = [
     { x1: 1, y1: 1, x2: 0.25, y2: 0.5, stopColor: 'var(--accent-3)', id: 'grad-3' },
 ];
 
-function Link(props: Omit<ComponentProps<typeof DistortComponent<'a'>>, 'as'>) {
+function Link(props: ComponentProps<typeof DistortComponent<'a'>>) {
     return (
         <DistortComponent
-            as="a"
             {...interactiveConditionalFilters}
             {...props}
+            as="a"
         />
     );
 };
@@ -47,6 +47,7 @@ export default function NavBar() {
                 </svg>
             </DistortComponent>
             <label onBlur={(e) => { (e.currentTarget.firstChild as HTMLInputElement).checked = false; }}>
+                Open Navigation Menu
                 <input type="checkbox" />
             </label>
             <nav>
@@ -86,6 +87,7 @@ export default function NavBar() {
                     rel="noreferrer noopener"
                 >
                     <i className={GITHUB_NF_CLASS} />
+                    <span className="screen-reader">Github</span>
                 </Link>
                 <Link
                     href="https://www.linkedin.com/in/cbunt"
@@ -93,9 +95,11 @@ export default function NavBar() {
                     rel="noreferrer noopener"
                 >
                     <i className={LINKEDIN_NF_CLASS} />
+                    <span className="screen-reader">LinkedIn</span>
                 </Link>
                 <Link href="mailto:cass@cbunt.ing">
                     <i className={EMAIL_NF_CLASS} />
+                    <span className="screen-reader">Email</span>
                 </Link>
             </div>
         </aside>
