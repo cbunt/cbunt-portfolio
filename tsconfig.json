@@ -4,7 +4,6 @@
     "module": "es2022",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
-    "rootDir": "./src",
     "outDir": "build",
     "jsx": "react-jsx",
     "target": "ES2021",
@@ -28,7 +27,5 @@
     "./src/**/*.d.ts",
     "./node_modules/@webgpu/types/dist/*",
   ],
-  "exclude": [
-    "./src/**/*.stories.tsx"
-  ]
+  "exclude": []
 }
