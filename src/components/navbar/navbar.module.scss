@@ -44,7 +44,7 @@ aside {
     }
 
     // hamburger button
-    > button {
+    > label {
         @include mixins.clickable;
 
         position: absolute;
@@ -52,6 +52,10 @@ aside {
         height: 2rem;
         aspect-ratio: 1;
         writing-mode: vertical-lr;
+
+        input {
+            display: none;
+        }
 
         &:after {
             content: '|||';
@@ -108,7 +112,7 @@ aside {
             gap: 2rem;
         }
 
-        > button {
+        > label {
             display: none;
         }
 
@@ -174,7 +178,7 @@ aside {
             gap: 2lh;
         }
 
-        &:not(:focus-within) > :not(&>div:first-of-type, &>button) {
+        &:not(:has(:checked)) > :not(&>div:first-of-type, &>label) {
             height: 0;
             padding: 0;
             overflow: hidden;
