@@ -1,9 +1,10 @@
 import type { Story } from '@ladle/react';
 import { Select } from './select';
 import { CSSProperties } from 'react';
+import { mapRange } from '../../utils/general';
 
 function makeItems(n: number) {
-    return [...Array(n).keys()].map((i) => `item ${i}`);
+    return mapRange(n, (i) => `item ${i}`);
 }
 
 function ExampleSelect({
