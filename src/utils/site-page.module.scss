@@ -22,6 +22,7 @@ body {
     font-family: "Asap", sans-serif;
     color: var(--hi-vis-color);
     background-color: var(--background-color);
+    width: 100%;
 
     /* Global Variables */
     --ok-l2: 0.6;
@@ -52,18 +53,16 @@ body {
 
 /* Block Styling */
 :global(#root) {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: minmax(min-content, 6rem) auto;
     min-height: 100svh;
 }
 
 main {
+    padding: 2ch 3ch;
     position: relative;
     container-type: inline-size;
-    width: min(calc(80vh * 1.66), 100%);
+    min-width: min(calc(80vh * 1.66), 100%);
+    max-width: 100ch;
     margin: 0 auto;
-    padding-top: 2rem;
 }
 
 footer {
@@ -75,6 +74,18 @@ footer {
 
 article {
     margin: 1.75rem 0;
+}
+
+@media (width > 80ch) and (height > 35lh) {
+    :global(#root) {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        grid-template-columns: minmax(min-content, min(6rem, 100%)) auto;
+    }
+
+    main {
+        padding-top: 2rem;
+    }
 }
 
 /* Inline Styling */

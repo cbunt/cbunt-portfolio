@@ -1,40 +1,68 @@
 @use "../mixins.module.scss" as mixins;
 
+@mixin nav-clickable {
+    @include mixins.clickable;
+
+    & {
+        transition:
+        text-shadow 0.5s cubic-bezier(.51, -0.33, .74, .78),
+        var(--scale-transition);
+    }
+
+    &:hover {
+        text-shadow: currentcolor 0 0 5px;
+        transition:
+            text-shadow 0.2s ease-out,
+            var(--scale-transition);
+    }
+}
+
 aside {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
 
-    grid-row: span 2;
     position: sticky;
-    top: 0;
-    padding: 2.5ch 0;
-
+    inset: 0;
     z-index: 10;
-    height: 100vh;
 
-    font-size: 1.5em;
+    font-size: 1.5rem;
     font-weight: 550;
 
     nav {
-        writing-mode: vertical-rl;
+        display: flex;
+    }
+
+    a {
+        @include nav-clickable;
+    }
+
+    a,
+    .nav-dropdown button {
         width: fit-content;
-        display: flex;
-        gap: 2rem;
+        text-transform: uppercase;
+        font-stretch: 125%;
     }
 
-    >nav,
-    >div {
-        >:nth-child(3n+1) { color: var(--accent-1); }
-        >:nth-child(3n+2) { color: var(--accent-2); }
-        >:nth-child(3n+3) { color: var(--accent-3); }
+    // hamburger button
+    > button {
+        @include mixins.clickable;
+
+        position: absolute;
+        right: 2ch;
+        height: 2rem;
+        aspect-ratio: 1;
+        writing-mode: vertical-lr;
+
+        &:after {
+            content: '|||';
+            font-weight: 700;
+            text-align: center;
+        }
     }
 
-    >div:last-of-type {
+    // social links container
+    > div:last-of-type {
         display: flex;
-        flex-direction: column;
-        gap: 1rem;
 
         i {
             font-family: 'NerdFontsSymbols Nerd Font';
@@ -42,80 +70,185 @@ aside {
         }
     }
 
-    :not(li)>a,
-    .nav-dropdown button,
-    .nav-dropdown li {
-        @include mixins.clickable;
+    > :is(nav, div) > :nth-child(3n+1) { color: var(--accent-1); }
+    > :is(nav, div) > :nth-child(3n+2) { color: var(--accent-2); }
+    > :is(nav, div) > :nth-child(3n+3) { color: var(--accent-3); }
+}
 
-        text-transform: uppercase;
-        font-stretch: 125%;
+.nav-dropdown {
+    ul {
+        @include mixins.distortion-background(var(--secondary-color));
+        list-style: none;
+    }
 
-        transition:
-            text-shadow 0.5s cubic-bezier(.51, -0.33, .74, .78),
-            var(--scale-transition);
+    li {
+        display: flex;
+        margin: 0;
+    }
 
-        &:hover {
-            text-shadow: currentcolor 0 0 5px;
-            transition:
-                text-shadow 0.2s ease-out,
-                var(--scale-transition);
+    a:visited {
+        color: var(--accent-1);
+    }
+}
+
+// shared horizontal and hamburger styling
+@media (height <= 35lh) or (width <= 80ch) {
+    aside {
+        width: 100%;
+        background-color: var(--background-color);
+        border-bottom: solid 5px var(--secondary-color);
+        padding: 1rem 2rem;
+    }
+}
+
+// shared horizontal and vertical styling
+@media (width > 80ch) {
+    aside {
+        nav {
+            gap: 2rem;
         }
 
-        &:not(:has(i)) {
-            rotate: 0.5turn;
+        > button {
+            display: none;
+        }
+
+        > div:last-of-type{ 
+            gap: 1rem;
+        }
+    }
+
+    .nav-dropdown {
+        > ul {
+            justify-content: space-evenly;
+            position: absolute;
+            display: flex;
+            visibility: hidden;
+            margin: 0;
+    
+            li {
+                margin-block: 0.5lh;
+            }
+    
+            &::after {
+                content: '';
+                position: absolute;
+                z-index: -1;
+            }
+    
+            &::before {
+                box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 2px 2px 6px;
+            }
+        }
+
+        > button {
+            @include nav-clickable;
+
+        }
+
+        &:is(:hover, :focus-within) > ul {
+            visibility: visible;
+
         }
     }
 }
 
-.nav-dropdown {
-    &:hover>ul {
-        visibility: visible;
+// hamburger styling
+@media (width <= 80ch) {
+    aside {
+        flex-direction: column;
+
+        nav { 
+            padding-block: 1lh;
+            flex-direction: column;
+            margin-inline: auto;
+            gap: 0.5lh;
+
+            li {
+                margin-inline: 1ch;
+            }
+        }
+
+        > div:last-of-type {
+            margin-inline: auto;
+            padding-bottom: 0.5lh;
+            gap: 2lh;
+        }
+
+        &:not(:focus-within) > :not(&>div:first-of-type, &>button) {
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+        }
     }
 
-    ul {
-        @include mixins.distortion-background(var(--secondary-color));
-
-        padding: 0;
-        margin: 0;
-
-        list-style: none;
+    .nav-dropdown {
+        padding: 0.5lh;
+        position: relative;
         display: flex;
-        visibility: hidden;
+        flex-direction: column;
+        gap: 0.5lh;
 
-        @media (hover: hover) {        
-            justify-content: space-evenly;
-            height: 100vh;
-            top: 0;
-            left: 100%;
-            position: absolute;
+        > button {
+            font-style: italic;
+            width: fit-content;
         }
 
-        &:before {
-            box-shadow: color-mix(in oklch, var(--background-color) 50%, black) 2px 2px 6px;
+        > ul {
+            display: contents;
+            border-radius: 10px;
         }
+    }
+}
+
+// horizontal styling
+@media (width > 80ch) and (height <= 35lh) {
+    .nav-dropdown > ul {
+        width: 100%;
+        top: 100%;
+        left: 0;
 
         &:after {
-            content: '';
-            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 3lh;
+        }
+    }
+}
+
+// vertical styling
+@media (width > 80ch) and (height > 35lh) {
+    aside {
+        align-items: center;
+        flex-direction: column;
+        grid-row: span 2;
+        padding: 2.5ch 0;
+        height: 100svh;
+
+        nav {
+            writing-mode: vertical-rl;
+        }
+
+        > div:last-of-type {
+            flex-direction: column;
+        }
+    }
+
+    .nav-dropdown > ul {
+        height: 100%;
+        top: 0;
+        left: 100%;
+
+        &:after {
             top: 0;
             right: 100%;
             height: 100%;
-            width: 3ch;
-            z-index: -1;
+            width: 3lh;
         }
     }
 
-    li {
-        margin: 0 0.5lh;
-        padding: 0;
-    }
-
-    a,
-    a:visited {
-        color: var(--accent-1);
-    }
-
-    button:active {
-        scale: var(--hover-scale);
+    aside a:not(:has(i)),
+    .nav-dropdown button {
+        rotate: 0.5turn;
     }
 }

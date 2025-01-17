@@ -5,9 +5,10 @@
 
     border: none;
     aspect-ratio: 1.66 / 1;
-    width: 100%;
+    width: min(calc(80vh * 1.66), 100%);
     background-color: var(--secondary-color);
 
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-content: center;

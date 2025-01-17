@@ -7,7 +7,7 @@
 }
 
 main > hgroup {
-    padding: 1rem 2rem 3rem;
+    padding: 0 0 2lh;
     width: 100%;
 
     @container (width > 35rem) {
@@ -45,7 +45,7 @@ main > hgroup {
 
 main > ul {
     list-style: none;
-    padding: 0.5rem 1rem 0;
+    padding: 0;
     margin: 0;
 
     display: grid;

@@ -46,6 +46,7 @@ export default function NavBar() {
                     {iconGradients.map(({ id }) => <use href="#triangle" fill={`url(#${id})`} key={id} />)}
                 </svg>
             </DistortComponent>
+            <button type="button" />
             <nav>
                 <Link href="/">About</Link>
                 <div className={styles['nav-dropdown']}>
