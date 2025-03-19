@@ -102,10 +102,8 @@ export default class GltfModel implements RenderModel {
                 }
             },
             accept: '.hdr',
-            selection: {
-                value: 'Environment Test',
-                initialValues: gltfIndex,
-            },
+            value: 'Environment Test',
+            initialValues: gltfIndex,
             process: (file: File) => file,
         },
     });

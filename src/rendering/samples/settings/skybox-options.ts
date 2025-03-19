@@ -44,10 +44,8 @@ export default function getSkyboxOptions(target: SkyboxTarget) {
             }
         },
         accept: '.hdr',
-        selection: {
-            value: Object.keys(hdrs)[0],
-            initialValues: hdrs,
-        },
+        value: Object.keys(hdrs)[0],
+        initialValues: hdrs,
         process: (file: File) => file,
     };
 }

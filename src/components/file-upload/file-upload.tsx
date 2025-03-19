@@ -5,19 +5,14 @@ import type { ValueKeyCallback } from '../../rendering/samples/settings/property
 import Button from '../button/button';
 import { Select } from '../select/select';
 
-export type FileSelection<T> = {
-    value?: string,
-    initialValues?: Record<string, T>,
-};
-
 export type FileUploadProps<T> = {
     label: string,
     accept?: string,
     buttonText?: string,
-    value?: T,
     process: (file: File) => T,
-    onChange?: ValueKeyCallback<FileUploadProps<T>>,
-    selection?: FileSelection<T>,
+    onChange?: ((value: T) => void),
+    value?: string,
+    initialValues?: Record<string, T>,
     callbacks?: Set<ValueKeyCallback<FileUploadProps<T>>>,
 };
 
@@ -27,35 +22,30 @@ export default function FileUpload<T>({
     buttonText,
     accept,
     onChange,
-    selection,
+    value,
+    initialValues,
     callbacks,
 }: FileUploadProps<T>) {
     const inputRef = useRef<null | HTMLInputElement>(null);
-    const [files, setFiles] = useState(selection?.initialValues ?? {});
-
-    function update<K extends keyof FileUploadProps<T>>(changed: FileUploadProps<T>[K], key: K) {
-        if (key !== 'selection' || changed == null) return;
-        const { value: newValue, initialValues: newValues } = changed as NonNullable<FileUploadProps<T>['selection']>;
-
-        if (
-            newValue == null
-            || newValues?.[newValue] == null
-            || newValues[newValue] === files[newValue]
-        ) return;
-
-        setFiles((files) => ({ ...files, [newValue]: newValues[newValue] }));
-    };
+    const [files, setFiles] = useState(initialValues ?? {});
 
     useEffect(() => {
-        if (selection?.value != null) {
-            onChange?.(files[selection.value], 'value');
-        }
+        if (value == null) return;
+        onChange?.(files[value]);
     }, []);
 
     useEffect(() => {
+        function update<K extends keyof FileUploadProps<T>>(changed: FileUploadProps<T>[K], key: K) {
+            if (changed == null) return;
+            if (key === 'initialValues') {
+                const newValues = changed as NonNullable<FileUploadProps<T>['initialValues']>;
+                setFiles((files) => ({ ...files, ...newValues }));
+            }
+        };
+
         callbacks?.add(update);
         return () => { callbacks?.delete(update); };
-    });
+    }, [callbacks]);
 
     return (
         <>
@@ -64,8 +54,8 @@ export default function FileUpload<T>({
                 label={`${label} select`}
                 style={{ gridColumn: 'span 2' }}
                 items={files}
-                defaultSelected={selection?.value}
-                onChange={(value) => { onChange?.(value, 'value'); }}
+                defaultSelected={value}
+                onChange={(value) => { onChange?.(value); }}
             />
             <Button
                 onClick={() => { inputRef.current?.click(); }}

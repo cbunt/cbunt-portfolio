@@ -23,14 +23,12 @@ export const Example: Story = () => (
                 label="A File Upload"
                 process={() => 0}
                 accept=".jpg"
-                selection={{
-                    value: 'a value',
-                    initialValues: {
-                        'a value': 0,
-                        'another value': 0,
-                        'another value with a lot of text so as to exceed the width': 0,
-                        'another value so the box scrolls': 0,
-                    },
+                value="a value"
+                initialValues={{
+                    'a value': 0,
+                    'another value': 0,
+                    'another value with a lot of text so as to exceed the width': 0,
+                    'another value so the box scrolls': 0,
                 }}
             />
             <Button
