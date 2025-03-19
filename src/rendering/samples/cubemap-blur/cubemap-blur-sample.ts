@@ -47,7 +47,7 @@ export default class CubemapBlurModel implements RenderModel {
         skybox: getSkyboxOptions(this),
         'Download Result': {
             [ListenerSyms.$type]: 'button' as const,
-            onClick: () => { void this.saveFile(); },
+            onClick: () => { this.saveFile().catch(console.error); },
         },
     });
 
@@ -67,14 +67,14 @@ export default class CubemapBlurModel implements RenderModel {
         this.renderer.skyboxPass.mipLevel = 1;
 
         this.refresh();
-        void this.reblur();
+        this.reblur().catch(console.error);
     }
 
     resolve() {
         this.refresh();
         const lastState = this.state;
         this.state = BlurState.IDLE;
-        if (lastState === BlurState.WAIT) void this.reblur();
+        if (lastState === BlurState.WAIT) this.reblur().catch(console.error);
     }
 
     async reblur() {
@@ -105,21 +105,17 @@ export default class CubemapBlurModel implements RenderModel {
 
     async saveFile() {
         if (this.skybox == null) return;
-        try {
-            const proms = Promise.all([
-                textureToKTX(this.renderer.device, this.skybox, true)
-                    .then((ktx2) => new Blob([ktx2], { type: 'image/ktx2' })),
-                showSaveFilePicker({
-                    types: [{ accept: { 'image/ktx2': ['.ktx2'] } }],
-                    suggestedName: 'blurred-skybox.ktx2',
-                }).then((handle) => handle.createWritable({ keepExistingData: false })),
-            ]);
+        const proms = Promise.all([
+            textureToKTX(this.renderer.device, this.skybox, true)
+                .then((ktx2) => new Blob([ktx2], { type: 'image/ktx2' })),
+            showSaveFilePicker({
+                types: [{ accept: { 'image/ktx2': ['.ktx2'] } }],
+                suggestedName: 'blurred-skybox.ktx2',
+            }).then((handle) => handle.createWritable({ keepExistingData: false })),
+        ]);
 
-            const [blob, stream] = await proms;
-            await blob.stream().pipeTo(stream);
-        } catch (e) {
-            console.warn(e);
-        }
+        const [blob, stream] = await proms;
+        await blob.stream().pipeTo(stream);
     }
 
     render({ encoder, gbuffer }: ForwardPassParams) {
