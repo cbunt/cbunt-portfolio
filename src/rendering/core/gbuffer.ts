@@ -139,7 +139,7 @@ export default class GBuffer {
             clearValue: clearValue,
             loadOp: 'clear',
             storeOp: 'store',
-        }));
+        } satisfies GPURenderPassColorAttachment));
 
         return {
             label: 'forward pass encoder',
@@ -150,7 +150,7 @@ export default class GBuffer {
                 depthStoreOp: 'store',
                 depthClearValue: 1.0,
             },
-        } as GPURenderPassDescriptor;
+        } satisfies GPURenderPassDescriptor;
     }
 
     createTexture(tex: TextureData) {

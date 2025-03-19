@@ -15,7 +15,6 @@ export default function ModelSettingsWidget(settings: Record<string, ModelSettin
             {Object.entries(settings).map(([label, info]) => {
                 const {
                     [ListenerSyms.$type]: type,
-                    [ListenerSyms.$callback]: _privateCallback,
                     [ListenerSyms.$listeners]: callbacks,
                     ...rest
                 } = info;
@@ -24,7 +23,7 @@ export default function ModelSettingsWidget(settings: Record<string, ModelSettin
                     ...rest,
                     callbacks,
                     label,
-                    onChange: (val: unknown) => { info.value = val; },
+                    onChange: (val: ModelSetting['value']) => { info.value = val; },
                 };
 
                 switch (type) {

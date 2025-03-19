@@ -104,18 +104,19 @@ function minStepDistance(steps: number, width: number) {
 
     const sampU = 2 * width - (baseV * 2) - steps - 2;
     const sampUN = (2 / width) * (sampU + 0.5) - 1;
+
     const samp0VN = (1 / width) - 1;
     const samp0Mag2 = 1 + sampUN * sampUN + samp0VN * samp0VN;
     const samp1VN = (3 / width) - 1;
     const samp1Mag2 = 1 + sampUN * sampUN + samp1VN * samp1VN;
 
-    const dot0 = (sampUN + baseVN + samp0VN * baseUN)
-        / Math.sqrt(samp0Mag2 * baseMag2);
+    const dot0 = (sampUN + baseVN + samp0VN * baseUN);
+    const mag0 = dot0 / Math.sqrt(samp0Mag2 * baseMag2);
 
-    const dot1 = (sampUN + baseVN + samp1VN * baseUN)
-        / Math.sqrt(samp1Mag2 * baseMag2);
+    const dot1 = (sampUN + baseVN + samp1VN * baseUN);
+    const mag1 = dot1 / Math.sqrt(samp1Mag2 * baseMag2);
 
-    return Math.min(1 - dot0, 1 - dot1);
+    return Math.min(1 - mag0, 1 - mag1);
 }
 
 export type GaussianPyramidDescriptor = {
