@@ -24,29 +24,35 @@ type MapSpec<T extends Record<PropertyKey, ListenerSpec>> = {
             ? GuiSetting<Omit<Rest, Syms>, Tag> : never : never
 };
 
+function fastProxy(spec: GuiSetting<UnknownObject>, callback?: (value: unknown, key: string) => void) {
+    return Object.keys(spec)
+        .reduce((prev, key) => Object.defineProperty(prev, key, {
+            enumerable: true,
+            get() { return spec[key]; },
+            set(value: unknown) {
+                if (spec[key] !== value) {
+                    spec[key] = value;
+                    callback?.(value, key);
+                }
+            },
+        }), { [$type]: spec[$type], [$listeners]: spec[$listeners] });
+}
+
 export default function propertyListener<T extends Record<PropertyKey, ListenerSpec<UnknownObject>>>(specs: T) {
     for (const spec of Object.values(specs) as GuiSetting[]) {
         spec[$listeners] = new Set();
     }
 
     return {
-        publicSettings: mapValues(specs, (spec) => new Proxy(spec as GuiSetting<UnknownObject>, {
-            set(target, key, value: unknown) {
-                if (target[key] !== value) {
-                    target[key] = value;
-                    target[$callback]?.(value, key);
-                }
-                return true;
-            },
-        })) as MapSpec<T>,
-        privateSettings: mapValues(specs, (spec) => new Proxy(spec as GuiSetting<UnknownObject>, {
-            set(target, key, value: unknown) {
-                if (target[key] !== value) {
-                    target[key] = value;
-                    target[$listeners].forEach((fn) => { fn(value, key); });
-                }
-                return true;
-            },
-        })) as MapSpec<T>,
+        publicSettings: mapValues(specs, (spec) => {
+            const cast = spec as GuiSetting<UnknownObject>;
+            return fastProxy(cast, cast[$callback]);
+        }) as MapSpec<T>,
+        privateSettings: mapValues(specs, (spec) => {
+            const cast = spec as GuiSetting<UnknownObject>;
+            return fastProxy(cast, (value, key) => {
+                cast[$listeners].forEach((fn) => { fn(value, key); });
+            });
+        }) as MapSpec<T>,
     };
 }
