@@ -168,7 +168,7 @@ export async function textureToKTX(device: GPUDevice, texture: GPUTexture, cube 
         throw new Error(`textureToKTX -- format ${texture.format} of ${texture.label} unsupported`);
     }
 
-    const container = new ktxparse.KTX2Container();
+    const container = ktxparse.createDefaultContainer();
     container.pixelWidth = texture.width;
     container.pixelHeight = texture.height;
     container.vkFormat = WebGPUToVkFormat[texture.format];
